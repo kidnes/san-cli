@@ -51,6 +51,13 @@ function getCompiler(opt = {}) {
     parser.use(require('markdown-it-multimd-table'), table);
     parser.use(require('markdown-it-div'), {
         render(tokens, idx, options, env, slf) {
+            const info = tokens[idx].info.trim();
+            const m = info.match(/(\]\(["']*\.\/).*(png|gif|jpg)/);
+            console.log('info:', info, m);
+        }
+    });
+    parser.use(require('markdown-it-div'), {
+        render(tokens, idx, options, env, slf) {
             const map = {
                 warn: 'warning',
                 danger: 'error',
@@ -116,7 +123,12 @@ function getCompiler(opt = {}) {
 
     const render = parser.render.bind(parser);
     parser.render = content => {
-        return render(content).replace(/{{/g, '&#123;&#123;');
+        let result = render(content)
+            .replace(/{{/g, '&#123;&#123;')
+            // 解决 a.md 渲染 /a/index.html 后，图片 ./ 开始的相对路径问题
+            // css 的图片路径 webpack 会处理
+            .replace(/(<img\s+.*src=")(\.\/.*)/mg, '$1.$2');
+        return result;
     };
     return parser;
 }

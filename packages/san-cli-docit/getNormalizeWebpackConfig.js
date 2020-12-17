@@ -148,7 +148,17 @@ module.exports = function getNormalizeWebpackConfig(
         delete webpackConfig.devServer;
     }
     else {
-        webpackConfig.devServer = Object.assign({hot: !isProd, compress: isProd}, webpackConfig.devServer);
+        webpackConfig.devServer = Object.assign({
+            hot: !isProd,
+            compress: isProd
+        },
+        webpackConfig.devServer,
+        {
+            contentBase: [
+                webpackConfig.devServer.contentBase,
+                path.resolve(__dirname, './template')
+            ]
+        });
     }
     return webpackConfig;
 };

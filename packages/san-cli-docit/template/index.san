@@ -1,7 +1,10 @@
 <template>
     <div id="site">
         <header id="header">
-            <a href="{{docit.config.rootUrl}}" class="logo">{{docit.config.siteName}}</a>
+            <a href="{{docit.config.rootUrl}}" class="navbar">
+                <img src="{{docit.config.rootUrl + 'logo.svg'}}" alt="Home" class="logo"/>
+                <span>{{docit.config.siteName}}</span>
+            </a>
             {{docit.navbar | raw}}
         </header>
         <aside id="sidebar">

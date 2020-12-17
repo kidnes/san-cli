@@ -1,5 +1,5 @@
 import {Component} from 'san';
-import index from './app.san';
+import index from './template/index.san';
 
 export default class Index extends Component {
     static components = {

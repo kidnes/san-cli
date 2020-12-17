@@ -8,16 +8,25 @@
     z-index: 10;
     background: #fff;
     border-bottom: 1px solid #f0f1f2;
+    box-shadow: 0 2px 8px #f0f1f2;
     transition: all 0.3s;
-    padding: 12px 40px;
+    padding: 12px 20px;
 
-    .logo {
+    .navbar {
+        display: inline-block;
         overflow: hidden;
-        line-height: @header-height;
+        line-height: 38px;
+        height: 38px;
         text-decoration: none;
         white-space: nowrap;
-        font-size: 24px;
-        color: @site-heading-color;
+        font-size: 30px;
+
+        .logo {
+            width: 36px;
+            height: 38px;
+            vertical-align: middle;
+            margin-right: 8px;
+        }
     }
 
     ul {
@@ -26,16 +35,16 @@
         background-color: #fff;
         white-space: nowrap;
         position: absolute;
-        right: 40px;
+        right: 80px;
         top: 0.7rem;
         display: flex;
 
         li {
             position: relative;
             display: inline-block;
-            margin-left: 20px;
+            margin-left: 48px;
             line-height: 28px;
-            font-size: 16px;
+            font-size: 24px;
         }
         a {
             color: #314659;
