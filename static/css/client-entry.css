@@ -525,9 +525,10 @@ aside#sidebar li ul > li ul > li {
   max-width: 280px;
   min-width: 280px;
   width: 280px;
+  height: 100%;
   background-color: #fff;
   border-radius: 6px;
-  height: 100%;
+  font-size: 14px;
   overflow-y: scroll;
 }
 #content .toc > ul {
