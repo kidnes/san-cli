@@ -8,7 +8,7 @@
 /* unused harmony export mixin */
 /* unused harmony export registerComponents */
 /* unused harmony export registerMixins */
-/* harmony import */ var san__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(58);
+/* harmony import */ var san__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(57);
 /* harmony import */ var san__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(san__WEBPACK_IMPORTED_MODULE_0__);
 /**
  * @file 重新定义san.Component组件
@@ -118,7 +118,7 @@ const registerMixins = (mixins, Component = SanComponent) => {
 
 /***/ }),
 
-/***/ 58:
+/***/ 57:
 /***/ (function(module, exports, __webpack_require__) {
 
 /* WEBPACK VAR INJECTION */(function(setImmediate) {/**
@@ -2692,6 +2692,12 @@ var directiveParsers = {
         };
     },
 
+    'is': function (value) {
+        return {
+            value: parseExpr(value.replace(/(^\{\{|\}\}$)/g, ''))
+        };
+    },
+
     'transition': function (value) {
         return {
             value: parseCall(value)
@@ -2827,20 +2833,18 @@ function integrateAttr(aNode, name, value, options) {
  */
 function integrateProp(aNode, name, rawValue, options) {
     // parse two way binding, e.g. value="{=ident=}"
-    var value = rawValue || '';
-    var xMatch = value.match(/^\{=\s*(.*?)\s*=\}$/);
-
-    if (xMatch) {
+    if (rawValue && rawValue.indexOf('{=') === 0 && rawValue.slice(-2) === '=}') {
         aNode.props.push({
             name: name,
-            expr: parseExpr(xMatch[1]),
+            expr: parseExpr(rawValue.slice(2, -2)),
             x: 1
         });
 
         return;
     }
 
-    var expr = parseText(value, options.delimiters);
+    var expr = parseText(rawValue || '', options.delimiters);
+
     if (expr.value === '') {
         if (boolAttrs[name]) {
             expr = {
@@ -3881,7 +3885,8 @@ var NodeType = {
     CMPT: 5,
     SLOT: 6,
     TPL: 7,
-    LOADER: 8
+    LOADER: 8,
+    IS: 9
 };
 
 // exports = module.exports = NodeType;
@@ -3988,6 +3993,7 @@ function boolPropHandler(el, value, name) {
 // #[begin] allua
 // see https://github.com/baidu/san/issues/495
 function placeholderHandler(el, value, name, element) {
+    /* istanbul ignore if */
     if (ie > 9 && !el.value && value) {
         element.__bkph = true;
         nextTick(function () {
@@ -5507,14 +5513,12 @@ AsyncComponent.prototype._update = function (changes) {
  * @param {DOMChildrenWalker} reverseWalker 子元素遍历对象
  * @return {Node}
  */
-function createReverseNode(aNode, parent, scope, owner, reverseWalker) {
+function createReverseNode(aNode, parent, scope, owner, reverseWalker, componentName) {
     if (aNode.Clazz) {
         return new aNode.Clazz(aNode, parent, scope, owner, reverseWalker);
     }
 
-    var ComponentOrLoader = owner.getComponentType
-        ? owner.getComponentType(aNode, scope)
-        : owner.components[aNode.tagName];
+    var ComponentOrLoader = owner.components[componentName || aNode.tagName];
 
     if (ComponentOrLoader) {
         return typeof ComponentOrLoader === 'function'
@@ -5590,6 +5594,7 @@ function reverseElementChildren(element, scope, owner) {
  * @file 创建节点的工厂方法
  */
 
+// var evalExpr = require('../runtime/eval-expr');
 // var Element = require('./element');
 // var AsyncComponent = require('./async-component');
 
@@ -5603,14 +5608,12 @@ function reverseElementChildren(element, scope, owner) {
  * @param {Component} owner 所属组件环境
  * @return {Node}
  */
-function createNode(aNode, parent, scope, owner) {
+function createNode(aNode, parent, scope, owner, componentName) {
     if (aNode.Clazz) {
         return new aNode.Clazz(aNode, parent, scope, owner);
     }
 
-    var ComponentOrLoader = owner.getComponentType
-        ? owner.getComponentType(aNode, scope)
-        : owner.components[aNode.tagName];
+    var ComponentOrLoader = owner.components[componentName || aNode.tagName];
 
     if (ComponentOrLoader) {
         return typeof ComponentOrLoader === 'function'
@@ -5928,6 +5931,7 @@ function getXPropOutputer(element, xProp, data) {
 function getInputXPropOutputer(element, xProp, data) {
     return function () {
         // #[begin] allua
+        /* istanbul ignore if */
         if (element.__bkph) {
             element.__bkph = false;
             return;
@@ -6201,10 +6205,6 @@ function nodeSBindUpdate(sBind, oldBindData, scope, owner, changes, updater) {
         while (len--) {
             if (changeExprCompare(changes[len].expr, sBind.value, scope)) {
                 var newBindData = evalExpr(sBind.value, scope, owner);
-                if (newBindData === oldBindData) {
-                    return oldBindData;
-                }
-
                 var keys = unionKeys(newBindData, oldBindData);
 
                 for (var i = 0, l = keys.length; i < l; i++) {
@@ -6595,6 +6595,7 @@ function unpackANode(packed) {
             case 42:
             case 43:
             case 44:
+            case 45:
                 node = {};
                 state = -2;
                 break;
@@ -6677,6 +6678,10 @@ function unpackANode(packed) {
 
                             case 44:
                                 current.directives.transition = node;
+                                break;
+
+                            case 45:
+                                current.directives.is = node;
                                 break;
 
                             case 1:
@@ -6780,7 +6785,7 @@ function unpackANode(packed) {
                     }
                     break;
 
-                // Directive: for, if, elif, ref, bind, html, transition
+                // Directive: for, if, elif, ref, bind, html, transition, is
                 case 37:
                 case 38:
                 case 39:
@@ -6788,6 +6793,7 @@ function unpackANode(packed) {
                 case 42:
                 case 43:
                 case 44:
+                case 45:
                     current.value = node;
                     stackIndex--;
                     break;
@@ -6935,6 +6941,13 @@ function Component(options) { // eslint-disable-line
         this.transition = options.transition;
     }
 
+
+    this.id = guid++;
+
+    // #[begin] devtool
+    this._toPhase('beforeCompile');
+    // #[end]
+
     var proto = clazz.prototype;
 
     // pre define components class
@@ -6999,8 +7012,6 @@ function Component(options) { // eslint-disable-line
         this.parentComponent = this.owner;
         this.scope = this.owner.data;
     }
-
-    this.id = guid++;
 
     // #[begin] reverse
     // 组件反解，读取注入的组件数据
@@ -7072,6 +7083,11 @@ function Component(options) { // eslint-disable-line
 
     this._toPhase('compiled');
 
+
+    // #[begin] devtool
+    this._toPhase('beforeInit');
+    // #[end]
+
     // init data
     var initData = extend(
         typeof this.initData === 'function' && this.initData() || {},
@@ -7130,9 +7146,7 @@ function Component(options) { // eslint-disable-line
     // #[begin] reverse
     var reverseWalker = options.reverseWalker;
     if (this.el || reverseWalker) {
-        var RootComponentType = this.getComponentType
-            ? this.getComponentType(this.aNode, this.data)
-            : this.components[this.aNode.tagName];
+        var RootComponentType = this.components[this.aNode.tagName];
 
         if (reverseWalker && (this.aNode.hotspot.hasRootNode || RootComponentType)) {
             this._rootNode = createReverseNode(this.aNode, this, this.data, this, reverseWalker);
@@ -7292,11 +7306,11 @@ Component.prototype.fire = function (name, event) {
     var me = this;
     // #[begin] devtool
     emitDevtool('comp-event', {
-        name: name, 
-        event: event, 
+        name: name,
+        event: event,
         target: this
     });
-    // #[end] 
+    // #[end]
 
     each(this.listeners[name], function (listener) {
         listener.fn.call(me, event);
@@ -7359,7 +7373,7 @@ Component.prototype.dispatch = function (name, value) {
             // #[begin] devtool
             emitDevtool('comp-message', {
                 target: this,
-                value: value, 
+                value: value,
                 name: name,
                 receiver: parentComponent
             });
@@ -7377,7 +7391,7 @@ Component.prototype.dispatch = function (name, value) {
 
     // #[begin] devtool
     emitDevtool('comp-message', {target: this, value: value, name: name});
-    // #[end]    
+    // #[end]
 };
 
 /**
@@ -7580,6 +7594,10 @@ Component.prototype._update = function (changes) {
 
     var dataChanges = this._dataChanges;
     if (dataChanges) {
+        // #[begin] devtool
+        this._toPhase('beforeUpdate');
+        // #[end]
+
         this._dataChanges = null;
 
         this._sbindData = nodeSBindUpdate(
@@ -7765,13 +7783,15 @@ Component.prototype._getElAsRootNode = function () {
  */
 Component.prototype.attach = function (parentEl, beforeEl) {
     if (!this.lifeCycle.attached) {
-        var hasRootNode = this.aNode.hotspot.hasRootNode
-            || (this.getComponentType
-                ? this.getComponentType(this.aNode, this.data)
-                : this.components[this.aNode.tagName]
-            );
+        // #[begin] devtool
+        this._toPhase('beforeAttach');
+        // #[end]
 
-        if (hasRootNode) {
+
+        if (this.aNode.hotspot.hasRootNode || this.components[this.aNode.tagName]) {
+            // #[begin] devtool
+            this._toPhase('beforeCreate');
+            // #[end]
             this._rootNode = this._rootNode || createNode(this.aNode, this, this.data, this);
             this._rootNode.attach(parentEl, beforeEl);
             this._rootNode._getElAsRootNode && (this.el = this._rootNode._getElAsRootNode());
@@ -7779,6 +7799,10 @@ Component.prototype.attach = function (parentEl, beforeEl) {
         }
         else {
             if (!this.el) {
+                // #[begin] devtool
+                this._toPhase('beforeCreate');
+                // #[end]
+
                 var sourceNode = this.aNode.hotspot.sourceNode;
                 var props = this.aNode.props;
 
@@ -7849,6 +7873,9 @@ Component.prototype._attached = elementOwnAttached;
 Component.prototype._leave = function () {
     if (this.leaveDispose) {
         if (!this.lifeCycle.disposed) {
+            // #[begin] devtool
+            this._toPhase('beforeDetach');
+            // #[end]
             this.data.unlisten();
             this.dataChanger = null;
             this._dataChanges = null;
@@ -7901,6 +7928,10 @@ Component.prototype._leave = function () {
 
             this._toPhase('detached');
 
+            // #[begin] devtool
+            this._toPhase('beforeDispose');
+            // #[end]
+
             this._rootNode = null;
             this.el = null;
             this.owner = null;
@@ -7915,6 +7946,10 @@ Component.prototype._leave = function () {
         }
     }
     else if (this.lifeCycle.attached) {
+        // #[begin] devtool
+        this._toPhase('beforeDetach');
+        // #[end]
+
         if (this._rootNode) {
             if (this._rootNode.detach) {
                 this._rootNode.detach();
@@ -8513,7 +8548,6 @@ function nodeOwnOnlyChildrenAttach(parentEl, beforeEl) {
 // var Data = require('../runtime/data');
 // var DataChangeType = require('../runtime/data-change-type');
 // var changeExprCompare = require('../runtime/change-expr-compare');
-// var insertBefore = require('../browser/insert-before');
 // var removeEl = require('../browser/remove-el');
 // var NodeType = require('./node-type');
 // var LifeCycle = require('./life-cycle');
@@ -9863,6 +9897,108 @@ IfNode.prototype._getElAsRootNode = function () {
  * This source code is licensed under the MIT license.
  * See LICENSE file in the project root for license information.
  *
+ * @file is 指令节点类
+ */
+
+// var guid = require('../util/guid');
+// var evalExpr = require('../runtime/eval-expr');
+// var NodeType = require('./node-type');
+// var createNode = require('./create-node');
+// var createReverseNode = require('./create-reverse-node');
+// var nodeOwnSimpleDispose = require('./node-own-simple-dispose');
+
+/**
+ * is 指令节点类
+ *
+ * @class
+ * @param {Object} aNode 抽象节点
+ * @param {Node} parent 父亲节点
+ * @param {Model} scope 所属数据环境
+ * @param {Component} owner 所属组件环境
+ * @param {DOMChildrenWalker?} reverseWalker 子元素遍历对象
+ */
+function IsNode(aNode, parent, scope, owner, reverseWalker) {
+    this.aNode = aNode;
+    this.owner = owner;
+    this.scope = scope;
+    this.parent = parent;
+    this.parentComponent = parent.nodeType === 5
+        ? parent
+        : parent.parentComponent;
+
+    this.id = guid++;
+    this.children = [];
+    this.tagName = this.aNode.tagName;
+    // #[begin] reverse
+    if (reverseWalker) {
+        this.cmpt = evalExpr(this.aNode.directives.is.value, this.scope) || this.tagName;
+        this.children[0] = createReverseNode(
+            this.aNode.isRinsed,
+            this,
+            this.scope,
+            this.owner,
+            reverseWalker,
+            this.cmpt
+        );
+    }
+    // #[end]
+}
+
+IsNode.prototype.nodeType = 9;
+
+IsNode.prototype.dispose = nodeOwnSimpleDispose;
+
+/**
+ * attach到页面
+ *
+ * @param {HTMLElement} parentEl 要添加到的父元素
+ * @param {HTMLElement＝} beforeEl 要添加到哪个元素之前
+ */
+IsNode.prototype.attach = function (parentEl, beforeEl) {
+    this.cmpt = evalExpr(this.aNode.directives.is.value, this.scope) || this.tagName;
+
+    var child = createNode(this.aNode.isRinsed, this, this.scope, this.owner, this.cmpt);
+    this.children[0] = child;
+    child.attach(parentEl, beforeEl);
+};
+
+/**
+ * 视图更新函数
+ *
+ * @param {Array} changes 数据变化信息
+ */
+IsNode.prototype._update = function (changes) {
+    var childANode = this.aNode.isRinsed;
+    var child = this.children[0];
+    var cmpt = evalExpr(this.aNode.directives.is.value, this.scope) || this.tagName;
+
+    if (cmpt === this.cmpt) {
+        child._update(changes);
+    }
+    else {
+        this.cmpt = cmpt;
+        var newChild = createNode(childANode, this, this.scope, this.owner, this.cmpt);
+        var el = child.el;
+        newChild.attach(el.parentNode, el);
+
+        child.dispose();
+        this.children[0] = newChild;
+    }
+};
+
+IsNode.prototype._getElAsRootNode = function () {
+    return this.children[0].el;
+};
+
+// exports = module.exports = IsNode;
+
+
+/**
+ * Copyright (c) Baidu Inc. All rights reserved.
+ *
+ * This source code is licensed under the MIT license.
+ * See LICENSE file in the project root for license information.
+ *
  * @file template 节点类
  */
 
@@ -10005,6 +10141,7 @@ TemplateNode.prototype._update = function (changes) {
 // var SlotNode = require('./slot-node');
 // var ForNode = require('./for-node');
 // var IfNode = require('./if-node');
+// var IsNode = require('./is-node');
 // var TemplateNode = require('./template-node');
 // var Element = require('./element');
 
@@ -10158,12 +10295,11 @@ function preheatANode(aNode, componentInstance) {
                         tagName: aNode.tagName,
                         vars: aNode.vars,
                         hotspot: aNode.hotspot,
-                        directives: extend({}, aNode.directives)
+                        directives: aNode.directives
                     };
                     aNode.hotspot.hasRootNode = true;
                     aNode.Clazz = IfNode;
                     aNode = aNode.ifRinsed;
-                    aNode.directives['if'] = null; // eslint-disable-line dot-notation
                 }
 
                 if (aNode.directives['for']) { // eslint-disable-line dot-notation
@@ -10174,12 +10310,26 @@ function preheatANode(aNode, componentInstance) {
                         tagName: aNode.tagName,
                         vars: aNode.vars,
                         hotspot: aNode.hotspot,
-                        directives: extend({}, aNode.directives)
+                        directives: aNode.directives
                     };
                     aNode.hotspot.hasRootNode = true;
                     aNode.Clazz = ForNode;
-                    aNode.forRinsed.directives['for'] = null; // eslint-disable-line dot-notation
                     aNode = aNode.forRinsed;
+                }
+
+                if (aNode.directives.is) {
+                    aNode.isRinsed = {
+                        children: aNode.children,
+                        props: aNode.props,
+                        events: aNode.events,
+                        tagName: aNode.tagName,
+                        vars: aNode.vars,
+                        hotspot: aNode.hotspot,
+                        directives: aNode.directives
+                    };
+                    aNode.hotspot.hasRootNode = true;
+                    aNode.Clazz = IsNode;
+                    aNode = aNode.isRinsed;
                 }
 
                 switch (aNode.tagName) {
@@ -10195,17 +10345,15 @@ function preheatANode(aNode, componentInstance) {
 
                     default:
                         if (hotTags[aNode.tagName]) {
-                            if (!componentInstance 
-                                || !(componentInstance.getComponentType || componentInstance.components[aNode.tagName])
+                            if (!aNode.directives.is
+                                && (!componentInstance || !componentInstance.components[aNode.tagName])
                             ) {
                                 aNode.Clazz = Element;
                             }
 
                             // #[begin] error
-                            if (componentInstance) {
-                                if (componentInstance.components[aNode.tagName]) {
-                                    warn('\`' + aNode.tagName + '\` as sub-component tag is a bad practice.');
-                                }
+                            if (componentInstance && componentInstance.components[aNode.tagName]) {
+                                warn('\`' + aNode.tagName + '\` as sub-component tag is a bad practice.');
                             }
                             // #[end]
                         }
@@ -10351,7 +10499,7 @@ function createComponentLoader(options) {
          *
          * @type {string}
          */
-        version: '3.9.5',
+        version: '3.10.1',
 
         // #[begin] devtool
         /**
@@ -10496,7 +10644,7 @@ function createComponentLoader(options) {
     // #[end]
 })(this);
 //@ sourceMappingURL=san.dev.js.map
-/* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(56).setImmediate))
+/* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(55).setImmediate))
 
 /***/ })
 

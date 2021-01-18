@@ -8,7 +8,7 @@
 /* unused harmony export mixin */
 /* unused harmony export registerComponents */
 /* unused harmony export registerMixins */
-/* harmony import */ var san__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(58);
+/* harmony import */ var san__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(57);
 /* harmony import */ var san__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(san__WEBPACK_IMPORTED_MODULE_0__);
 /**
  * @file 重新定义san.Component组件
@@ -119,7 +119,517 @@ const registerMixins = (mixins, Component = SanComponent) => {
 /***/ }),
 
 /***/ 1:
+/***/ (function(module, exports) {
+
+var g;
+
+// This works in non-strict mode
+g = (function() {
+	return this;
+})();
+
+try {
+	// This works if eval is allowed (see CSP)
+	g = g || new Function("return this")();
+} catch (e) {
+	// This works if the window reference is available
+	if (typeof window === "object") g = window;
+}
+
+// g can still be undefined, but nothing to do about it...
+// We return undefined, instead of nothing here, so it's
+// easier to handle this case. if(!global) { ...}
+
+module.exports = g;
+
+
+/***/ }),
+
+/***/ 10:
 /***/ (function(module, exports, __webpack_require__) {
+
+var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_RESULT__;/* NProgress, (c) 2013, 2014 Rico Sta. Cruz - http://ricostacruz.com/nprogress
+ * @license MIT */
+
+;(function(root, factory) {
+
+  if (true) {
+    !(__WEBPACK_AMD_DEFINE_FACTORY__ = (factory),
+				__WEBPACK_AMD_DEFINE_RESULT__ = (typeof __WEBPACK_AMD_DEFINE_FACTORY__ === 'function' ?
+				(__WEBPACK_AMD_DEFINE_FACTORY__.call(exports, __webpack_require__, exports, module)) :
+				__WEBPACK_AMD_DEFINE_FACTORY__),
+				__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
+  } else {}
+
+})(this, function() {
+  var NProgress = {};
+
+  NProgress.version = '0.2.0';
+
+  var Settings = NProgress.settings = {
+    minimum: 0.08,
+    easing: 'ease',
+    positionUsing: '',
+    speed: 200,
+    trickle: true,
+    trickleRate: 0.02,
+    trickleSpeed: 800,
+    showSpinner: true,
+    barSelector: '[role="bar"]',
+    spinnerSelector: '[role="spinner"]',
+    parent: 'body',
+    template: '<div class="bar" role="bar"><div class="peg"></div></div><div class="spinner" role="spinner"><div class="spinner-icon"></div></div>'
+  };
+
+  /**
+   * Updates configuration.
+   *
+   *     NProgress.configure({
+   *       minimum: 0.1
+   *     });
+   */
+  NProgress.configure = function(options) {
+    var key, value;
+    for (key in options) {
+      value = options[key];
+      if (value !== undefined && options.hasOwnProperty(key)) Settings[key] = value;
+    }
+
+    return this;
+  };
+
+  /**
+   * Last number.
+   */
+
+  NProgress.status = null;
+
+  /**
+   * Sets the progress bar status, where `n` is a number from `0.0` to `1.0`.
+   *
+   *     NProgress.set(0.4);
+   *     NProgress.set(1.0);
+   */
+
+  NProgress.set = function(n) {
+    var started = NProgress.isStarted();
+
+    n = clamp(n, Settings.minimum, 1);
+    NProgress.status = (n === 1 ? null : n);
+
+    var progress = NProgress.render(!started),
+        bar      = progress.querySelector(Settings.barSelector),
+        speed    = Settings.speed,
+        ease     = Settings.easing;
+
+    progress.offsetWidth; /* Repaint */
+
+    queue(function(next) {
+      // Set positionUsing if it hasn't already been set
+      if (Settings.positionUsing === '') Settings.positionUsing = NProgress.getPositioningCSS();
+
+      // Add transition
+      css(bar, barPositionCSS(n, speed, ease));
+
+      if (n === 1) {
+        // Fade out
+        css(progress, { 
+          transition: 'none', 
+          opacity: 1 
+        });
+        progress.offsetWidth; /* Repaint */
+
+        setTimeout(function() {
+          css(progress, { 
+            transition: 'all ' + speed + 'ms linear', 
+            opacity: 0 
+          });
+          setTimeout(function() {
+            NProgress.remove();
+            next();
+          }, speed);
+        }, speed);
+      } else {
+        setTimeout(next, speed);
+      }
+    });
+
+    return this;
+  };
+
+  NProgress.isStarted = function() {
+    return typeof NProgress.status === 'number';
+  };
+
+  /**
+   * Shows the progress bar.
+   * This is the same as setting the status to 0%, except that it doesn't go backwards.
+   *
+   *     NProgress.start();
+   *
+   */
+  NProgress.start = function() {
+    if (!NProgress.status) NProgress.set(0);
+
+    var work = function() {
+      setTimeout(function() {
+        if (!NProgress.status) return;
+        NProgress.trickle();
+        work();
+      }, Settings.trickleSpeed);
+    };
+
+    if (Settings.trickle) work();
+
+    return this;
+  };
+
+  /**
+   * Hides the progress bar.
+   * This is the *sort of* the same as setting the status to 100%, with the
+   * difference being `done()` makes some placebo effect of some realistic motion.
+   *
+   *     NProgress.done();
+   *
+   * If `true` is passed, it will show the progress bar even if its hidden.
+   *
+   *     NProgress.done(true);
+   */
+
+  NProgress.done = function(force) {
+    if (!force && !NProgress.status) return this;
+
+    return NProgress.inc(0.3 + 0.5 * Math.random()).set(1);
+  };
+
+  /**
+   * Increments by a random amount.
+   */
+
+  NProgress.inc = function(amount) {
+    var n = NProgress.status;
+
+    if (!n) {
+      return NProgress.start();
+    } else {
+      if (typeof amount !== 'number') {
+        amount = (1 - n) * clamp(Math.random() * n, 0.1, 0.95);
+      }
+
+      n = clamp(n + amount, 0, 0.994);
+      return NProgress.set(n);
+    }
+  };
+
+  NProgress.trickle = function() {
+    return NProgress.inc(Math.random() * Settings.trickleRate);
+  };
+
+  /**
+   * Waits for all supplied jQuery promises and
+   * increases the progress as the promises resolve.
+   *
+   * @param $promise jQUery Promise
+   */
+  (function() {
+    var initial = 0, current = 0;
+
+    NProgress.promise = function($promise) {
+      if (!$promise || $promise.state() === "resolved") {
+        return this;
+      }
+
+      if (current === 0) {
+        NProgress.start();
+      }
+
+      initial++;
+      current++;
+
+      $promise.always(function() {
+        current--;
+        if (current === 0) {
+            initial = 0;
+            NProgress.done();
+        } else {
+            NProgress.set((initial - current) / initial);
+        }
+      });
+
+      return this;
+    };
+
+  })();
+
+  /**
+   * (Internal) renders the progress bar markup based on the `template`
+   * setting.
+   */
+
+  NProgress.render = function(fromStart) {
+    if (NProgress.isRendered()) return document.getElementById('nprogress');
+
+    addClass(document.documentElement, 'nprogress-busy');
+    
+    var progress = document.createElement('div');
+    progress.id = 'nprogress';
+    progress.innerHTML = Settings.template;
+
+    var bar      = progress.querySelector(Settings.barSelector),
+        perc     = fromStart ? '-100' : toBarPerc(NProgress.status || 0),
+        parent   = document.querySelector(Settings.parent),
+        spinner;
+    
+    css(bar, {
+      transition: 'all 0 linear',
+      transform: 'translate3d(' + perc + '%,0,0)'
+    });
+
+    if (!Settings.showSpinner) {
+      spinner = progress.querySelector(Settings.spinnerSelector);
+      spinner && removeElement(spinner);
+    }
+
+    if (parent != document.body) {
+      addClass(parent, 'nprogress-custom-parent');
+    }
+
+    parent.appendChild(progress);
+    return progress;
+  };
+
+  /**
+   * Removes the element. Opposite of render().
+   */
+
+  NProgress.remove = function() {
+    removeClass(document.documentElement, 'nprogress-busy');
+    removeClass(document.querySelector(Settings.parent), 'nprogress-custom-parent');
+    var progress = document.getElementById('nprogress');
+    progress && removeElement(progress);
+  };
+
+  /**
+   * Checks if the progress bar is rendered.
+   */
+
+  NProgress.isRendered = function() {
+    return !!document.getElementById('nprogress');
+  };
+
+  /**
+   * Determine which positioning CSS rule to use.
+   */
+
+  NProgress.getPositioningCSS = function() {
+    // Sniff on document.body.style
+    var bodyStyle = document.body.style;
+
+    // Sniff prefixes
+    var vendorPrefix = ('WebkitTransform' in bodyStyle) ? 'Webkit' :
+                       ('MozTransform' in bodyStyle) ? 'Moz' :
+                       ('msTransform' in bodyStyle) ? 'ms' :
+                       ('OTransform' in bodyStyle) ? 'O' : '';
+
+    if (vendorPrefix + 'Perspective' in bodyStyle) {
+      // Modern browsers with 3D support, e.g. Webkit, IE10
+      return 'translate3d';
+    } else if (vendorPrefix + 'Transform' in bodyStyle) {
+      // Browsers without 3D support, e.g. IE9
+      return 'translate';
+    } else {
+      // Browsers without translate() support, e.g. IE7-8
+      return 'margin';
+    }
+  };
+
+  /**
+   * Helpers
+   */
+
+  function clamp(n, min, max) {
+    if (n < min) return min;
+    if (n > max) return max;
+    return n;
+  }
+
+  /**
+   * (Internal) converts a percentage (`0..1`) to a bar translateX
+   * percentage (`-100%..0%`).
+   */
+
+  function toBarPerc(n) {
+    return (-1 + n) * 100;
+  }
+
+
+  /**
+   * (Internal) returns the correct CSS for changing the bar's
+   * position given an n percentage, and speed and ease from Settings
+   */
+
+  function barPositionCSS(n, speed, ease) {
+    var barCSS;
+
+    if (Settings.positionUsing === 'translate3d') {
+      barCSS = { transform: 'translate3d('+toBarPerc(n)+'%,0,0)' };
+    } else if (Settings.positionUsing === 'translate') {
+      barCSS = { transform: 'translate('+toBarPerc(n)+'%,0)' };
+    } else {
+      barCSS = { 'margin-left': toBarPerc(n)+'%' };
+    }
+
+    barCSS.transition = 'all '+speed+'ms '+ease;
+
+    return barCSS;
+  }
+
+  /**
+   * (Internal) Queues a function to be executed.
+   */
+
+  var queue = (function() {
+    var pending = [];
+    
+    function next() {
+      var fn = pending.shift();
+      if (fn) {
+        fn(next);
+      }
+    }
+
+    return function(fn) {
+      pending.push(fn);
+      if (pending.length == 1) next();
+    };
+  })();
+
+  /**
+   * (Internal) Applies css properties to an element, similar to the jQuery 
+   * css method.
+   *
+   * While this helper does assist with vendor prefixed property names, it 
+   * does not perform any manipulation of values prior to setting styles.
+   */
+
+  var css = (function() {
+    var cssPrefixes = [ 'Webkit', 'O', 'Moz', 'ms' ],
+        cssProps    = {};
+
+    function camelCase(string) {
+      return string.replace(/^-ms-/, 'ms-').replace(/-([\da-z])/gi, function(match, letter) {
+        return letter.toUpperCase();
+      });
+    }
+
+    function getVendorProp(name) {
+      var style = document.body.style;
+      if (name in style) return name;
+
+      var i = cssPrefixes.length,
+          capName = name.charAt(0).toUpperCase() + name.slice(1),
+          vendorName;
+      while (i--) {
+        vendorName = cssPrefixes[i] + capName;
+        if (vendorName in style) return vendorName;
+      }
+
+      return name;
+    }
+
+    function getStyleProp(name) {
+      name = camelCase(name);
+      return cssProps[name] || (cssProps[name] = getVendorProp(name));
+    }
+
+    function applyCss(element, prop, value) {
+      prop = getStyleProp(prop);
+      element.style[prop] = value;
+    }
+
+    return function(element, properties) {
+      var args = arguments,
+          prop, 
+          value;
+
+      if (args.length == 2) {
+        for (prop in properties) {
+          value = properties[prop];
+          if (value !== undefined && properties.hasOwnProperty(prop)) applyCss(element, prop, value);
+        }
+      } else {
+        applyCss(element, args[1], args[2]);
+      }
+    }
+  })();
+
+  /**
+   * (Internal) Determines if an element or space separated list of class names contains a class name.
+   */
+
+  function hasClass(element, name) {
+    var list = typeof element == 'string' ? element : classList(element);
+    return list.indexOf(' ' + name + ' ') >= 0;
+  }
+
+  /**
+   * (Internal) Adds a class to an element.
+   */
+
+  function addClass(element, name) {
+    var oldList = classList(element),
+        newList = oldList + name;
+
+    if (hasClass(oldList, name)) return; 
+
+    // Trim the opening space.
+    element.className = newList.substring(1);
+  }
+
+  /**
+   * (Internal) Removes a class from an element.
+   */
+
+  function removeClass(element, name) {
+    var oldList = classList(element),
+        newList;
+
+    if (!hasClass(element, name)) return;
+
+    // Replace the class name.
+    newList = oldList.replace(' ' + name + ' ', ' ');
+
+    // Trim the opening and closing spaces.
+    element.className = newList.substring(1, newList.length - 1);
+  }
+
+  /**
+   * (Internal) Gets a space separated list of the class names on the element. 
+   * The list is wrapped with a single space on each end to facilitate finding 
+   * matches within the list.
+   */
+
+  function classList(element) {
+    return (' ' + (element.className || '') + ' ').replace(/\s+/gi, ' ');
+  }
+
+  /**
+   * (Internal) Removes an element from the DOM.
+   */
+
+  function removeElement(element) {
+    element && element.parentNode && element.parentNode.removeChild(element);
+  }
+
+  return NProgress;
+});
+
+
+
+/***/ }),
+
+/***/ 104:
+/***/ (function(module, exports) {
 
 /**
  * Copyright (c) Baidu Inc. All rights reserved.
@@ -127,106 +637,84 @@ const registerMixins = (mixins, Component = SanComponent) => {
  * This source code is licensed under the MIT license.
  * See LICENSE file in the project root for license information.
  *
- * @file normalize.js
- * @author clark-t
+ * @file DOM 事件挂载
  */
-
-/* eslint-disable prefer-rest-params */
-
-var defineComponent = __webpack_require__(3).defineComponent;
 
 /**
- * 处理 .san 组件 script 与 template 等部分的组合方法
+ * DOM 事件挂载
  *
- * @param {Object|Function} script 组件 script 部分
- * @param {string} template 组件 template 部分的文本
- * @param {string} injectStyles 组件需要注入的 style 列表
- * @return {Class} 组件类
+ * @inner
+ * @param {HTMLElement} el DOM元素
+ * @param {string} eventName 事件名
+ * @param {Function} listener 监听函数
+ * @param {boolean} capture 是否是捕获阶段
  */
-module.exports = function (script, template, injectStyles) {
-    var dfns = componentDefinitions(script);
-    for (var i = 0; i < dfns.length; i++) {
-        if (template) {
-            if (typeof template === 'string') {
-                dfns[i].template = template;
-            }
-            else if (template instanceof Array) {
-                dfns[i].aPack = template;
-            }
-            else {
-                dfns[i].aNode = template;
-            }
-        }
-        if (injectStyles.length) {
-            injectStylesIntoInitData(dfns[i], injectStyles);
-        }
+function on(el, eventName, listener, capture) {
+    // #[begin] allua
+    /* istanbul ignore else */
+    if (el.addEventListener) {
+    // #[end]
+        el.addEventListener(eventName, listener, capture);
+    // #[begin] allua
     }
-
-    return typeof script === 'object' ? defineComponent(script) : script;
-};
-
-function injectStylesIntoInitData(proto, injectStyles) {
-    var style = {};
-    for (var i = 0; i < injectStyles.length; i++) {
-        objectAssign(style, injectStyles[i]);
+    else {
+        el.attachEvent('on' + eventName, listener);
     }
-    var original = proto.initData;
-    proto.initData = original
-        ? function () {
-            return objectAssign({}, original.call(this), {$style: style});
-        }
-        : function () {
-            return style;
-        };
+    // #[end]
 }
 
-function componentDefinitions(cmpt) {
-    // 当 script 为 Function 时，等价于 class A { static template = 'xxx' }
-    // 可查看 static property 的 babel 编译产物
-    var dfns = [cmpt];
-    // 对于联合 san-store 的情况，需要同时将 template, inited 等挂到原型链上
-    if (typeof cmpt === 'function') {
-        dfns.push(cmpt.prototype);
-        if (cmpt.prototype.constructor) {
-            dfns.push(cmpt.prototype.constructor.prototype);
-        }
-    }
-    return dfns;
-}
-
-// 参考：https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/assign#Polyfill
-function objectAssign(target) {
-    'use strict';
-    if (target === null || target === undefined) {
-        throw new TypeError('Cannot convert undefined or null to object');
-    }
-
-    var to = Object(target);
-
-    for (var index = 1; index < arguments.length; index++) {
-        var nextSource = arguments[index];
-
-        if (nextSource !== null && nextSource !== undefined) {
-            for (var nextKey in nextSource) {
-                if (Object.prototype.hasOwnProperty.call(nextSource, nextKey)) {
-                    to[nextKey] = nextSource[nextKey];
-                }
-            }
-        }
-    }
-    return to;
-}
+exports = module.exports = on;
 
 
 /***/ }),
 
-/***/ 10:
+/***/ 105:
+/***/ (function(module, exports) {
+
+/**
+ * Copyright (c) Baidu Inc. All rights reserved.
+ *
+ * This source code is licensed under the MIT license.
+ * See LICENSE file in the project root for license information.
+ *
+ * @file DOM 事件卸载
+ */
+
+/**
+ * DOM 事件卸载
+ *
+ * @inner
+ * @param {HTMLElement} el DOM元素
+ * @param {string} eventName 事件名
+ * @param {Function} listener 监听函数
+ * @param {boolean} capture 是否是捕获阶段
+ */
+function un(el, eventName, listener, capture) {
+    // #[begin] allua
+    /* istanbul ignore else */
+    if (el.addEventListener) {
+    // #[end]
+        el.removeEventListener(eventName, listener, capture);
+    // #[begin] allua
+    }
+    else {
+        el.detachEvent('on' + eventName, listener);
+    }
+    // #[end]
+}
+
+exports = module.exports = un;
+
+
+/***/ }),
+
+/***/ 107:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return SanComponent; });
+/* unused harmony export SanComponent */
 /* unused harmony export mixin */
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "b", function() { return registerComponents; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return registerComponents; });
 /* unused harmony export registerMixins */
 /* harmony import */ var san__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(3);
 /* harmony import */ var san__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(san__WEBPACK_IMPORTED_MODULE_0__);
@@ -338,97 +826,17 @@ const registerMixins = (mixins, Component = SanComponent) => {
 
 /***/ }),
 
-/***/ 105:
-/***/ (function(module, exports) {
-
-/**
- * Copyright (c) Baidu Inc. All rights reserved.
- *
- * This source code is licensed under the MIT license.
- * See LICENSE file in the project root for license information.
- *
- * @file DOM 事件挂载
- */
-
-/**
- * DOM 事件挂载
- *
- * @inner
- * @param {HTMLElement} el DOM元素
- * @param {string} eventName 事件名
- * @param {Function} listener 监听函数
- * @param {boolean} capture 是否是捕获阶段
- */
-function on(el, eventName, listener, capture) {
-    // #[begin] allua
-    /* istanbul ignore else */
-    if (el.addEventListener) {
-    // #[end]
-        el.addEventListener(eventName, listener, capture);
-    // #[begin] allua
-    }
-    else {
-        el.attachEvent('on' + eventName, listener);
-    }
-    // #[end]
-}
-
-exports = module.exports = on;
-
-
-/***/ }),
-
-/***/ 106:
-/***/ (function(module, exports) {
-
-/**
- * Copyright (c) Baidu Inc. All rights reserved.
- *
- * This source code is licensed under the MIT license.
- * See LICENSE file in the project root for license information.
- *
- * @file DOM 事件卸载
- */
-
-/**
- * DOM 事件卸载
- *
- * @inner
- * @param {HTMLElement} el DOM元素
- * @param {string} eventName 事件名
- * @param {Function} listener 监听函数
- * @param {boolean} capture 是否是捕获阶段
- */
-function un(el, eventName, listener, capture) {
-    // #[begin] allua
-    /* istanbul ignore else */
-    if (el.addEventListener) {
-    // #[end]
-        el.removeEventListener(eventName, listener, capture);
-    // #[begin] allua
-    }
-    else {
-        el.detachEvent('on' + eventName, listener);
-    }
-    // #[end]
-}
-
-exports = module.exports = un;
-
-
-/***/ }),
-
-/***/ 16:
+/***/ 15:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* harmony import */ var _css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(6);
+/* harmony import */ var _css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(7);
 /* harmony import */ var _css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0__);
 // Imports
 
 var ___CSS_LOADER_EXPORT___ = _css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default()(function(i){return i[1]});
 // Module
-___CSS_LOADER_EXPORT___.push([module.i, "/* Make clicks pass-through */\n#nprogress {\n  pointer-events: none;\n}\n\n#nprogress .bar {\n  background: #29d;\n\n  position: fixed;\n  z-index: 1031;\n  top: 0;\n  left: 0;\n\n  width: 100%;\n  height: 2px;\n}\n\n/* Fancy blur effect */\n#nprogress .peg {\n  display: block;\n  position: absolute;\n  right: 0px;\n  width: 100px;\n  height: 100%;\n  box-shadow: 0 0 10px #29d, 0 0 5px #29d;\n  opacity: 1.0;\n\n  -webkit-transform: rotate(3deg) translate(0px, -4px);\n      -ms-transform: rotate(3deg) translate(0px, -4px);\n          transform: rotate(3deg) translate(0px, -4px);\n}\n\n/* Remove these to get rid of the spinner */\n#nprogress .spinner {\n  display: block;\n  position: fixed;\n  z-index: 1031;\n  top: 15px;\n  right: 15px;\n}\n\n#nprogress .spinner-icon {\n  width: 18px;\n  height: 18px;\n  box-sizing: border-box;\n\n  border: solid 2px transparent;\n  border-top-color: #29d;\n  border-left-color: #29d;\n  border-radius: 50%;\n\n  -webkit-animation: nprogress-spinner 400ms linear infinite;\n          animation: nprogress-spinner 400ms linear infinite;\n}\n\n.nprogress-custom-parent {\n  overflow: hidden;\n  position: relative;\n}\n\n.nprogress-custom-parent #nprogress .spinner,\n.nprogress-custom-parent #nprogress .bar {\n  position: absolute;\n}\n\n@-webkit-keyframes nprogress-spinner {\n  0%   { -webkit-transform: rotate(0deg); }\n  100% { -webkit-transform: rotate(360deg); }\n}\n@keyframes nprogress-spinner {\n  0%   { transform: rotate(0deg); }\n  100% { transform: rotate(360deg); }\n}\n\n", ""]);
+___CSS_LOADER_EXPORT___.push([module.i, "// extracted by mini-css-extract-plugin\nexport {};", ""]);
 // Exports
 /* harmony default export */ __webpack_exports__["a"] = (___CSS_LOADER_EXPORT___);
 
@@ -625,7 +1033,7 @@ ___CSS_LOADER_EXPORT___.push([module.i, "/* Make clicks pass-through */\n#nprogr
     attachTo.clearImmediate = clearImmediate;
 }(typeof self === "undefined" ? typeof global === "undefined" ? this : global : self));
 
-/* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(2), __webpack_require__(172)))
+/* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(1), __webpack_require__(172)))
 
 /***/ }),
 
@@ -824,9 +1232,9 @@ process.umask = function() { return 0; };
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* harmony import */ var _style_loader_dist_runtime_injectStylesIntoStyleTag_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(5);
+/* harmony import */ var _style_loader_dist_runtime_injectStylesIntoStyleTag_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(6);
 /* harmony import */ var _style_loader_dist_runtime_injectStylesIntoStyleTag_js__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_style_loader_dist_runtime_injectStylesIntoStyleTag_js__WEBPACK_IMPORTED_MODULE_0__);
-/* harmony import */ var _css_loader_dist_cjs_js_nprogress_css__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(16);
+/* harmony import */ var _css_loader_dist_cjs_js_mini_css_extract_plugin_dist_loader_js_css_loader_dist_cjs_js_nprogress_css__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(15);
 
             
 
@@ -835,37 +1243,112 @@ var options = {};
 options.insert = "head";
 options.singleton = false;
 
-var update = _style_loader_dist_runtime_injectStylesIntoStyleTag_js__WEBPACK_IMPORTED_MODULE_0___default()(_css_loader_dist_cjs_js_nprogress_css__WEBPACK_IMPORTED_MODULE_1__[/* default */ "a"], options);
+var update = _style_loader_dist_runtime_injectStylesIntoStyleTag_js__WEBPACK_IMPORTED_MODULE_0___default()(_css_loader_dist_cjs_js_mini_css_extract_plugin_dist_loader_js_css_loader_dist_cjs_js_nprogress_css__WEBPACK_IMPORTED_MODULE_1__[/* default */ "a"], options);
 
 
 
-/* unused harmony default export */ var _unused_webpack_default_export = (_css_loader_dist_cjs_js_nprogress_css__WEBPACK_IMPORTED_MODULE_1__[/* default */ "a"].locals || {});
+/* unused harmony default export */ var _unused_webpack_default_export = (_css_loader_dist_cjs_js_mini_css_extract_plugin_dist_loader_js_css_loader_dist_cjs_js_nprogress_css__WEBPACK_IMPORTED_MODULE_1__[/* default */ "a"].locals || {});
 
 /***/ }),
 
 /***/ 2:
-/***/ (function(module, exports) {
+/***/ (function(module, exports, __webpack_require__) {
 
-var g;
+/**
+ * Copyright (c) Baidu Inc. All rights reserved.
+ *
+ * This source code is licensed under the MIT license.
+ * See LICENSE file in the project root for license information.
+ *
+ * @file normalize.js
+ * @author clark-t
+ */
 
-// This works in non-strict mode
-g = (function() {
-	return this;
-})();
+/* eslint-disable prefer-rest-params */
 
-try {
-	// This works if eval is allowed (see CSP)
-	g = g || new Function("return this")();
-} catch (e) {
-	// This works if the window reference is available
-	if (typeof window === "object") g = window;
+var defineComponent = __webpack_require__(3).defineComponent;
+
+/**
+ * 处理 .san 组件 script 与 template 等部分的组合方法
+ *
+ * @param {Object|Function} script 组件 script 部分
+ * @param {string} template 组件 template 部分的文本
+ * @param {string} injectStyles 组件需要注入的 style 列表
+ * @return {Class} 组件类
+ */
+module.exports = function (script, template, injectStyles) {
+    var dfns = componentDefinitions(script);
+    for (var i = 0; i < dfns.length; i++) {
+        if (template) {
+            if (typeof template === 'string') {
+                dfns[i].template = template;
+            }
+            else if (template instanceof Array) {
+                dfns[i].aPack = template;
+            }
+            else {
+                dfns[i].aNode = template;
+            }
+        }
+        if (injectStyles.length) {
+            injectStylesIntoInitData(dfns[i], injectStyles);
+        }
+    }
+
+    return typeof script === 'object' ? defineComponent(script) : script;
+};
+
+function injectStylesIntoInitData(proto, injectStyles) {
+    var style = {};
+    for (var i = 0; i < injectStyles.length; i++) {
+        objectAssign(style, injectStyles[i]);
+    }
+    var original = proto.initData;
+    proto.initData = original
+        ? function () {
+            return objectAssign({}, original.call(this), {$style: style});
+        }
+        : function () {
+            return style;
+        };
 }
 
-// g can still be undefined, but nothing to do about it...
-// We return undefined, instead of nothing here, so it's
-// easier to handle this case. if(!global) { ...}
+function componentDefinitions(cmpt) {
+    // 当 script 为 Function 时，等价于 class A { static template = 'xxx' }
+    // 可查看 static property 的 babel 编译产物
+    var dfns = [cmpt];
+    // 对于联合 san-store 的情况，需要同时将 template, inited 等挂到原型链上
+    if (typeof cmpt === 'function') {
+        dfns.push(cmpt.prototype);
+        if (cmpt.prototype.constructor) {
+            dfns.push(cmpt.prototype.constructor.prototype);
+        }
+    }
+    return dfns;
+}
 
-module.exports = g;
+// 参考：https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/assign#Polyfill
+function objectAssign(target) {
+    'use strict';
+    if (target === null || target === undefined) {
+        throw new TypeError('Cannot convert undefined or null to object');
+    }
+
+    var to = Object(target);
+
+    for (var index = 1; index < arguments.length; index++) {
+        var nextSource = arguments[index];
+
+        if (nextSource !== null && nextSource !== undefined) {
+            for (var nextKey in nextSource) {
+                if (Object.prototype.hasOwnProperty.call(nextSource, nextKey)) {
+                    to[nextKey] = nextSource[nextKey];
+                }
+            }
+        }
+    }
+    return to;
+}
 
 
 /***/ }),
@@ -11099,7 +11582,7 @@ function createComponentLoader(options) {
     // #[end]
 })(this);
 //@ sourceMappingURL=san.dev.js.map
-/* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(56).setImmediate))
+/* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(55).setImmediate))
 
 /***/ }),
 
@@ -11136,283 +11619,7 @@ module.exports = function (url, options) {
 
 /***/ }),
 
-/***/ 5:
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-var isOldIE = function isOldIE() {
-  var memo;
-  return function memorize() {
-    if (typeof memo === 'undefined') {
-      // Test for IE <= 9 as proposed by Browserhacks
-      // @see http://browserhacks.com/#hack-e71d8692f65334173fee715c222cb805
-      // Tests for existence of standard globals is to allow style-loader
-      // to operate correctly into non-standard environments
-      // @see https://github.com/webpack-contrib/style-loader/issues/177
-      memo = Boolean(window && document && document.all && !window.atob);
-    }
-
-    return memo;
-  };
-}();
-
-var getTarget = function getTarget() {
-  var memo = {};
-  return function memorize(target) {
-    if (typeof memo[target] === 'undefined') {
-      var styleTarget = document.querySelector(target); // Special case to return head of iframe instead of iframe itself
-
-      if (window.HTMLIFrameElement && styleTarget instanceof window.HTMLIFrameElement) {
-        try {
-          // This will throw an exception if access to iframe is blocked
-          // due to cross-origin restrictions
-          styleTarget = styleTarget.contentDocument.head;
-        } catch (e) {
-          // istanbul ignore next
-          styleTarget = null;
-        }
-      }
-
-      memo[target] = styleTarget;
-    }
-
-    return memo[target];
-  };
-}();
-
-var stylesInDom = [];
-
-function getIndexByIdentifier(identifier) {
-  var result = -1;
-
-  for (var i = 0; i < stylesInDom.length; i++) {
-    if (stylesInDom[i].identifier === identifier) {
-      result = i;
-      break;
-    }
-  }
-
-  return result;
-}
-
-function modulesToDom(list, options) {
-  var idCountMap = {};
-  var identifiers = [];
-
-  for (var i = 0; i < list.length; i++) {
-    var item = list[i];
-    var id = options.base ? item[0] + options.base : item[0];
-    var count = idCountMap[id] || 0;
-    var identifier = "".concat(id, " ").concat(count);
-    idCountMap[id] = count + 1;
-    var index = getIndexByIdentifier(identifier);
-    var obj = {
-      css: item[1],
-      media: item[2],
-      sourceMap: item[3]
-    };
-
-    if (index !== -1) {
-      stylesInDom[index].references++;
-      stylesInDom[index].updater(obj);
-    } else {
-      stylesInDom.push({
-        identifier: identifier,
-        updater: addStyle(obj, options),
-        references: 1
-      });
-    }
-
-    identifiers.push(identifier);
-  }
-
-  return identifiers;
-}
-
-function insertStyleElement(options) {
-  var style = document.createElement('style');
-  var attributes = options.attributes || {};
-
-  if (typeof attributes.nonce === 'undefined') {
-    var nonce =  true ? __webpack_require__.nc : undefined;
-
-    if (nonce) {
-      attributes.nonce = nonce;
-    }
-  }
-
-  Object.keys(attributes).forEach(function (key) {
-    style.setAttribute(key, attributes[key]);
-  });
-
-  if (typeof options.insert === 'function') {
-    options.insert(style);
-  } else {
-    var target = getTarget(options.insert || 'head');
-
-    if (!target) {
-      throw new Error("Couldn't find a style target. This probably means that the value for the 'insert' parameter is invalid.");
-    }
-
-    target.appendChild(style);
-  }
-
-  return style;
-}
-
-function removeStyleElement(style) {
-  // istanbul ignore if
-  if (style.parentNode === null) {
-    return false;
-  }
-
-  style.parentNode.removeChild(style);
-}
-/* istanbul ignore next  */
-
-
-var replaceText = function replaceText() {
-  var textStore = [];
-  return function replace(index, replacement) {
-    textStore[index] = replacement;
-    return textStore.filter(Boolean).join('\n');
-  };
-}();
-
-function applyToSingletonTag(style, index, remove, obj) {
-  var css = remove ? '' : obj.media ? "@media ".concat(obj.media, " {").concat(obj.css, "}") : obj.css; // For old IE
-
-  /* istanbul ignore if  */
-
-  if (style.styleSheet) {
-    style.styleSheet.cssText = replaceText(index, css);
-  } else {
-    var cssNode = document.createTextNode(css);
-    var childNodes = style.childNodes;
-
-    if (childNodes[index]) {
-      style.removeChild(childNodes[index]);
-    }
-
-    if (childNodes.length) {
-      style.insertBefore(cssNode, childNodes[index]);
-    } else {
-      style.appendChild(cssNode);
-    }
-  }
-}
-
-function applyToTag(style, options, obj) {
-  var css = obj.css;
-  var media = obj.media;
-  var sourceMap = obj.sourceMap;
-
-  if (media) {
-    style.setAttribute('media', media);
-  } else {
-    style.removeAttribute('media');
-  }
-
-  if (sourceMap && typeof btoa !== 'undefined') {
-    css += "\n/*# sourceMappingURL=data:application/json;base64,".concat(btoa(unescape(encodeURIComponent(JSON.stringify(sourceMap)))), " */");
-  } // For old IE
-
-  /* istanbul ignore if  */
-
-
-  if (style.styleSheet) {
-    style.styleSheet.cssText = css;
-  } else {
-    while (style.firstChild) {
-      style.removeChild(style.firstChild);
-    }
-
-    style.appendChild(document.createTextNode(css));
-  }
-}
-
-var singleton = null;
-var singletonCounter = 0;
-
-function addStyle(obj, options) {
-  var style;
-  var update;
-  var remove;
-
-  if (options.singleton) {
-    var styleIndex = singletonCounter++;
-    style = singleton || (singleton = insertStyleElement(options));
-    update = applyToSingletonTag.bind(null, style, styleIndex, false);
-    remove = applyToSingletonTag.bind(null, style, styleIndex, true);
-  } else {
-    style = insertStyleElement(options);
-    update = applyToTag.bind(null, style, options);
-
-    remove = function remove() {
-      removeStyleElement(style);
-    };
-  }
-
-  update(obj);
-  return function updateStyle(newObj) {
-    if (newObj) {
-      if (newObj.css === obj.css && newObj.media === obj.media && newObj.sourceMap === obj.sourceMap) {
-        return;
-      }
-
-      update(obj = newObj);
-    } else {
-      remove();
-    }
-  };
-}
-
-module.exports = function (list, options) {
-  options = options || {}; // Force single-tag solution on IE6-9, which has a hard limit on the # of <style>
-  // tags it will allow on a page
-
-  if (!options.singleton && typeof options.singleton !== 'boolean') {
-    options.singleton = isOldIE();
-  }
-
-  list = list || [];
-  var lastIdentifiers = modulesToDom(list, options);
-  return function update(newList) {
-    newList = newList || [];
-
-    if (Object.prototype.toString.call(newList) !== '[object Array]') {
-      return;
-    }
-
-    for (var i = 0; i < lastIdentifiers.length; i++) {
-      var identifier = lastIdentifiers[i];
-      var index = getIndexByIdentifier(identifier);
-      stylesInDom[index].references--;
-    }
-
-    var newLastIdentifiers = modulesToDom(newList, options);
-
-    for (var _i = 0; _i < lastIdentifiers.length; _i++) {
-      var _identifier = lastIdentifiers[_i];
-
-      var _index = getIndexByIdentifier(_identifier);
-
-      if (stylesInDom[_index].references === 0) {
-        stylesInDom[_index].updater();
-
-        stylesInDom.splice(_index, 1);
-      }
-    }
-
-    lastIdentifiers = newLastIdentifiers;
-  };
-};
-
-/***/ }),
-
-/***/ 56:
+/***/ 55:
 /***/ (function(module, exports, __webpack_require__) {
 
 /* WEBPACK VAR INJECTION */(function(global) {var scope = (typeof global !== "undefined" && global) ||
@@ -11479,11 +11686,11 @@ exports.clearImmediate = (typeof self !== "undefined" && self.clearImmediate) ||
                          (typeof global !== "undefined" && global.clearImmediate) ||
                          (this && this.clearImmediate);
 
-/* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(2)))
+/* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(1)))
 
 /***/ }),
 
-/***/ 58:
+/***/ 57:
 /***/ (function(module, exports, __webpack_require__) {
 
 /* WEBPACK VAR INJECTION */(function(setImmediate) {/**
@@ -14057,6 +14264,12 @@ var directiveParsers = {
         };
     },
 
+    'is': function (value) {
+        return {
+            value: parseExpr(value.replace(/(^\{\{|\}\}$)/g, ''))
+        };
+    },
+
     'transition': function (value) {
         return {
             value: parseCall(value)
@@ -14192,20 +14405,18 @@ function integrateAttr(aNode, name, value, options) {
  */
 function integrateProp(aNode, name, rawValue, options) {
     // parse two way binding, e.g. value="{=ident=}"
-    var value = rawValue || '';
-    var xMatch = value.match(/^\{=\s*(.*?)\s*=\}$/);
-
-    if (xMatch) {
+    if (rawValue && rawValue.indexOf('{=') === 0 && rawValue.slice(-2) === '=}') {
         aNode.props.push({
             name: name,
-            expr: parseExpr(xMatch[1]),
+            expr: parseExpr(rawValue.slice(2, -2)),
             x: 1
         });
 
         return;
     }
 
-    var expr = parseText(value, options.delimiters);
+    var expr = parseText(rawValue || '', options.delimiters);
+
     if (expr.value === '') {
         if (boolAttrs[name]) {
             expr = {
@@ -15246,7 +15457,8 @@ var NodeType = {
     CMPT: 5,
     SLOT: 6,
     TPL: 7,
-    LOADER: 8
+    LOADER: 8,
+    IS: 9
 };
 
 // exports = module.exports = NodeType;
@@ -15353,6 +15565,7 @@ function boolPropHandler(el, value, name) {
 // #[begin] allua
 // see https://github.com/baidu/san/issues/495
 function placeholderHandler(el, value, name, element) {
+    /* istanbul ignore if */
     if (ie > 9 && !el.value && value) {
         element.__bkph = true;
         nextTick(function () {
@@ -16872,14 +17085,12 @@ AsyncComponent.prototype._update = function (changes) {
  * @param {DOMChildrenWalker} reverseWalker 子元素遍历对象
  * @return {Node}
  */
-function createReverseNode(aNode, parent, scope, owner, reverseWalker) {
+function createReverseNode(aNode, parent, scope, owner, reverseWalker, componentName) {
     if (aNode.Clazz) {
         return new aNode.Clazz(aNode, parent, scope, owner, reverseWalker);
     }
 
-    var ComponentOrLoader = owner.getComponentType
-        ? owner.getComponentType(aNode, scope)
-        : owner.components[aNode.tagName];
+    var ComponentOrLoader = owner.components[componentName || aNode.tagName];
 
     if (ComponentOrLoader) {
         return typeof ComponentOrLoader === 'function'
@@ -16955,6 +17166,7 @@ function reverseElementChildren(element, scope, owner) {
  * @file 创建节点的工厂方法
  */
 
+// var evalExpr = require('../runtime/eval-expr');
 // var Element = require('./element');
 // var AsyncComponent = require('./async-component');
 
@@ -16968,14 +17180,12 @@ function reverseElementChildren(element, scope, owner) {
  * @param {Component} owner 所属组件环境
  * @return {Node}
  */
-function createNode(aNode, parent, scope, owner) {
+function createNode(aNode, parent, scope, owner, componentName) {
     if (aNode.Clazz) {
         return new aNode.Clazz(aNode, parent, scope, owner);
     }
 
-    var ComponentOrLoader = owner.getComponentType
-        ? owner.getComponentType(aNode, scope)
-        : owner.components[aNode.tagName];
+    var ComponentOrLoader = owner.components[componentName || aNode.tagName];
 
     if (ComponentOrLoader) {
         return typeof ComponentOrLoader === 'function'
@@ -17293,6 +17503,7 @@ function getXPropOutputer(element, xProp, data) {
 function getInputXPropOutputer(element, xProp, data) {
     return function () {
         // #[begin] allua
+        /* istanbul ignore if */
         if (element.__bkph) {
             element.__bkph = false;
             return;
@@ -17566,10 +17777,6 @@ function nodeSBindUpdate(sBind, oldBindData, scope, owner, changes, updater) {
         while (len--) {
             if (changeExprCompare(changes[len].expr, sBind.value, scope)) {
                 var newBindData = evalExpr(sBind.value, scope, owner);
-                if (newBindData === oldBindData) {
-                    return oldBindData;
-                }
-
                 var keys = unionKeys(newBindData, oldBindData);
 
                 for (var i = 0, l = keys.length; i < l; i++) {
@@ -17960,6 +18167,7 @@ function unpackANode(packed) {
             case 42:
             case 43:
             case 44:
+            case 45:
                 node = {};
                 state = -2;
                 break;
@@ -18042,6 +18250,10 @@ function unpackANode(packed) {
 
                             case 44:
                                 current.directives.transition = node;
+                                break;
+
+                            case 45:
+                                current.directives.is = node;
                                 break;
 
                             case 1:
@@ -18145,7 +18357,7 @@ function unpackANode(packed) {
                     }
                     break;
 
-                // Directive: for, if, elif, ref, bind, html, transition
+                // Directive: for, if, elif, ref, bind, html, transition, is
                 case 37:
                 case 38:
                 case 39:
@@ -18153,6 +18365,7 @@ function unpackANode(packed) {
                 case 42:
                 case 43:
                 case 44:
+                case 45:
                     current.value = node;
                     stackIndex--;
                     break;
@@ -18300,6 +18513,13 @@ function Component(options) { // eslint-disable-line
         this.transition = options.transition;
     }
 
+
+    this.id = guid++;
+
+    // #[begin] devtool
+    this._toPhase('beforeCompile');
+    // #[end]
+
     var proto = clazz.prototype;
 
     // pre define components class
@@ -18364,8 +18584,6 @@ function Component(options) { // eslint-disable-line
         this.parentComponent = this.owner;
         this.scope = this.owner.data;
     }
-
-    this.id = guid++;
 
     // #[begin] reverse
     // 组件反解，读取注入的组件数据
@@ -18437,6 +18655,11 @@ function Component(options) { // eslint-disable-line
 
     this._toPhase('compiled');
 
+
+    // #[begin] devtool
+    this._toPhase('beforeInit');
+    // #[end]
+
     // init data
     var initData = extend(
         typeof this.initData === 'function' && this.initData() || {},
@@ -18495,9 +18718,7 @@ function Component(options) { // eslint-disable-line
     // #[begin] reverse
     var reverseWalker = options.reverseWalker;
     if (this.el || reverseWalker) {
-        var RootComponentType = this.getComponentType
-            ? this.getComponentType(this.aNode, this.data)
-            : this.components[this.aNode.tagName];
+        var RootComponentType = this.components[this.aNode.tagName];
 
         if (reverseWalker && (this.aNode.hotspot.hasRootNode || RootComponentType)) {
             this._rootNode = createReverseNode(this.aNode, this, this.data, this, reverseWalker);
@@ -18657,11 +18878,11 @@ Component.prototype.fire = function (name, event) {
     var me = this;
     // #[begin] devtool
     emitDevtool('comp-event', {
-        name: name, 
-        event: event, 
+        name: name,
+        event: event,
         target: this
     });
-    // #[end] 
+    // #[end]
 
     each(this.listeners[name], function (listener) {
         listener.fn.call(me, event);
@@ -18724,7 +18945,7 @@ Component.prototype.dispatch = function (name, value) {
             // #[begin] devtool
             emitDevtool('comp-message', {
                 target: this,
-                value: value, 
+                value: value,
                 name: name,
                 receiver: parentComponent
             });
@@ -18742,7 +18963,7 @@ Component.prototype.dispatch = function (name, value) {
 
     // #[begin] devtool
     emitDevtool('comp-message', {target: this, value: value, name: name});
-    // #[end]    
+    // #[end]
 };
 
 /**
@@ -18945,6 +19166,10 @@ Component.prototype._update = function (changes) {
 
     var dataChanges = this._dataChanges;
     if (dataChanges) {
+        // #[begin] devtool
+        this._toPhase('beforeUpdate');
+        // #[end]
+
         this._dataChanges = null;
 
         this._sbindData = nodeSBindUpdate(
@@ -19130,13 +19355,15 @@ Component.prototype._getElAsRootNode = function () {
  */
 Component.prototype.attach = function (parentEl, beforeEl) {
     if (!this.lifeCycle.attached) {
-        var hasRootNode = this.aNode.hotspot.hasRootNode
-            || (this.getComponentType
-                ? this.getComponentType(this.aNode, this.data)
-                : this.components[this.aNode.tagName]
-            );
+        // #[begin] devtool
+        this._toPhase('beforeAttach');
+        // #[end]
 
-        if (hasRootNode) {
+
+        if (this.aNode.hotspot.hasRootNode || this.components[this.aNode.tagName]) {
+            // #[begin] devtool
+            this._toPhase('beforeCreate');
+            // #[end]
             this._rootNode = this._rootNode || createNode(this.aNode, this, this.data, this);
             this._rootNode.attach(parentEl, beforeEl);
             this._rootNode._getElAsRootNode && (this.el = this._rootNode._getElAsRootNode());
@@ -19144,6 +19371,10 @@ Component.prototype.attach = function (parentEl, beforeEl) {
         }
         else {
             if (!this.el) {
+                // #[begin] devtool
+                this._toPhase('beforeCreate');
+                // #[end]
+
                 var sourceNode = this.aNode.hotspot.sourceNode;
                 var props = this.aNode.props;
 
@@ -19214,6 +19445,9 @@ Component.prototype._attached = elementOwnAttached;
 Component.prototype._leave = function () {
     if (this.leaveDispose) {
         if (!this.lifeCycle.disposed) {
+            // #[begin] devtool
+            this._toPhase('beforeDetach');
+            // #[end]
             this.data.unlisten();
             this.dataChanger = null;
             this._dataChanges = null;
@@ -19266,6 +19500,10 @@ Component.prototype._leave = function () {
 
             this._toPhase('detached');
 
+            // #[begin] devtool
+            this._toPhase('beforeDispose');
+            // #[end]
+
             this._rootNode = null;
             this.el = null;
             this.owner = null;
@@ -19280,6 +19518,10 @@ Component.prototype._leave = function () {
         }
     }
     else if (this.lifeCycle.attached) {
+        // #[begin] devtool
+        this._toPhase('beforeDetach');
+        // #[end]
+
         if (this._rootNode) {
             if (this._rootNode.detach) {
                 this._rootNode.detach();
@@ -19878,7 +20120,6 @@ function nodeOwnOnlyChildrenAttach(parentEl, beforeEl) {
 // var Data = require('../runtime/data');
 // var DataChangeType = require('../runtime/data-change-type');
 // var changeExprCompare = require('../runtime/change-expr-compare');
-// var insertBefore = require('../browser/insert-before');
 // var removeEl = require('../browser/remove-el');
 // var NodeType = require('./node-type');
 // var LifeCycle = require('./life-cycle');
@@ -21228,6 +21469,108 @@ IfNode.prototype._getElAsRootNode = function () {
  * This source code is licensed under the MIT license.
  * See LICENSE file in the project root for license information.
  *
+ * @file is 指令节点类
+ */
+
+// var guid = require('../util/guid');
+// var evalExpr = require('../runtime/eval-expr');
+// var NodeType = require('./node-type');
+// var createNode = require('./create-node');
+// var createReverseNode = require('./create-reverse-node');
+// var nodeOwnSimpleDispose = require('./node-own-simple-dispose');
+
+/**
+ * is 指令节点类
+ *
+ * @class
+ * @param {Object} aNode 抽象节点
+ * @param {Node} parent 父亲节点
+ * @param {Model} scope 所属数据环境
+ * @param {Component} owner 所属组件环境
+ * @param {DOMChildrenWalker?} reverseWalker 子元素遍历对象
+ */
+function IsNode(aNode, parent, scope, owner, reverseWalker) {
+    this.aNode = aNode;
+    this.owner = owner;
+    this.scope = scope;
+    this.parent = parent;
+    this.parentComponent = parent.nodeType === 5
+        ? parent
+        : parent.parentComponent;
+
+    this.id = guid++;
+    this.children = [];
+    this.tagName = this.aNode.tagName;
+    // #[begin] reverse
+    if (reverseWalker) {
+        this.cmpt = evalExpr(this.aNode.directives.is.value, this.scope) || this.tagName;
+        this.children[0] = createReverseNode(
+            this.aNode.isRinsed,
+            this,
+            this.scope,
+            this.owner,
+            reverseWalker,
+            this.cmpt
+        );
+    }
+    // #[end]
+}
+
+IsNode.prototype.nodeType = 9;
+
+IsNode.prototype.dispose = nodeOwnSimpleDispose;
+
+/**
+ * attach到页面
+ *
+ * @param {HTMLElement} parentEl 要添加到的父元素
+ * @param {HTMLElement＝} beforeEl 要添加到哪个元素之前
+ */
+IsNode.prototype.attach = function (parentEl, beforeEl) {
+    this.cmpt = evalExpr(this.aNode.directives.is.value, this.scope) || this.tagName;
+
+    var child = createNode(this.aNode.isRinsed, this, this.scope, this.owner, this.cmpt);
+    this.children[0] = child;
+    child.attach(parentEl, beforeEl);
+};
+
+/**
+ * 视图更新函数
+ *
+ * @param {Array} changes 数据变化信息
+ */
+IsNode.prototype._update = function (changes) {
+    var childANode = this.aNode.isRinsed;
+    var child = this.children[0];
+    var cmpt = evalExpr(this.aNode.directives.is.value, this.scope) || this.tagName;
+
+    if (cmpt === this.cmpt) {
+        child._update(changes);
+    }
+    else {
+        this.cmpt = cmpt;
+        var newChild = createNode(childANode, this, this.scope, this.owner, this.cmpt);
+        var el = child.el;
+        newChild.attach(el.parentNode, el);
+
+        child.dispose();
+        this.children[0] = newChild;
+    }
+};
+
+IsNode.prototype._getElAsRootNode = function () {
+    return this.children[0].el;
+};
+
+// exports = module.exports = IsNode;
+
+
+/**
+ * Copyright (c) Baidu Inc. All rights reserved.
+ *
+ * This source code is licensed under the MIT license.
+ * See LICENSE file in the project root for license information.
+ *
  * @file template 节点类
  */
 
@@ -21370,6 +21713,7 @@ TemplateNode.prototype._update = function (changes) {
 // var SlotNode = require('./slot-node');
 // var ForNode = require('./for-node');
 // var IfNode = require('./if-node');
+// var IsNode = require('./is-node');
 // var TemplateNode = require('./template-node');
 // var Element = require('./element');
 
@@ -21523,12 +21867,11 @@ function preheatANode(aNode, componentInstance) {
                         tagName: aNode.tagName,
                         vars: aNode.vars,
                         hotspot: aNode.hotspot,
-                        directives: extend({}, aNode.directives)
+                        directives: aNode.directives
                     };
                     aNode.hotspot.hasRootNode = true;
                     aNode.Clazz = IfNode;
                     aNode = aNode.ifRinsed;
-                    aNode.directives['if'] = null; // eslint-disable-line dot-notation
                 }
 
                 if (aNode.directives['for']) { // eslint-disable-line dot-notation
@@ -21539,12 +21882,26 @@ function preheatANode(aNode, componentInstance) {
                         tagName: aNode.tagName,
                         vars: aNode.vars,
                         hotspot: aNode.hotspot,
-                        directives: extend({}, aNode.directives)
+                        directives: aNode.directives
                     };
                     aNode.hotspot.hasRootNode = true;
                     aNode.Clazz = ForNode;
-                    aNode.forRinsed.directives['for'] = null; // eslint-disable-line dot-notation
                     aNode = aNode.forRinsed;
+                }
+
+                if (aNode.directives.is) {
+                    aNode.isRinsed = {
+                        children: aNode.children,
+                        props: aNode.props,
+                        events: aNode.events,
+                        tagName: aNode.tagName,
+                        vars: aNode.vars,
+                        hotspot: aNode.hotspot,
+                        directives: aNode.directives
+                    };
+                    aNode.hotspot.hasRootNode = true;
+                    aNode.Clazz = IsNode;
+                    aNode = aNode.isRinsed;
                 }
 
                 switch (aNode.tagName) {
@@ -21560,17 +21917,15 @@ function preheatANode(aNode, componentInstance) {
 
                     default:
                         if (hotTags[aNode.tagName]) {
-                            if (!componentInstance 
-                                || !(componentInstance.getComponentType || componentInstance.components[aNode.tagName])
+                            if (!aNode.directives.is
+                                && (!componentInstance || !componentInstance.components[aNode.tagName])
                             ) {
                                 aNode.Clazz = Element;
                             }
 
                             // #[begin] error
-                            if (componentInstance) {
-                                if (componentInstance.components[aNode.tagName]) {
-                                    warn('\`' + aNode.tagName + '\` as sub-component tag is a bad practice.');
-                                }
+                            if (componentInstance && componentInstance.components[aNode.tagName]) {
+                                warn('\`' + aNode.tagName + '\` as sub-component tag is a bad practice.');
                             }
                             // #[end]
                         }
@@ -21716,7 +22071,7 @@ function createComponentLoader(options) {
          *
          * @type {string}
          */
-        version: '3.9.5',
+        version: '3.10.1',
 
         // #[begin] devtool
         /**
@@ -21861,11 +22216,287 @@ function createComponentLoader(options) {
     // #[end]
 })(this);
 //@ sourceMappingURL=san.dev.js.map
-/* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(56).setImmediate))
+/* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(55).setImmediate))
 
 /***/ }),
 
 /***/ 6:
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+var isOldIE = function isOldIE() {
+  var memo;
+  return function memorize() {
+    if (typeof memo === 'undefined') {
+      // Test for IE <= 9 as proposed by Browserhacks
+      // @see http://browserhacks.com/#hack-e71d8692f65334173fee715c222cb805
+      // Tests for existence of standard globals is to allow style-loader
+      // to operate correctly into non-standard environments
+      // @see https://github.com/webpack-contrib/style-loader/issues/177
+      memo = Boolean(window && document && document.all && !window.atob);
+    }
+
+    return memo;
+  };
+}();
+
+var getTarget = function getTarget() {
+  var memo = {};
+  return function memorize(target) {
+    if (typeof memo[target] === 'undefined') {
+      var styleTarget = document.querySelector(target); // Special case to return head of iframe instead of iframe itself
+
+      if (window.HTMLIFrameElement && styleTarget instanceof window.HTMLIFrameElement) {
+        try {
+          // This will throw an exception if access to iframe is blocked
+          // due to cross-origin restrictions
+          styleTarget = styleTarget.contentDocument.head;
+        } catch (e) {
+          // istanbul ignore next
+          styleTarget = null;
+        }
+      }
+
+      memo[target] = styleTarget;
+    }
+
+    return memo[target];
+  };
+}();
+
+var stylesInDom = [];
+
+function getIndexByIdentifier(identifier) {
+  var result = -1;
+
+  for (var i = 0; i < stylesInDom.length; i++) {
+    if (stylesInDom[i].identifier === identifier) {
+      result = i;
+      break;
+    }
+  }
+
+  return result;
+}
+
+function modulesToDom(list, options) {
+  var idCountMap = {};
+  var identifiers = [];
+
+  for (var i = 0; i < list.length; i++) {
+    var item = list[i];
+    var id = options.base ? item[0] + options.base : item[0];
+    var count = idCountMap[id] || 0;
+    var identifier = "".concat(id, " ").concat(count);
+    idCountMap[id] = count + 1;
+    var index = getIndexByIdentifier(identifier);
+    var obj = {
+      css: item[1],
+      media: item[2],
+      sourceMap: item[3]
+    };
+
+    if (index !== -1) {
+      stylesInDom[index].references++;
+      stylesInDom[index].updater(obj);
+    } else {
+      stylesInDom.push({
+        identifier: identifier,
+        updater: addStyle(obj, options),
+        references: 1
+      });
+    }
+
+    identifiers.push(identifier);
+  }
+
+  return identifiers;
+}
+
+function insertStyleElement(options) {
+  var style = document.createElement('style');
+  var attributes = options.attributes || {};
+
+  if (typeof attributes.nonce === 'undefined') {
+    var nonce =  true ? __webpack_require__.nc : undefined;
+
+    if (nonce) {
+      attributes.nonce = nonce;
+    }
+  }
+
+  Object.keys(attributes).forEach(function (key) {
+    style.setAttribute(key, attributes[key]);
+  });
+
+  if (typeof options.insert === 'function') {
+    options.insert(style);
+  } else {
+    var target = getTarget(options.insert || 'head');
+
+    if (!target) {
+      throw new Error("Couldn't find a style target. This probably means that the value for the 'insert' parameter is invalid.");
+    }
+
+    target.appendChild(style);
+  }
+
+  return style;
+}
+
+function removeStyleElement(style) {
+  // istanbul ignore if
+  if (style.parentNode === null) {
+    return false;
+  }
+
+  style.parentNode.removeChild(style);
+}
+/* istanbul ignore next  */
+
+
+var replaceText = function replaceText() {
+  var textStore = [];
+  return function replace(index, replacement) {
+    textStore[index] = replacement;
+    return textStore.filter(Boolean).join('\n');
+  };
+}();
+
+function applyToSingletonTag(style, index, remove, obj) {
+  var css = remove ? '' : obj.media ? "@media ".concat(obj.media, " {").concat(obj.css, "}") : obj.css; // For old IE
+
+  /* istanbul ignore if  */
+
+  if (style.styleSheet) {
+    style.styleSheet.cssText = replaceText(index, css);
+  } else {
+    var cssNode = document.createTextNode(css);
+    var childNodes = style.childNodes;
+
+    if (childNodes[index]) {
+      style.removeChild(childNodes[index]);
+    }
+
+    if (childNodes.length) {
+      style.insertBefore(cssNode, childNodes[index]);
+    } else {
+      style.appendChild(cssNode);
+    }
+  }
+}
+
+function applyToTag(style, options, obj) {
+  var css = obj.css;
+  var media = obj.media;
+  var sourceMap = obj.sourceMap;
+
+  if (media) {
+    style.setAttribute('media', media);
+  } else {
+    style.removeAttribute('media');
+  }
+
+  if (sourceMap && typeof btoa !== 'undefined') {
+    css += "\n/*# sourceMappingURL=data:application/json;base64,".concat(btoa(unescape(encodeURIComponent(JSON.stringify(sourceMap)))), " */");
+  } // For old IE
+
+  /* istanbul ignore if  */
+
+
+  if (style.styleSheet) {
+    style.styleSheet.cssText = css;
+  } else {
+    while (style.firstChild) {
+      style.removeChild(style.firstChild);
+    }
+
+    style.appendChild(document.createTextNode(css));
+  }
+}
+
+var singleton = null;
+var singletonCounter = 0;
+
+function addStyle(obj, options) {
+  var style;
+  var update;
+  var remove;
+
+  if (options.singleton) {
+    var styleIndex = singletonCounter++;
+    style = singleton || (singleton = insertStyleElement(options));
+    update = applyToSingletonTag.bind(null, style, styleIndex, false);
+    remove = applyToSingletonTag.bind(null, style, styleIndex, true);
+  } else {
+    style = insertStyleElement(options);
+    update = applyToTag.bind(null, style, options);
+
+    remove = function remove() {
+      removeStyleElement(style);
+    };
+  }
+
+  update(obj);
+  return function updateStyle(newObj) {
+    if (newObj) {
+      if (newObj.css === obj.css && newObj.media === obj.media && newObj.sourceMap === obj.sourceMap) {
+        return;
+      }
+
+      update(obj = newObj);
+    } else {
+      remove();
+    }
+  };
+}
+
+module.exports = function (list, options) {
+  options = options || {}; // Force single-tag solution on IE6-9, which has a hard limit on the # of <style>
+  // tags it will allow on a page
+
+  if (!options.singleton && typeof options.singleton !== 'boolean') {
+    options.singleton = isOldIE();
+  }
+
+  list = list || [];
+  var lastIdentifiers = modulesToDom(list, options);
+  return function update(newList) {
+    newList = newList || [];
+
+    if (Object.prototype.toString.call(newList) !== '[object Array]') {
+      return;
+    }
+
+    for (var i = 0; i < lastIdentifiers.length; i++) {
+      var identifier = lastIdentifiers[i];
+      var index = getIndexByIdentifier(identifier);
+      stylesInDom[index].references--;
+    }
+
+    var newLastIdentifiers = modulesToDom(newList, options);
+
+    for (var _i = 0; _i < lastIdentifiers.length; _i++) {
+      var _identifier = lastIdentifiers[_i];
+
+      var _index = getIndexByIdentifier(_identifier);
+
+      if (stylesInDom[_index].references === 0) {
+        stylesInDom[_index].updater();
+
+        stylesInDom.splice(_index, 1);
+      }
+    }
+
+    lastIdentifiers = newLastIdentifiers;
+  };
+};
+
+/***/ }),
+
+/***/ 7:
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -21935,1310 +22566,6 @@ module.exports = function (cssWithMappingToString) {
 
   return list;
 };
-
-/***/ }),
-
-/***/ 7:
-/***/ (function(module, exports, __webpack_require__) {
-
-var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;/**
- * san-router
- * Copyright 2017 Baidu Inc. All rights reserved.
- */
-
-(function (root) {
-
-    /**
-     * 元素选择器
-     *
-     * @param {string|Element} selector 选择器
-     * @returns {Element}
-     */
-    function elementSelector(selector) {
-        switch (typeof selector) {
-            case 'object':
-                return selector;
-
-            case 'string':
-                if (document.querySelector) {
-                    return document.querySelector(selector);
-                }
-
-                return document.getElementById(selector.replace(/#/i, ''));
-        }
-    }
-
-    /**
-     * 解析URL，返回包含path、query、queryString的对象
-     *
-     * @param {string} url 要解析的url
-     * @return {Object}
-     */
-    function parseURL(url) {
-        var result = {
-            hash: '',
-            queryString: '',
-            params: {},
-            query: {},
-            path: url
-        };
-
-        // parse hash
-        var hashStart = result.path.indexOf('#');
-        if (hashStart >= 0) {
-            result.hash = result.path.slice(hashStart + 1);
-            result.path = result.path.slice(0, hashStart);
-        }
-
-        // parse query
-        var query = result.query;
-        var queryStart = result.path.indexOf('?');
-        if (queryStart >= 0) {
-            result.queryString = result.path.slice(queryStart + 1);
-            result.path = result.path.slice(0, queryStart);
-
-            var querySegs = result.queryString.split('&');
-            for (var i = 0; i < querySegs.length; i++) {
-                var querySeg = querySegs[i];
-
-                // 考虑到有可能因为未处理转义问题，
-                // 导致value中存在**=**字符，因此不使用`split`函数
-                var equalIndex = querySeg.indexOf('=');
-                var value = '';
-                if (equalIndex > 0) {
-                    value = querySeg.slice(equalIndex + 1);
-                    querySeg = querySeg.slice(0, equalIndex);
-                }
-
-                var key = decodeURIComponent(querySeg);
-                value = decodeURIComponent(value);
-
-                // 已经存在这个参数，且新的值不为空时，把原来的值变成数组
-                if (query.hasOwnProperty(key)) {
-                    /* eslint-disable */
-                    query[key] = [].concat(query[key], value);
-                    /* eslint-disable */
-                }
-                else {
-                    query[key] = value;
-                }
-            }
-
-        }
-
-        return result;
-    }
-
-    /**
-     * 将 URL 中相对路径部分展开
-     *
-     * @param {string} source 要展开的url
-     * @param {string} base 当前所属环境的url
-     * @return {string}
-     */
-    function resolveURL(source, base) {
-        var sourceLoc = parseURL(source);
-        var baseLoc = parseURL(base);
-
-        var sourcePath = sourceLoc.path;
-        if (sourcePath.indexOf('/') === 0) {
-            return source;
-        }
-
-        var sourceSegs = sourcePath.split('/');
-        var baseSegs = baseLoc.path.split('/');
-        baseSegs.pop();
-
-        for (var i = 0; i < sourceSegs.length; i++) {
-            var seg = sourceSegs[i];
-            switch (seg) {
-                case '..':
-                    baseSegs.pop();
-                    break;
-                case '.':
-                    break;
-                default:
-                    baseSegs.push(seg);
-            }
-        }
-
-        if (baseSegs[0] !== '') {
-            baseSegs.unshift('');
-        }
-
-        return baseSegs.join('/')
-            + (sourceLoc.queryString ? '?' + sourceLoc.queryString : '');
-    }
-
-    function EventTarget() {
-    }
-
-    /**
-     * 注册一个事件处理函数
-     *
-     * @param {string} type 事件的类型
-     * @param {Function | boolean} fn 事件的处理函数
-     */
-    EventTarget.prototype.on = function (type, fn) {
-        if (typeof fn !== 'function') {
-            return;
-        }
-
-        if (!this._eventListeners) {
-            this._eventListeners = {};
-        }
-
-        if (!this._eventListeners[type]) {
-            this._eventListeners[type] = [];
-        }
-
-        this._eventListeners[type].push(fn);
-    };
-
-
-    /**
-     * 注销一个事件处理函数
-     *
-     * @param {string} type 事件的类型，如果值为`*`仅会注销通过`*`为类型注册的事件，并不会将所有事件注销
-     * @param {Function} [fn] 事件的处理函数，无此参数则注销`type`指定类型的所有事件处理函数
-     */
-    EventTarget.prototype.un = function (type, fn) {
-        if (!this._eventListeners || !this._eventListeners[type]) {
-            return;
-        }
-
-        if (!fn) {
-            this._eventListeners[type] = [];
-        }
-        else {
-            var listeners = this._eventListeners[type];
-            var len = listeners.length;
-
-            while (len--) {
-                if (listeners[len] === fn) {
-                    listeners.splice(len, 1);
-                }
-            }
-        }
-    };
-
-    /**
-     * 触发指定类型的事件
-     *
-     * @param {string} type 事件类型
-     * @param {*} [args] 事件对象
-     */
-    EventTarget.prototype.fire = function (type, args) {
-        if (!type) {
-            throw new Error('No event type specified');
-        }
-
-        var listeners = this._eventListeners && this._eventListeners[type];
-        if (listeners) {
-            for (var i = 0; i < listeners.length; i++) {
-                listeners[i](args);
-            }
-        }
-    };
-
-    /**
-     * 获取hash当前URL
-     *
-     * @return {string}
-     */
-    function getHashLocation() {
-        // Firefox下`location.hash`存在自动解码的情况，
-        // 比如hash的值是**abc%3def**，
-        // 在Firefox下获取会成为**abc=def**
-        // 为了避免这一情况，需要从`location.href`中分解
-        var index = location.href.indexOf('#');
-        var url = index < 0 ? '/' : (location.href.slice(index + 1) || '/');
-
-        return url;
-    }
-
-    /**
-     * hash 模式地址监听器
-     *
-     * @class
-     */
-    function HashLocator() {
-        this.current = getHashLocation();
-        this.referrer = '';
-
-        var me = this;
-        this.hashChangeHandler = function () {
-            me.redirect(getHashLocation());
-        };
-    }
-
-    HashLocator.prototype = new EventTarget();
-    HashLocator.prototype.constructor = HashLocator;
-
-    /**
-     * 开始监听 url 变化
-     */
-    HashLocator.prototype.start = function () {
-        if (window.addEventListener) {
-            window.addEventListener('hashchange', this.hashChangeHandler, false);
-        }
-
-        if (window.attachEvent) {
-            window.attachEvent('onhashchange', this.hashChangeHandler);
-        }
-    };
-
-    /**
-     * 停止监听
-     */
-    HashLocator.prototype.stop = function () {
-        if (window.removeEventListener) {
-            window.removeEventListener('hashchange', this.hashChangeHandler, false);
-        }
-
-        if (window.detachEvent) {
-            window.detachEvent('onhashchange', this.hashChangeHandler);
-        }
-    };
-
-    /**
-     * 重定向
-     *
-     * @param {string} url 重定向的地址
-     * @param {Object?} options 重定向的行为配置
-     * @param {boolean?} options.force 是否强制刷新
-     */
-    HashLocator.prototype.redirect = function (url, options) {
-        options = options || {};
-
-        url = resolveURL(url, this.current);
-        var referrer = this.current;
-
-        var isChanged = url !== referrer;
-        if (isChanged) {
-            this.referrer = referrer;
-            this.current = url;
-            location.hash = url;
-        }
-        else {
-            referrer = this.referrer;
-        }
-
-        if ((isChanged || options.force) && !options.silent) {
-            this.fire('redirect', {url: url, referrer: referrer});
-        }
-    };
-
-
-    /**
-     * 刷新当前 url
-     */
-    HashLocator.prototype.reload = function () {
-        this.redirect(this.current, {force: true});
-    };
-
-    /**
-     * 获取当前URL
-     *
-     * @return {string}
-     */
-    function getLocation() {
-        return location.pathname + location.search;
-    }
-
-    /**
-     * html5 模式地址监听器
-     *
-     * @class
-     */
-    function HTML5Locator() {
-        this.current = getLocation();
-        this.referrer = '';
-
-        var me = this;
-
-        this.popstateHandler = function () {
-            me.referrer = me.current;
-            me.current = getLocation();
-
-            me.fire('redirect', {
-                url: me.current,
-                referrer: me.referrer
-            });
-        };
-    }
-
-    HTML5Locator.prototype = new EventTarget();
-    HTML5Locator.prototype.constructor = HashLocator;
-
-    /**
-     * 开始监听 url 变化
-     */
-    HTML5Locator.prototype.start = function () {
-        window.addEventListener('popstate', this.popstateHandler);
-    };
-
-    /**
-     * 停止监听
-     */
-    HTML5Locator.prototype.stop = function () {
-        window.removeEventListener('popstate', this.popstateHandler);
-    };
-
-    /**
-     * 重定向
-     *
-     * @param {string} url 重定向的地址
-     * @param {Object?} options 重定向的行为配置
-     * @param {boolean?} options.force 是否强制刷新
-     */
-    HTML5Locator.prototype.redirect = function (url, options) {
-        options = options || {};
-
-        url = resolveURL(url, this.current);
-        var referrer = this.current;
-
-        var isChanged = url !== referrer;
-
-        if (isChanged) {
-            this.referrer = referrer;
-            this.current = url;
-
-            history.pushState({}, '', url);
-        }
-
-        if ((isChanged || options.force) && !options.silent) {
-            this.fire('redirect', {url: url, referrer: referrer});
-        }
-    };
-
-    /**
-     * 刷新当前 url
-     */
-    HTML5Locator.prototype.reload = function () {
-        this.fire('redirect', {
-            url: this.current,
-            referrer: this.referrer
-        });
-    };
-
-    HTML5Locator.isSupport = 'pushState' in window.history;
-
-
-
-
-    var routeID = 0x5942b;
-    function guid() {
-        return (++routeID).toString();
-    }
-
-    function isComponent(C) {
-        return C.prototype && (C.prototype.nodeType === 5 || C.prototype._type === 'san-cmpt');
-    }
-
-    /**
-     * 获取 router 的 locator redirect 事件监听函数
-     *
-     * @return {Function}
-     */
-    function getLocatorRedirectHandler(router) {
-        return function (e) {
-            var url = parseURL(e.url);
-            var routeItem;
-
-            for (var i = 0; i < router.routes.length; i++) {
-                var item = router.routes[i];
-                var match = item.rule.exec(url.path);
-
-                if (match) {
-                    routeItem = item;
-
-                    // fill params
-                    var keys = item.keys || [];
-                    for (var j = 1; j < match.length; j++) {
-                        var key = keys[j] || j;
-                        var value = match[j];
-                        url.query[key] = value;
-                        url.params[key] = value;
-                    }
-
-                    // fill referrer
-                    url.referrer = e.referrer;
-                    url.config = item.config;
-
-                    break;
-                }
-            }
-
-            var i = 0;
-            var state = 1;
-
-            /**
-             * listener 事件对象
-             *
-             * @type {Object}
-             */
-            var listenerEvent = {
-                url: e.url,
-                hash: url.hash,
-                queryString: url.queryString,
-                query: url.query,
-                path: url.path,
-                referrer: url.referrer,
-                config: url.config,
-                resume: next,
-                suspend: function () {
-                    state = 0;
-                },
-                stop: function () {
-                    state = -1;
-                }
-            };
-
-            /**
-             * 尝试运行下一个listener
-             *
-             * @inner
-             */
-            function doNext() {
-                if (state > 0) {
-                    if (i < router.listeners.length) {
-                        router.listeners[i].call(router, listenerEvent, url.config);
-                        if (state > 0) {
-                            next();
-                        }
-                    }
-                    else {
-                        routeAction();
-                    }
-                }
-            }
-
-            /**
-             * 运行下一个listener
-             *
-             * @inner
-             */
-            function next() {
-                state = 1;
-                i++;
-                doNext();
-            }
-
-            /**
-             * 运行路由行为
-             *
-             * @inner
-             */
-            function routeAction() {
-                if (routeItem) {
-                    router.doRoute(routeItem, url);
-                }
-                else {
-                    var len = router.routeAlives.length;
-                    while (len--) {
-                        router.routeAlives[len].component.dispose();
-                        router.routeAlives.splice(len, 1);
-                    }
-                }
-            };
-
-            doNext();
-
-
-        };
-    }
-
-    /**
-     * 路由器类
-     *
-     * @class
-     * @param {Object?} options 初始化参数
-     * @param {string?} options.mode 路由模式，hash | html5
-     */
-    function Router(options) {
-        options = options || {};
-        var mode = options.mode || 'hash';
-
-        this.routes = [];
-        this.routeAlives = [];
-        this.listeners = [];
-
-
-        this.locatorRedirectHandler = getLocatorRedirectHandler(this);
-        this.setMode(mode);
-    }
-
-    /**
-     * 添加路由监听器
-     *
-     * @param {function(e, config)} listener 监听器
-     */
-    Router.prototype.listen = function (listener) {
-        this.listeners.push(listener);
-    };
-
-    /**
-     * 移除路由监听器
-     *
-     * @param {Function} listener 监听器
-     */
-    Router.prototype.unlisten = function (listener) {
-        var len = this.listeners.length;
-        while (len--) {
-            if (this.listeners[len] === listener) {
-                this.listeners.splice(len, 1);
-            }
-        }
-    };
-
-    /**
-     * 启动路由功能
-     *
-     * @return {Object} san-router 实例
-     */
-    Router.prototype.start = function () {
-        if (!this.isStarted) {
-            this.isStarted = true;
-            this.locator.on('redirect', this.locatorRedirectHandler);
-            this.locator.start();
-            this.locator.reload();
-        }
-
-        return this;
-    };
-
-    /**
-     * 停止路由功能
-     *
-     * @return {Object} san-router 实例
-     */
-    Router.prototype.stop = function () {
-        this.locator.un('redirect', this.locatorRedirectHandler);
-        this.locator.stop();
-        this.isStarted = false;
-
-        return this;
-    };
-
-    /**
-     * 设置路由模式
-     *
-     * @param {string} mode 路由模式，hash | html5
-     * @return {Object} san-router 实例
-     */
-    Router.prototype.setMode = function (mode) {
-        mode = mode.toLowerCase();
-        if (this.mode === mode) {
-            return;
-        }
-
-        this.mode = mode;
-
-        var restart = false;
-        if (this.isStarted) {
-            this.stop();
-            restart = true;
-        }
-
-        switch (mode) {
-            case 'hash':
-                this.locator = new HashLocator();
-                break;
-            case 'html5':
-                this.locator = new HTML5Locator();
-        }
-
-        if (restart) {
-            this.start();
-        }
-
-        return this;
-    };
-
-    /**
-     * 执行路由
-     *
-     * @private
-     * @param {Object} routeItem 路由项
-     * @param {Object} e 路由信息
-     */
-    Router.prototype.doRoute = function (routeItem, e) {
-        var isUpdateAlive = false;
-        var len = this.routeAlives.length;
-
-        while (len--) {
-            var routeAlive = this.routeAlives[len];
-
-            if (routeAlive.id === routeItem.id) {
-                routeAlive.component.data.set('route', e);
-                routeAlive.component._callHook('route');
-                isUpdateAlive = true;
-            }
-            else {
-                routeAlive.component.dispose();
-                this.routeAlives.splice(len, 1);
-            }
-        }
-
-        if (isUpdateAlive) {
-            return;
-        }
-
-        if (routeItem.Component) {
-            if (isComponent(routeItem.Component)) {
-                this.attachCmpt(routeItem, e);
-            }
-            else {
-                var me = this;
-                routeItem.Component().then(
-                    function (Cmpt) { // eslint-disable-line
-                        if (isComponent(Cmpt)) {
-                            routeItem.Component = Cmpt;
-                        }
-                        else if (Cmpt.__esModule && isComponent(Cmpt['default'])) {
-                            routeItem.Component = Cmpt['default'];
-                        }
-                        me.attachCmpt(routeItem, e);
-                    }
-                );
-            }
-        }
-        else {
-            routeItem.handler.call(this, e);
-        }
-    };
-
-    Router.prototype.attachCmpt = function (routeItem, e) {
-        var component = new routeItem.Component();
-        component.data.set('route', e);
-        component._callHook('route');
-
-        var target = routeItem.target;
-        var targetEl = elementSelector(target);
-
-        if (!targetEl) {
-            throw new Error('[SAN-ROUTER ERROR] '
-                + 'Attach failed, target element "'
-                + routeItem.target + '" is not found.'
-            );
-        }
-
-        component.attach(targetEl);
-
-        this.routeAlives.push({
-            component: component,
-            id: routeItem.id
-        });
-    };
-
-    /**
-     * 添加路由项
-     * 当规则匹配时，路由将优先将Component渲染到target中。如果没有包含Component，则执行handler函数
-     *
-     * @private
-     * @param {Object} config 路由项配置
-     * @param {string|RegExp} config.rule 路由规则
-     * @param {Function?} config.handler 路由函数
-     * @param {Function?} config.Component 路由组件
-     * @param {string} config.target 路由组件要渲染到的目标位置
-     * @return {Object} san-router 实例
-     */
-    Router.prototype.add = function (config) {
-        var rule = config.rule;
-        var keys = [''];
-
-        if (typeof rule === 'string') {
-            // 没用path-to-regexp，暂时不提供这么多功能支持
-            var regText = rule.replace(
-                /\/:([a-z0-9_-]+)(?=\/|$)/ig,
-                function (match, key) {
-                    keys.push(key);
-                    return '/([^/\\s]+)';
-                }
-            );
-
-            rule = new RegExp('^' + regText + '$', 'i');
-        }
-
-        if (!(rule instanceof RegExp)) {
-            throw new Error('[SAN-ROUTER ERROR] Rule must be string or RegExp!');
-        }
-
-        var id = guid();
-        this.routes.push({
-            id: id,
-            rule: rule,
-            handler: config.handler,
-            keys: keys,
-            target: config.target || '#main',
-            Component: config.Component,
-            config: config
-        });
-
-        return this;
-    };
-
-    var router = new Router();
-
-    var main = {
-        /**
-         * 路由链接的 San 组件
-         */
-        Link: {
-            template: '<a href="{{hrefPrefix}}{{href}}" onclick="return false;" on-click="clicker($event)" '
-                + 'target="{{target}}" class="{{isActive ? activeClass : \'\'}}"><slot/></a>',
-
-            clicker: function (e) {
-                var href = this.data.get('href');
-
-                if (typeof href === 'string') {
-                    router.locator.redirect(href.replace(/^#/, ''));
-                }
-
-                if (e.preventDefault) {
-                    e.preventDefault();
-                }
-                else {
-                    e.returnValue = false;
-                }
-            },
-
-            inited: function () {
-                var me = this;
-                this.routeListener = function (e) {
-                    me.data.set('isActive', e.url === me.data.get('href'));
-                };
-
-                this.routeListener({url: router.locator.current});
-                router.listen(this.routeListener);
-            },
-
-            disposed: function () {
-                router.unlisten(this.routeListener);
-                this.routeListener = null;
-            },
-
-            initData: function () {
-                return {
-                    isActive: false,
-                    hrefPrefix: router.mode === 'hash' ? '#' : ''
-                };
-            },
-
-            computed: {
-                href: function () {
-                    var url = this.data.get('to') || '';
-                    return resolveURL(url, router.locator.current);
-                }
-            }
-        },
-
-        router: router,
-        Router: Router,
-        HashLocator: HashLocator,
-        HTML5Locator: HTML5Locator,
-        resolveURL: resolveURL,
-        parseURL: parseURL,
-
-        version: '1.2.2'
-    };
-
-    // For AMD
-    if (true) {
-        !(__WEBPACK_AMD_DEFINE_ARRAY__ = [], __WEBPACK_AMD_DEFINE_FACTORY__ = (main),
-				__WEBPACK_AMD_DEFINE_RESULT__ = (typeof __WEBPACK_AMD_DEFINE_FACTORY__ === 'function' ?
-				(__WEBPACK_AMD_DEFINE_FACTORY__.apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__)) : __WEBPACK_AMD_DEFINE_FACTORY__),
-				__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
-    }
-    else {}
-
-
-})(this);
-
-
-/***/ }),
-
-/***/ 9:
-/***/ (function(module, exports, __webpack_require__) {
-
-var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_RESULT__;/* NProgress, (c) 2013, 2014 Rico Sta. Cruz - http://ricostacruz.com/nprogress
- * @license MIT */
-
-;(function(root, factory) {
-
-  if (true) {
-    !(__WEBPACK_AMD_DEFINE_FACTORY__ = (factory),
-				__WEBPACK_AMD_DEFINE_RESULT__ = (typeof __WEBPACK_AMD_DEFINE_FACTORY__ === 'function' ?
-				(__WEBPACK_AMD_DEFINE_FACTORY__.call(exports, __webpack_require__, exports, module)) :
-				__WEBPACK_AMD_DEFINE_FACTORY__),
-				__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
-  } else {}
-
-})(this, function() {
-  var NProgress = {};
-
-  NProgress.version = '0.2.0';
-
-  var Settings = NProgress.settings = {
-    minimum: 0.08,
-    easing: 'ease',
-    positionUsing: '',
-    speed: 200,
-    trickle: true,
-    trickleRate: 0.02,
-    trickleSpeed: 800,
-    showSpinner: true,
-    barSelector: '[role="bar"]',
-    spinnerSelector: '[role="spinner"]',
-    parent: 'body',
-    template: '<div class="bar" role="bar"><div class="peg"></div></div><div class="spinner" role="spinner"><div class="spinner-icon"></div></div>'
-  };
-
-  /**
-   * Updates configuration.
-   *
-   *     NProgress.configure({
-   *       minimum: 0.1
-   *     });
-   */
-  NProgress.configure = function(options) {
-    var key, value;
-    for (key in options) {
-      value = options[key];
-      if (value !== undefined && options.hasOwnProperty(key)) Settings[key] = value;
-    }
-
-    return this;
-  };
-
-  /**
-   * Last number.
-   */
-
-  NProgress.status = null;
-
-  /**
-   * Sets the progress bar status, where `n` is a number from `0.0` to `1.0`.
-   *
-   *     NProgress.set(0.4);
-   *     NProgress.set(1.0);
-   */
-
-  NProgress.set = function(n) {
-    var started = NProgress.isStarted();
-
-    n = clamp(n, Settings.minimum, 1);
-    NProgress.status = (n === 1 ? null : n);
-
-    var progress = NProgress.render(!started),
-        bar      = progress.querySelector(Settings.barSelector),
-        speed    = Settings.speed,
-        ease     = Settings.easing;
-
-    progress.offsetWidth; /* Repaint */
-
-    queue(function(next) {
-      // Set positionUsing if it hasn't already been set
-      if (Settings.positionUsing === '') Settings.positionUsing = NProgress.getPositioningCSS();
-
-      // Add transition
-      css(bar, barPositionCSS(n, speed, ease));
-
-      if (n === 1) {
-        // Fade out
-        css(progress, { 
-          transition: 'none', 
-          opacity: 1 
-        });
-        progress.offsetWidth; /* Repaint */
-
-        setTimeout(function() {
-          css(progress, { 
-            transition: 'all ' + speed + 'ms linear', 
-            opacity: 0 
-          });
-          setTimeout(function() {
-            NProgress.remove();
-            next();
-          }, speed);
-        }, speed);
-      } else {
-        setTimeout(next, speed);
-      }
-    });
-
-    return this;
-  };
-
-  NProgress.isStarted = function() {
-    return typeof NProgress.status === 'number';
-  };
-
-  /**
-   * Shows the progress bar.
-   * This is the same as setting the status to 0%, except that it doesn't go backwards.
-   *
-   *     NProgress.start();
-   *
-   */
-  NProgress.start = function() {
-    if (!NProgress.status) NProgress.set(0);
-
-    var work = function() {
-      setTimeout(function() {
-        if (!NProgress.status) return;
-        NProgress.trickle();
-        work();
-      }, Settings.trickleSpeed);
-    };
-
-    if (Settings.trickle) work();
-
-    return this;
-  };
-
-  /**
-   * Hides the progress bar.
-   * This is the *sort of* the same as setting the status to 100%, with the
-   * difference being `done()` makes some placebo effect of some realistic motion.
-   *
-   *     NProgress.done();
-   *
-   * If `true` is passed, it will show the progress bar even if its hidden.
-   *
-   *     NProgress.done(true);
-   */
-
-  NProgress.done = function(force) {
-    if (!force && !NProgress.status) return this;
-
-    return NProgress.inc(0.3 + 0.5 * Math.random()).set(1);
-  };
-
-  /**
-   * Increments by a random amount.
-   */
-
-  NProgress.inc = function(amount) {
-    var n = NProgress.status;
-
-    if (!n) {
-      return NProgress.start();
-    } else {
-      if (typeof amount !== 'number') {
-        amount = (1 - n) * clamp(Math.random() * n, 0.1, 0.95);
-      }
-
-      n = clamp(n + amount, 0, 0.994);
-      return NProgress.set(n);
-    }
-  };
-
-  NProgress.trickle = function() {
-    return NProgress.inc(Math.random() * Settings.trickleRate);
-  };
-
-  /**
-   * Waits for all supplied jQuery promises and
-   * increases the progress as the promises resolve.
-   *
-   * @param $promise jQUery Promise
-   */
-  (function() {
-    var initial = 0, current = 0;
-
-    NProgress.promise = function($promise) {
-      if (!$promise || $promise.state() === "resolved") {
-        return this;
-      }
-
-      if (current === 0) {
-        NProgress.start();
-      }
-
-      initial++;
-      current++;
-
-      $promise.always(function() {
-        current--;
-        if (current === 0) {
-            initial = 0;
-            NProgress.done();
-        } else {
-            NProgress.set((initial - current) / initial);
-        }
-      });
-
-      return this;
-    };
-
-  })();
-
-  /**
-   * (Internal) renders the progress bar markup based on the `template`
-   * setting.
-   */
-
-  NProgress.render = function(fromStart) {
-    if (NProgress.isRendered()) return document.getElementById('nprogress');
-
-    addClass(document.documentElement, 'nprogress-busy');
-    
-    var progress = document.createElement('div');
-    progress.id = 'nprogress';
-    progress.innerHTML = Settings.template;
-
-    var bar      = progress.querySelector(Settings.barSelector),
-        perc     = fromStart ? '-100' : toBarPerc(NProgress.status || 0),
-        parent   = document.querySelector(Settings.parent),
-        spinner;
-    
-    css(bar, {
-      transition: 'all 0 linear',
-      transform: 'translate3d(' + perc + '%,0,0)'
-    });
-
-    if (!Settings.showSpinner) {
-      spinner = progress.querySelector(Settings.spinnerSelector);
-      spinner && removeElement(spinner);
-    }
-
-    if (parent != document.body) {
-      addClass(parent, 'nprogress-custom-parent');
-    }
-
-    parent.appendChild(progress);
-    return progress;
-  };
-
-  /**
-   * Removes the element. Opposite of render().
-   */
-
-  NProgress.remove = function() {
-    removeClass(document.documentElement, 'nprogress-busy');
-    removeClass(document.querySelector(Settings.parent), 'nprogress-custom-parent');
-    var progress = document.getElementById('nprogress');
-    progress && removeElement(progress);
-  };
-
-  /**
-   * Checks if the progress bar is rendered.
-   */
-
-  NProgress.isRendered = function() {
-    return !!document.getElementById('nprogress');
-  };
-
-  /**
-   * Determine which positioning CSS rule to use.
-   */
-
-  NProgress.getPositioningCSS = function() {
-    // Sniff on document.body.style
-    var bodyStyle = document.body.style;
-
-    // Sniff prefixes
-    var vendorPrefix = ('WebkitTransform' in bodyStyle) ? 'Webkit' :
-                       ('MozTransform' in bodyStyle) ? 'Moz' :
-                       ('msTransform' in bodyStyle) ? 'ms' :
-                       ('OTransform' in bodyStyle) ? 'O' : '';
-
-    if (vendorPrefix + 'Perspective' in bodyStyle) {
-      // Modern browsers with 3D support, e.g. Webkit, IE10
-      return 'translate3d';
-    } else if (vendorPrefix + 'Transform' in bodyStyle) {
-      // Browsers without 3D support, e.g. IE9
-      return 'translate';
-    } else {
-      // Browsers without translate() support, e.g. IE7-8
-      return 'margin';
-    }
-  };
-
-  /**
-   * Helpers
-   */
-
-  function clamp(n, min, max) {
-    if (n < min) return min;
-    if (n > max) return max;
-    return n;
-  }
-
-  /**
-   * (Internal) converts a percentage (`0..1`) to a bar translateX
-   * percentage (`-100%..0%`).
-   */
-
-  function toBarPerc(n) {
-    return (-1 + n) * 100;
-  }
-
-
-  /**
-   * (Internal) returns the correct CSS for changing the bar's
-   * position given an n percentage, and speed and ease from Settings
-   */
-
-  function barPositionCSS(n, speed, ease) {
-    var barCSS;
-
-    if (Settings.positionUsing === 'translate3d') {
-      barCSS = { transform: 'translate3d('+toBarPerc(n)+'%,0,0)' };
-    } else if (Settings.positionUsing === 'translate') {
-      barCSS = { transform: 'translate('+toBarPerc(n)+'%,0)' };
-    } else {
-      barCSS = { 'margin-left': toBarPerc(n)+'%' };
-    }
-
-    barCSS.transition = 'all '+speed+'ms '+ease;
-
-    return barCSS;
-  }
-
-  /**
-   * (Internal) Queues a function to be executed.
-   */
-
-  var queue = (function() {
-    var pending = [];
-    
-    function next() {
-      var fn = pending.shift();
-      if (fn) {
-        fn(next);
-      }
-    }
-
-    return function(fn) {
-      pending.push(fn);
-      if (pending.length == 1) next();
-    };
-  })();
-
-  /**
-   * (Internal) Applies css properties to an element, similar to the jQuery 
-   * css method.
-   *
-   * While this helper does assist with vendor prefixed property names, it 
-   * does not perform any manipulation of values prior to setting styles.
-   */
-
-  var css = (function() {
-    var cssPrefixes = [ 'Webkit', 'O', 'Moz', 'ms' ],
-        cssProps    = {};
-
-    function camelCase(string) {
-      return string.replace(/^-ms-/, 'ms-').replace(/-([\da-z])/gi, function(match, letter) {
-        return letter.toUpperCase();
-      });
-    }
-
-    function getVendorProp(name) {
-      var style = document.body.style;
-      if (name in style) return name;
-
-      var i = cssPrefixes.length,
-          capName = name.charAt(0).toUpperCase() + name.slice(1),
-          vendorName;
-      while (i--) {
-        vendorName = cssPrefixes[i] + capName;
-        if (vendorName in style) return vendorName;
-      }
-
-      return name;
-    }
-
-    function getStyleProp(name) {
-      name = camelCase(name);
-      return cssProps[name] || (cssProps[name] = getVendorProp(name));
-    }
-
-    function applyCss(element, prop, value) {
-      prop = getStyleProp(prop);
-      element.style[prop] = value;
-    }
-
-    return function(element, properties) {
-      var args = arguments,
-          prop, 
-          value;
-
-      if (args.length == 2) {
-        for (prop in properties) {
-          value = properties[prop];
-          if (value !== undefined && properties.hasOwnProperty(prop)) applyCss(element, prop, value);
-        }
-      } else {
-        applyCss(element, args[1], args[2]);
-      }
-    }
-  })();
-
-  /**
-   * (Internal) Determines if an element or space separated list of class names contains a class name.
-   */
-
-  function hasClass(element, name) {
-    var list = typeof element == 'string' ? element : classList(element);
-    return list.indexOf(' ' + name + ' ') >= 0;
-  }
-
-  /**
-   * (Internal) Adds a class to an element.
-   */
-
-  function addClass(element, name) {
-    var oldList = classList(element),
-        newList = oldList + name;
-
-    if (hasClass(oldList, name)) return; 
-
-    // Trim the opening space.
-    element.className = newList.substring(1);
-  }
-
-  /**
-   * (Internal) Removes a class from an element.
-   */
-
-  function removeClass(element, name) {
-    var oldList = classList(element),
-        newList;
-
-    if (!hasClass(element, name)) return;
-
-    // Replace the class name.
-    newList = oldList.replace(' ' + name + ' ', ' ');
-
-    // Trim the opening and closing spaces.
-    element.className = newList.substring(1, newList.length - 1);
-  }
-
-  /**
-   * (Internal) Gets a space separated list of the class names on the element. 
-   * The list is wrapped with a single space on each end to facilitate finding 
-   * matches within the list.
-   */
-
-  function classList(element) {
-    return (' ' + (element.className || '') + ' ').replace(/\s+/gi, ' ');
-  }
-
-  /**
-   * (Internal) Removes an element from the DOM.
-   */
-
-  function removeElement(element) {
-    element && element.parentNode && element.parentNode.removeChild(element);
-  }
-
-  return NProgress;
-});
-
-
 
 /***/ })
 
