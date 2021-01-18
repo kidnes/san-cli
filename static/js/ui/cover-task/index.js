@@ -149,7 +149,7 @@
 /******/
 /******/
 /******/ 	// add entry module to deferred list
-/******/ 	deferredModules.push([86,0]);
+/******/ 	deferredModules.push([88,0]);
 /******/ 	// run deferred modules when ready
 /******/ 	return checkDeferredModules();
 /******/ })
@@ -160,13 +160,13 @@
 /***/ (function(module, exports) {
 
 // Module
-var code = " <div class=\"content\"><div class=\"markdown\"></div></div> ";
+var code = " <div class=\"content\"><div class=\"markdown\"><h1 id=\"%E4%BB%BB%E5%8A%A1%E7%AE%A1%E7%90%86\"><a class=\"header-anchor\" href=\"#%E4%BB%BB%E5%8A%A1%E7%AE%A1%E7%90%86\">#</a> 任务管理</h1> <p>waiting</p> </div></div> ";
 // Exports
 module.exports = code;
 
 /***/ }),
 
-/***/ 45:
+/***/ 47:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -187,7 +187,7 @@ class ContentView extends san_component__WEBPACK_IMPORTED_MODULE_0__[/* SanCompo
 
 /***/ }),
 
-/***/ 86:
+/***/ 88:
 /***/ (function(module, exports, __webpack_require__) {
 
 
@@ -196,8 +196,8 @@ class ContentView extends san_component__WEBPACK_IMPORTED_MODULE_0__[/* SanCompo
 
         var template = __webpack_require__(147);
         
-        var script = __webpack_require__(45).default;
-        module.exports = __webpack_require__(45);
+        var script = __webpack_require__(47).default;
+        module.exports = __webpack_require__(47);
     
         module.exports.default = normalize(script, template, injectStyles);
         /* san-hmr component */

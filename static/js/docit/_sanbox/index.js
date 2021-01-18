@@ -149,7 +149,7 @@
 /******/
 /******/
 /******/ 	// add entry module to deferred list
-/******/ 	deferredModules.push([79,0]);
+/******/ 	deferredModules.push([81,0]);
 /******/ 	// run deferred modules when ready
 /******/ 	return checkDeferredModules();
 /******/ })
@@ -166,7 +166,7 @@ module.exports = code;
 
 /***/ }),
 
-/***/ 38:
+/***/ 40:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -192,7 +192,7 @@ class ContentView extends san_component__WEBPACK_IMPORTED_MODULE_0__[/* SanCompo
 
 /***/ }),
 
-/***/ 79:
+/***/ 81:
 /***/ (function(module, exports, __webpack_require__) {
 
 
@@ -201,8 +201,8 @@ class ContentView extends san_component__WEBPACK_IMPORTED_MODULE_0__[/* SanCompo
 
         var template = __webpack_require__(139);
         
-        var script = __webpack_require__(38).default;
-        module.exports = __webpack_require__(38);
+        var script = __webpack_require__(40).default;
+        module.exports = __webpack_require__(40);
     
         module.exports.default = normalize(script, template, injectStyles);
         /* san-hmr component */

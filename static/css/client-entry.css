@@ -19,8 +19,6 @@ a {
   text-decoration: none;
   outline: none;
   cursor: pointer;
-  -webkit-transition: color 0.3s;
-  transition: color 0.3s;
   -webkit-text-decoration-skip: objects;
 }
 :not(pre) > code[class*='language-'],
@@ -103,12 +101,16 @@ aside#sidebar ul {
 }
 aside#sidebar li {
   line-height: 40px;
-  padding: 0 0 0 20px;
   font-weight: 600;
   text-overflow: ellipsis;
 }
+aside#sidebar li span {
+  padding: 0 0 0 20px;
+}
 aside#sidebar li a {
+  padding: 0 0 0 20px;
   color: #314659;
+  display: block;
 }
 aside#sidebar li a:hover {
   color: #236EFF;
@@ -121,15 +123,20 @@ aside#sidebar li.active {
 aside#sidebar li.active a {
   color: #236EFF;
 }
-aside#sidebar li ul {
-  margin-left: -20px;
-}
 aside#sidebar li ul > li {
-  padding-left: 40px;
   font-weight: normal;
 }
-aside#sidebar li ul > li ul > li {
+aside#sidebar li ul > li a,
+aside#sidebar li ul > li span {
   padding-left: 40px;
+}
+aside#sidebar li ul > li ul > li a,
+aside#sidebar li ul > li ul > li span {
+  padding-left: 60px;
+}
+aside#sidebar li ul > li ul > li ul > li a,
+aside#sidebar li ul > li ul > li ul > li span {
+  padding-left: 80px;
 }
 .markdown {
   /**
@@ -517,7 +524,11 @@ aside#sidebar li ul > li ul > li {
   margin-left: 12px;
   margin-right: 270px;
 }
+#content .router-view.hidden {
+  margin-right: 0;
+}
 #content .toc {
+  display: block;
   flex: 0 0 280px;
   position: fixed;
   right: 0;
@@ -555,6 +566,9 @@ aside#sidebar li ul > li ul > li {
 #content .fixed {
   position: fixed;
   top: 68px;
+}
+#content.hidden {
+  padding-left: 0;
 }
 #content h1:target,
 #content h2:target,

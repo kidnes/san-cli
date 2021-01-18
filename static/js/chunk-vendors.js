@@ -8,7 +8,7 @@
 /* unused harmony export mixin */
 /* unused harmony export registerComponents */
 /* unused harmony export registerMixins */
-/* harmony import */ var san__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(57);
+/* harmony import */ var san__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(59);
 /* harmony import */ var san__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(san__WEBPACK_IMPORTED_MODULE_0__);
 /**
  * @file 重新定义san.Component组件
@@ -628,86 +628,6 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_RESULT__;/* NProgress, 
 
 /***/ }),
 
-/***/ 104:
-/***/ (function(module, exports) {
-
-/**
- * Copyright (c) Baidu Inc. All rights reserved.
- *
- * This source code is licensed under the MIT license.
- * See LICENSE file in the project root for license information.
- *
- * @file DOM 事件挂载
- */
-
-/**
- * DOM 事件挂载
- *
- * @inner
- * @param {HTMLElement} el DOM元素
- * @param {string} eventName 事件名
- * @param {Function} listener 监听函数
- * @param {boolean} capture 是否是捕获阶段
- */
-function on(el, eventName, listener, capture) {
-    // #[begin] allua
-    /* istanbul ignore else */
-    if (el.addEventListener) {
-    // #[end]
-        el.addEventListener(eventName, listener, capture);
-    // #[begin] allua
-    }
-    else {
-        el.attachEvent('on' + eventName, listener);
-    }
-    // #[end]
-}
-
-exports = module.exports = on;
-
-
-/***/ }),
-
-/***/ 105:
-/***/ (function(module, exports) {
-
-/**
- * Copyright (c) Baidu Inc. All rights reserved.
- *
- * This source code is licensed under the MIT license.
- * See LICENSE file in the project root for license information.
- *
- * @file DOM 事件卸载
- */
-
-/**
- * DOM 事件卸载
- *
- * @inner
- * @param {HTMLElement} el DOM元素
- * @param {string} eventName 事件名
- * @param {Function} listener 监听函数
- * @param {boolean} capture 是否是捕获阶段
- */
-function un(el, eventName, listener, capture) {
-    // #[begin] allua
-    /* istanbul ignore else */
-    if (el.addEventListener) {
-    // #[end]
-        el.removeEventListener(eventName, listener, capture);
-    // #[begin] allua
-    }
-    else {
-        el.detachEvent('on' + eventName, listener);
-    }
-    // #[end]
-}
-
-exports = module.exports = un;
-
-
-/***/ }),
-
 /***/ 107:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
@@ -826,7 +746,87 @@ const registerMixins = (mixins, Component = SanComponent) => {
 
 /***/ }),
 
-/***/ 15:
+/***/ 13:
+/***/ (function(module, exports) {
+
+/**
+ * Copyright (c) Baidu Inc. All rights reserved.
+ *
+ * This source code is licensed under the MIT license.
+ * See LICENSE file in the project root for license information.
+ *
+ * @file DOM 事件挂载
+ */
+
+/**
+ * DOM 事件挂载
+ *
+ * @inner
+ * @param {HTMLElement} el DOM元素
+ * @param {string} eventName 事件名
+ * @param {Function} listener 监听函数
+ * @param {boolean} capture 是否是捕获阶段
+ */
+function on(el, eventName, listener, capture) {
+    // #[begin] allua
+    /* istanbul ignore else */
+    if (el.addEventListener) {
+    // #[end]
+        el.addEventListener(eventName, listener, capture);
+    // #[begin] allua
+    }
+    else {
+        el.attachEvent('on' + eventName, listener);
+    }
+    // #[end]
+}
+
+exports = module.exports = on;
+
+
+/***/ }),
+
+/***/ 14:
+/***/ (function(module, exports) {
+
+/**
+ * Copyright (c) Baidu Inc. All rights reserved.
+ *
+ * This source code is licensed under the MIT license.
+ * See LICENSE file in the project root for license information.
+ *
+ * @file DOM 事件卸载
+ */
+
+/**
+ * DOM 事件卸载
+ *
+ * @inner
+ * @param {HTMLElement} el DOM元素
+ * @param {string} eventName 事件名
+ * @param {Function} listener 监听函数
+ * @param {boolean} capture 是否是捕获阶段
+ */
+function un(el, eventName, listener, capture) {
+    // #[begin] allua
+    /* istanbul ignore else */
+    if (el.addEventListener) {
+    // #[end]
+        el.removeEventListener(eventName, listener, capture);
+    // #[begin] allua
+    }
+    else {
+        el.detachEvent('on' + eventName, listener);
+    }
+    // #[end]
+}
+
+exports = module.exports = un;
+
+
+/***/ }),
+
+/***/ 17:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -1234,7 +1234,7 @@ process.umask = function() { return 0; };
 "use strict";
 /* harmony import */ var _style_loader_dist_runtime_injectStylesIntoStyleTag_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(6);
 /* harmony import */ var _style_loader_dist_runtime_injectStylesIntoStyleTag_js__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_style_loader_dist_runtime_injectStylesIntoStyleTag_js__WEBPACK_IMPORTED_MODULE_0__);
-/* harmony import */ var _css_loader_dist_cjs_js_mini_css_extract_plugin_dist_loader_js_css_loader_dist_cjs_js_nprogress_css__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(15);
+/* harmony import */ var _css_loader_dist_cjs_js_mini_css_extract_plugin_dist_loader_js_css_loader_dist_cjs_js_nprogress_css__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(17);
 
             
 
@@ -11582,11 +11582,11 @@ function createComponentLoader(options) {
     // #[end]
 })(this);
 //@ sourceMappingURL=san.dev.js.map
-/* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(55).setImmediate))
+/* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(57).setImmediate))
 
 /***/ }),
 
-/***/ 4:
+/***/ 5:
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -11619,7 +11619,7 @@ module.exports = function (url, options) {
 
 /***/ }),
 
-/***/ 55:
+/***/ 57:
 /***/ (function(module, exports, __webpack_require__) {
 
 /* WEBPACK VAR INJECTION */(function(global) {var scope = (typeof global !== "undefined" && global) ||
@@ -11690,7 +11690,7 @@ exports.clearImmediate = (typeof self !== "undefined" && self.clearImmediate) ||
 
 /***/ }),
 
-/***/ 57:
+/***/ 59:
 /***/ (function(module, exports, __webpack_require__) {
 
 /* WEBPACK VAR INJECTION */(function(setImmediate) {/**
@@ -22216,7 +22216,7 @@ function createComponentLoader(options) {
     // #[end]
 })(this);
 //@ sourceMappingURL=san.dev.js.map
-/* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(55).setImmediate))
+/* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(57).setImmediate))
 
 /***/ }),
 

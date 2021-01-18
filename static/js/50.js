@@ -4,7 +4,7 @@
 /***/ (function(module, exports, __webpack_require__) {
 
 // Imports
-var ___HTML_LOADER_GET_SOURCE_FROM_IMPORT___ = __webpack_require__(4);
+var ___HTML_LOADER_GET_SOURCE_FROM_IMPORT___ = __webpack_require__(5);
 var ___HTML_LOADER_IMPORT_0___ = __webpack_require__(146);
 // Module
 var ___HTML_LOADER_REPLACEMENT_0___ = ___HTML_LOADER_GET_SOURCE_FROM_IMPORT___(___HTML_LOADER_IMPORT_0___);
@@ -23,7 +23,28 @@ __webpack_require__.r(__webpack_exports__);
 
 /***/ }),
 
-/***/ 4:
+/***/ 46:
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* WEBPACK VAR INJECTION */(function(global) {/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "default", function() { return ContentView; });
+/* harmony import */ var san_component__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(0);
+
+class ContentView extends san_component__WEBPACK_IMPORTED_MODULE_0__[/* SanComponent */ "a"] {
+  inited() {
+    global.hub.fire('changed', {
+      "level": 0
+    });
+  }
+
+}
+/* san-hmr disable */
+/* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(1)))
+
+/***/ }),
+
+/***/ 5:
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -56,28 +77,7 @@ module.exports = function (url, options) {
 
 /***/ }),
 
-/***/ 44:
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* WEBPACK VAR INJECTION */(function(global) {/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "default", function() { return ContentView; });
-/* harmony import */ var san_component__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(0);
-
-class ContentView extends san_component__WEBPACK_IMPORTED_MODULE_0__[/* SanComponent */ "a"] {
-  inited() {
-    global.hub.fire('changed', {
-      "level": 0
-    });
-  }
-
-}
-/* san-hmr disable */
-/* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(1)))
-
-/***/ }),
-
-/***/ 85:
+/***/ 87:
 /***/ (function(module, exports, __webpack_require__) {
 
 
@@ -86,8 +86,8 @@ class ContentView extends san_component__WEBPACK_IMPORTED_MODULE_0__[/* SanCompo
 
         var template = __webpack_require__(145);
         
-        var script = __webpack_require__(44).default;
-        module.exports = __webpack_require__(44);
+        var script = __webpack_require__(46).default;
+        module.exports = __webpack_require__(46);
     
         module.exports.default = normalize(script, template, injectStyles);
         /* san-hmr component */

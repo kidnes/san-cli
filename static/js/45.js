@@ -4,7 +4,7 @@
 /***/ (function(module, exports, __webpack_require__) {
 
 // Imports
-var ___HTML_LOADER_GET_SOURCE_FROM_IMPORT___ = __webpack_require__(4);
+var ___HTML_LOADER_GET_SOURCE_FROM_IMPORT___ = __webpack_require__(5);
 var ___HTML_LOADER_IMPORT_0___ = __webpack_require__(154);
 var ___HTML_LOADER_IMPORT_1___ = __webpack_require__(155);
 // Module
@@ -34,7 +34,33 @@ __webpack_require__.r(__webpack_exports__);
 
 /***/ }),
 
-/***/ 4:
+/***/ 49:
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* WEBPACK VAR INJECTION */(function(global) {/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "default", function() { return ContentView; });
+/* harmony import */ var san_component__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(0);
+
+class ContentView extends san_component__WEBPACK_IMPORTED_MODULE_0__[/* SanComponent */ "a"] {
+  inited() {
+    global.hub.fire('changed', {
+      "level": 0,
+      "children": [{
+        "level": 2,
+        "title": "安装依赖",
+        "hash": "%E5%AE%89%E8%A3%85%E4%BE%9D%E8%B5%96"
+      }]
+    });
+  }
+
+}
+/* san-hmr disable */
+/* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(1)))
+
+/***/ }),
+
+/***/ 5:
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -67,33 +93,7 @@ module.exports = function (url, options) {
 
 /***/ }),
 
-/***/ 47:
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* WEBPACK VAR INJECTION */(function(global) {/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "default", function() { return ContentView; });
-/* harmony import */ var san_component__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(0);
-
-class ContentView extends san_component__WEBPACK_IMPORTED_MODULE_0__[/* SanComponent */ "a"] {
-  inited() {
-    global.hub.fire('changed', {
-      "level": 0,
-      "children": [{
-        "level": 2,
-        "title": "安装依赖",
-        "hash": "%E5%AE%89%E8%A3%85%E4%BE%9D%E8%B5%96"
-      }]
-    });
-  }
-
-}
-/* san-hmr disable */
-/* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(1)))
-
-/***/ }),
-
-/***/ 88:
+/***/ 90:
 /***/ (function(module, exports, __webpack_require__) {
 
 
@@ -102,8 +102,8 @@ class ContentView extends san_component__WEBPACK_IMPORTED_MODULE_0__[/* SanCompo
 
         var template = __webpack_require__(153);
         
-        var script = __webpack_require__(47).default;
-        module.exports = __webpack_require__(47);
+        var script = __webpack_require__(49).default;
+        module.exports = __webpack_require__(49);
     
         module.exports.default = normalize(script, template, injectStyles);
         /* san-hmr component */

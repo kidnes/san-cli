@@ -4,7 +4,7 @@
 /***/ (function(module, exports, __webpack_require__) {
 
 // Imports
-var ___HTML_LOADER_GET_SOURCE_FROM_IMPORT___ = __webpack_require__(4);
+var ___HTML_LOADER_GET_SOURCE_FROM_IMPORT___ = __webpack_require__(5);
 var ___HTML_LOADER_IMPORT_0___ = __webpack_require__(116);
 var ___HTML_LOADER_IMPORT_1___ = __webpack_require__(117);
 var ___HTML_LOADER_IMPORT_2___ = __webpack_require__(118);
@@ -56,7 +56,7 @@ __webpack_require__.r(__webpack_exports__);
 
 /***/ }),
 
-/***/ 20:
+/***/ 22:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -116,7 +116,7 @@ class ContentView extends san_component__WEBPACK_IMPORTED_MODULE_0__[/* SanCompo
 
 /***/ }),
 
-/***/ 4:
+/***/ 5:
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -149,7 +149,7 @@ module.exports = function (url, options) {
 
 /***/ }),
 
-/***/ 61:
+/***/ 63:
 /***/ (function(module, exports, __webpack_require__) {
 
 
@@ -158,8 +158,8 @@ module.exports = function (url, options) {
 
         var template = __webpack_require__(115);
         
-        var script = __webpack_require__(20).default;
-        module.exports = __webpack_require__(20);
+        var script = __webpack_require__(22).default;
+        module.exports = __webpack_require__(22);
     
         module.exports.default = normalize(script, template, injectStyles);
         /* san-hmr component */

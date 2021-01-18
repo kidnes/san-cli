@@ -229,12 +229,58 @@
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony default export */ __webpack_exports__["default"] = ({});
+/* harmony import */ var san__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(3);
+/* harmony import */ var san__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(san__WEBPACK_IMPORTED_MODULE_0__);
+
+/* harmony default export */ __webpack_exports__["default"] = ({
+  components: {// SSR 不支持 self 啊。。
+    // 'tree-node': 'self'
+  },
+  dataTypes: {
+    treeNode: san__WEBPACK_IMPORTED_MODULE_0__["DataTypes"].object
+  },
+
+  getNodeId(node) {
+    return node.path || node.hash;
+  }
+
+});
 /* san-hmr disable */
 
 /***/ }),
 
 /***/ 101:
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony default export */ __webpack_exports__["default"] = ({
+  initData() {
+    return {
+      isExpand: false
+    };
+  },
+
+  toggleExpand() {
+    this.data.set('isExpand', !this.data.get('isExpand'));
+  }
+
+});
+/* san-hmr disable */
+
+/***/ }),
+
+/***/ 102:
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony default export */ __webpack_exports__["default"] = ({});
+/* san-hmr disable */
+
+/***/ }),
+
+/***/ 103:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -295,7 +341,6 @@ const removeClass = (dom, name) => {
       for (let i = 0; i < list.length; i++) {
         const el = list[i];
         const finded = val.find(item => {
-          console.log(el);
           return el.getAttribute('data-id') === (item.path || item.hash);
         });
         const isActive = finded !== undefined;
@@ -309,7 +354,7 @@ const removeClass = (dom, name) => {
 
 /***/ }),
 
-/***/ 102:
+/***/ 104:
 /***/ (function(module, exports, __webpack_require__) {
 
 
@@ -319,8 +364,8 @@ var injectStyles = [];
 
         var template = __webpack_require__(174);
         
-        var script = __webpack_require__(96).default;
-        module.exports = __webpack_require__(96);
+        var script = __webpack_require__(98).default;
+        module.exports = __webpack_require__(98);
     
         module.exports.default = normalize(script, template, injectStyles);
         /* san-hmr component */
@@ -328,7 +373,7 @@ var injectStyles = [];
 
 /***/ }),
 
-/***/ 103:
+/***/ 105:
 /***/ (function(module, exports, __webpack_require__) {
 
 
@@ -337,8 +382,8 @@ var injectStyles = [];
 
         var template = __webpack_require__(175);
         
-        var script = __webpack_require__(97).default;
-        module.exports = __webpack_require__(97);
+        var script = __webpack_require__(99).default;
+        module.exports = __webpack_require__(99);
     
         module.exports.default = normalize(script, template, injectStyles);
         /* san-hmr component */
@@ -355,8 +400,8 @@ var injectStyles = [];
 
         var template = __webpack_require__(177);
         
-        var script = __webpack_require__(98).default;
-        module.exports = __webpack_require__(98);
+        var script = __webpack_require__(100).default;
+        module.exports = __webpack_require__(100);
     
         module.exports.default = normalize(script, template, injectStyles);
         /* san-hmr component */
@@ -374,8 +419,8 @@ var injectStyles = [];
 
         var template = __webpack_require__(179);
         
-        var script = __webpack_require__(99).default;
-        module.exports = __webpack_require__(99);
+        var script = __webpack_require__(101).default;
+        module.exports = __webpack_require__(101);
     
         module.exports.default = normalize(script, template, injectStyles);
         /* san-hmr component */
@@ -392,7 +437,7 @@ var injectStyles = [];
 /* harmony import */ var NProgress__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(10);
 /* harmony import */ var NProgress__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(NProgress__WEBPACK_IMPORTED_MODULE_1__);
 /* harmony import */ var _common_hub__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(9);
-/* harmony import */ var _common_utils__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(5);
+/* harmony import */ var _common_utils__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(4);
 /* harmony import */ var _views_not_found_san__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(110);
 /* harmony import */ var _views_not_found_san__WEBPACK_IMPORTED_MODULE_4___default = /*#__PURE__*/__webpack_require__.n(_views_not_found_san__WEBPACK_IMPORTED_MODULE_4__);
 /* harmony import */ var nprogress_nprogress_css__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(181);
@@ -405,47 +450,47 @@ var injectStyles = [];
 
 _common_san_router__WEBPACK_IMPORTED_MODULE_0__["router"].setMode('html5'); // Webpack Inject
 
-const config = {"title":"San CLI","base":"/san-cli/","themeConfig":{"nav":[{"text":"San","link":"https://baidu.github.io/san/"},{"text":"Santd","link":"https://ecomfe.github.io/santd/"}],"sidebar":{"/":{"children":[{"path":"/","filename":"/Volumes/Source/san/san-cli-all/san-cli-github/docs/README.md","title":"介绍"},{"title":"基础命令","children":[{"path":"/create-project/","filename":"/Volumes/Source/san/san-cli-all/san-cli-github/docs/create-project.md","title":"初始化项目"},{"path":"/serve/","filename":"/Volumes/Source/san/san-cli-all/san-cli-github/docs/serve.md","title":"开发打包"},{"path":"/build/","filename":"/Volumes/Source/san/san-cli-all/san-cli-github/docs/build.md","title":"生产打包"}]},{"title":"配置","children":[{"path":"/config/","filename":"/Volumes/Source/san/san-cli-all/san-cli-github/docs/config.md","title":"San CLI 配置文件"},{"path":"/advanced/","filename":"/Volumes/Source/san/san-cli-all/san-cli-github/docs/advanced.md","title":"高级配置"},{"path":"/presets/","filename":"/Volumes/Source/san/san-cli-all/san-cli-github/docs/presets.md","title":"Presets 预设"},{"path":"/env/","filename":"/Volumes/Source/san/san-cli-all/san-cli-github/docs/env.md","title":"环境变量"}]},{"title":"常见解决方案","children":[{"path":"/modern-mode/","filename":"/Volumes/Source/san/san-cli-all/san-cli-github/docs/modern-mode.md","title":"现在的浏览器打包模式"},{"path":"/bundle-analyze/","filename":"/Volumes/Source/san/san-cli-all/san-cli-github/docs/bundle-analyze.md","title":"Bundle 分析"},{"path":"/component/","filename":"/Volumes/Source/san/san-cli-all/san-cli-github/docs/component.md","title":"San Component 组件开发"},{"path":"/smarty/","filename":"/Volumes/Source/san/san-cli-all/san-cli-github/docs/smarty.md","title":"Smarty 相关"},{"path":"/deployment/","filename":"/Volumes/Source/san/san-cli-all/san-cli-github/docs/deployment.md","title":"部署"},{"path":"/hulk-cli-migration/","filename":"/Volumes/Source/san/san-cli-all/san-cli-github/docs/hulk-cli-migration.md","title":"hulk-cli升级san-cli"}]},{"title":"二次开发","children":[{"path":"/architecture/","filename":"/Volumes/Source/san/san-cli-all/san-cli-github/docs/architecture.md","title":"内部实现"},{"path":"/create-scaffold/","filename":"/Volumes/Source/san/san-cli-all/san-cli-github/docs/create-scaffold.md","title":"如何创建一个脚手架项目"},{"path":"/plugin/","children":[{"path":"/cmd-plugin/","filename":"/Volumes/Source/san/san-cli-all/san-cli-github/docs/cmd-plugin.md","title":"Command 插件"},{"path":"/srv-plugin/","filename":"/Volumes/Source/san/san-cli-all/san-cli-github/docs/srv-plugin.md","title":"编写一个 Serivce 插件"}]}]},{"title":"CLI UI","children":[{"path":"/ui/start/","children":[{"title":"功能简介","children":[{"path":"/ui/project-list/","filename":"/Volumes/Source/san/san-cli-all/san-cli-github/docs/ui/project-list.md","title":"项目列表"},{"path":"/ui/dashboard/","filename":"/Volumes/Source/san/san-cli-all/san-cli-github/docs/ui/dashboard.md","title":"仪表盘"},{"path":"/ui/plugin/","filename":"/Volumes/Source/san/san-cli-all/san-cli-github/docs/ui/plugin.md","title":"插件管理"},{"path":"/ui/dependency/","filename":"/Volumes/Source/san/san-cli-all/san-cli-github/docs/ui/dependency.md","title":"依赖管理"},{"path":"/ui/configuration/","filename":"/Volumes/Source/san/san-cli-all/san-cli-github/docs/ui/configuration.md","title":"配置管理"},{"path":"/ui/task/","filename":"/Volumes/Source/san/san-cli-all/san-cli-github/docs/ui/task.md","title":"任务管理"}]},{"title":"插件开发","children":[{"path":"/ui/structure/","filename":"/Volumes/Source/san/san-cli-all/san-cli-github/docs/ui/structure.md","title":"CLI UI 插件"},{"path":"/ui/plugin-object/","filename":"/Volumes/Source/san/san-cli-all/san-cli-github/docs/ui/plugin-object.md","title":"PluginManager对象"},{"path":"/ui/add-addon/","filename":"/Volumes/Source/san/san-cli-all/san-cli-github/docs/ui/add-addon.md","title":"addon组件"},{"path":"/ui/add-config/","filename":"/Volumes/Source/san/san-cli-all/san-cli-github/docs/ui/add-config.md","title":"添加项目配置"},{"path":"/ui/task/","filename":"/Volumes/Source/san/san-cli-all/san-cli-github/docs/ui/task.md","title":"任务管理"},{"path":"/ui/add-view/","filename":"/Volumes/Source/san/san-cli-all/san-cli-github/docs/ui/add-view.md","title":"添加自定义视图"},{"path":"/ui/static/","filename":"/Volumes/Source/san/san-cli-all/san-cli-github/docs/ui/static.md","title":"公共静态文件"}]}]}]}]}}}};
+const config = {"title":"San CLI","base":"/san-cli/","themeConfig":{"nav":[{"text":"San","link":"https://baidu.github.io/san/"},{"text":"Santd","link":"https://ecomfe.github.io/santd/"}],"sidebar":{"/":{"children":[{"path":"/","filename":"/Volumes/Source/san/san-cli-all/san-cli-github/docs/README.md","title":"介绍"},{"title":"基础命令","children":[{"path":"/create-project/","filename":"/Volumes/Source/san/san-cli-all/san-cli-github/docs/create-project.md","title":"初始化项目"},{"path":"/serve/","filename":"/Volumes/Source/san/san-cli-all/san-cli-github/docs/serve.md","title":"开发打包"},{"path":"/build/","filename":"/Volumes/Source/san/san-cli-all/san-cli-github/docs/build.md","title":"生产打包"}]},{"title":"配置","children":[{"path":"/config/","filename":"/Volumes/Source/san/san-cli-all/san-cli-github/docs/config.md","title":"San CLI 配置文件"},{"path":"/advanced/","filename":"/Volumes/Source/san/san-cli-all/san-cli-github/docs/advanced.md","title":"高级配置"},{"path":"/presets/","filename":"/Volumes/Source/san/san-cli-all/san-cli-github/docs/presets.md","title":"Presets 预设"},{"path":"/env/","filename":"/Volumes/Source/san/san-cli-all/san-cli-github/docs/env.md","title":"环境变量"}]},{"title":"常见解决方案","children":[{"path":"/modern-mode/","filename":"/Volumes/Source/san/san-cli-all/san-cli-github/docs/modern-mode.md","title":"现在的浏览器打包模式"},{"path":"/bundle-analyze/","filename":"/Volumes/Source/san/san-cli-all/san-cli-github/docs/bundle-analyze.md","title":"Bundle 分析"},{"path":"/component/","filename":"/Volumes/Source/san/san-cli-all/san-cli-github/docs/component.md","title":"San Component 组件开发"},{"path":"/smarty/","filename":"/Volumes/Source/san/san-cli-all/san-cli-github/docs/smarty.md","title":"Smarty 相关"},{"path":"/deployment/","filename":"/Volumes/Source/san/san-cli-all/san-cli-github/docs/deployment.md","title":"部署"},{"path":"/hulk-cli-migration/","filename":"/Volumes/Source/san/san-cli-all/san-cli-github/docs/hulk-cli-migration.md","title":"hulk-cli升级san-cli"}]},{"title":"二次开发","children":[{"path":"/architecture/","filename":"/Volumes/Source/san/san-cli-all/san-cli-github/docs/architecture.md","title":"内部实现"},{"path":"/create-scaffold/","filename":"/Volumes/Source/san/san-cli-all/san-cli-github/docs/create-scaffold.md","title":"如何创建一个脚手架项目"},{"path":"/plugin/","filename":"/Volumes/Source/san/san-cli-all/san-cli-github/docs/plugin.md","title":"插件","children":[{"path":"/cmd-plugin/","filename":"/Volumes/Source/san/san-cli-all/san-cli-github/docs/cmd-plugin.md","title":"Command 插件"},{"path":"/srv-plugin/","filename":"/Volumes/Source/san/san-cli-all/san-cli-github/docs/srv-plugin.md","title":"编写一个 Serivce 插件"}]}]},{"title":"CLI UI","children":[{"path":"/ui/start/","filename":"/Volumes/Source/san/san-cli-all/san-cli-github/docs/ui/start.md","title":"CLI UI安装"},{"title":"功能简介","children":[{"path":"/ui/project-list/","filename":"/Volumes/Source/san/san-cli-all/san-cli-github/docs/ui/project-list.md","title":"项目列表"},{"path":"/ui/dashboard/","filename":"/Volumes/Source/san/san-cli-all/san-cli-github/docs/ui/dashboard.md","title":"仪表盘"},{"path":"/ui/plugin/","filename":"/Volumes/Source/san/san-cli-all/san-cli-github/docs/ui/plugin.md","title":"插件管理"},{"path":"/ui/dependency/","filename":"/Volumes/Source/san/san-cli-all/san-cli-github/docs/ui/dependency.md","title":"依赖管理"},{"path":"/ui/configuration/","filename":"/Volumes/Source/san/san-cli-all/san-cli-github/docs/ui/configuration.md","title":"配置管理"},{"path":"/ui/task/","filename":"/Volumes/Source/san/san-cli-all/san-cli-github/docs/ui/task.md","title":"任务管理"}]},{"title":"插件开发","children":[{"path":"/ui/structure/","filename":"/Volumes/Source/san/san-cli-all/san-cli-github/docs/ui/structure.md","title":"CLI UI 插件"},{"path":"/ui/plugin-object/","filename":"/Volumes/Source/san/san-cli-all/san-cli-github/docs/ui/plugin-object.md","title":"PluginManager对象"},{"path":"/ui/add-addon/","filename":"/Volumes/Source/san/san-cli-all/san-cli-github/docs/ui/add-addon.md","title":"addon组件"},{"path":"/ui/add-config/","filename":"/Volumes/Source/san/san-cli-all/san-cli-github/docs/ui/add-config.md","title":"添加项目配置"},{"path":"/ui/cover-task/","filename":"/Volumes/Source/san/san-cli-all/san-cli-github/docs/ui/cover-task.md","title":"任务管理"},{"path":"/ui/add-view/","filename":"/Volumes/Source/san/san-cli-all/san-cli-github/docs/ui/add-view.md","title":"添加自定义视图"},{"path":"/ui/static/","filename":"/Volumes/Source/san/san-cli-all/san-cli-github/docs/ui/static.md","title":"公共静态文件"}]}]}]}}}};
 const components = {
-  "/": () => Promise.all(/* import() */[__webpack_require__.e(1), __webpack_require__.e(51)]).then(__webpack_require__.t.bind(null, 56, 7)),
-  "/_navbar/": () => Promise.all(/* import() */[__webpack_require__.e(1), __webpack_require__.e(52)]).then(__webpack_require__.t.bind(null, 58, 7)),
-  "/_sidebar/": () => Promise.all(/* import() */[__webpack_require__.e(1), __webpack_require__.e(53)]).then(__webpack_require__.t.bind(null, 59, 7)),
-  "/advanced/": () => Promise.all(/* import() */[__webpack_require__.e(1), __webpack_require__.e(54)]).then(__webpack_require__.t.bind(null, 60, 7)),
-  "/architecture/": () => Promise.all(/* import() */[__webpack_require__.e(1), __webpack_require__.e(42)]).then(__webpack_require__.t.bind(null, 61, 7)),
-  "/build/": () => Promise.all(/* import() */[__webpack_require__.e(1), __webpack_require__.e(48)]).then(__webpack_require__.t.bind(null, 62, 7)),
-  "/bundle-analyze/": () => Promise.all(/* import() */[__webpack_require__.e(1), __webpack_require__.e(49)]).then(__webpack_require__.t.bind(null, 63, 7)),
-  "/cmd-plugin/": () => Promise.all(/* import() */[__webpack_require__.e(1), __webpack_require__.e(55)]).then(__webpack_require__.t.bind(null, 64, 7)),
-  "/component/": () => Promise.all(/* import() */[__webpack_require__.e(1), __webpack_require__.e(56)]).then(__webpack_require__.t.bind(null, 65, 7)),
-  "/config/": () => Promise.all(/* import() */[__webpack_require__.e(1), __webpack_require__.e(57)]).then(__webpack_require__.t.bind(null, 66, 7)),
-  "/create-project/": () => Promise.all(/* import() */[__webpack_require__.e(1), __webpack_require__.e(58)]).then(__webpack_require__.t.bind(null, 67, 7)),
-  "/create-scaffold/": () => Promise.all(/* import() */[__webpack_require__.e(1), __webpack_require__.e(59)]).then(__webpack_require__.t.bind(null, 68, 7)),
-  "/deployment/": () => Promise.all(/* import() */[__webpack_require__.e(1), __webpack_require__.e(60)]).then(__webpack_require__.t.bind(null, 69, 7)),
-  "/env/": () => Promise.all(/* import() */[__webpack_require__.e(1), __webpack_require__.e(64)]).then(__webpack_require__.t.bind(null, 70, 7)),
-  "/hulk-cli-migration/": () => Promise.all(/* import() */[__webpack_require__.e(1), __webpack_require__.e(65)]).then(__webpack_require__.t.bind(null, 71, 7)),
-  "/inspect/": () => Promise.all(/* import() */[__webpack_require__.e(1), __webpack_require__.e(66)]).then(__webpack_require__.t.bind(null, 72, 7)),
-  "/modern-mode/": () => Promise.all(/* import() */[__webpack_require__.e(1), __webpack_require__.e(67)]).then(__webpack_require__.t.bind(null, 73, 7)),
-  "/plugin/": () => Promise.all(/* import() */[__webpack_require__.e(1), __webpack_require__.e(68)]).then(__webpack_require__.t.bind(null, 74, 7)),
-  "/presets/": () => Promise.all(/* import() */[__webpack_require__.e(1), __webpack_require__.e(69)]).then(__webpack_require__.t.bind(null, 75, 7)),
-  "/serve/": () => Promise.all(/* import() */[__webpack_require__.e(1), __webpack_require__.e(70)]).then(__webpack_require__.t.bind(null, 76, 7)),
-  "/smarty/": () => Promise.all(/* import() */[__webpack_require__.e(1), __webpack_require__.e(71)]).then(__webpack_require__.t.bind(null, 77, 7)),
-  "/srv-plugin/": () => Promise.all(/* import() */[__webpack_require__.e(1), __webpack_require__.e(72)]).then(__webpack_require__.t.bind(null, 78, 7)),
-  "/docit/_sanbox/": () => Promise.all(/* import() */[__webpack_require__.e(1), __webpack_require__.e(61)]).then(__webpack_require__.t.bind(null, 79, 7)),
-  "/docit/markdownit/": () => Promise.all(/* import() */[__webpack_require__.e(1), __webpack_require__.e(62)]).then(__webpack_require__.t.bind(null, 80, 7)),
-  "/docit/sanbox-demo/": () => Promise.all(/* import() */[__webpack_require__.e(1), __webpack_require__.e(63)]).then(__webpack_require__.t.bind(null, 81, 7)),
-  "/ui/add-addon/": () => Promise.all(/* import() */[__webpack_require__.e(1), __webpack_require__.e(73)]).then(__webpack_require__.t.bind(null, 82, 7)),
-  "/ui/add-config/": () => Promise.all(/* import() */[__webpack_require__.e(1), __webpack_require__.e(74)]).then(__webpack_require__.t.bind(null, 83, 7)),
-  "/ui/add-view/": () => Promise.all(/* import() */[__webpack_require__.e(1), __webpack_require__.e(75)]).then(__webpack_require__.t.bind(null, 84, 7)),
-  "/ui/configuration/": () => Promise.all(/* import() */[__webpack_require__.e(1), __webpack_require__.e(50)]).then(__webpack_require__.t.bind(null, 85, 7)),
-  "/ui/cover-task/": () => Promise.all(/* import() */[__webpack_require__.e(1), __webpack_require__.e(76)]).then(__webpack_require__.t.bind(null, 86, 7)),
-  "/ui/dashboard/": () => Promise.all(/* import() */[__webpack_require__.e(1), __webpack_require__.e(43)]).then(__webpack_require__.t.bind(null, 87, 7)),
-  "/ui/dependency/": () => Promise.all(/* import() */[__webpack_require__.e(1), __webpack_require__.e(45)]).then(__webpack_require__.t.bind(null, 88, 7)),
-  "/ui/plugin-object/": () => Promise.all(/* import() */[__webpack_require__.e(1), __webpack_require__.e(77)]).then(__webpack_require__.t.bind(null, 89, 7)),
-  "/ui/plugin/": () => Promise.all(/* import() */[__webpack_require__.e(1), __webpack_require__.e(46)]).then(__webpack_require__.t.bind(null, 90, 7)),
-  "/ui/project-list/": () => Promise.all(/* import() */[__webpack_require__.e(1), __webpack_require__.e(44)]).then(__webpack_require__.t.bind(null, 91, 7)),
-  "/ui/start/": () => Promise.all(/* import() */[__webpack_require__.e(1), __webpack_require__.e(78)]).then(__webpack_require__.t.bind(null, 92, 7)),
-  "/ui/static/": () => Promise.all(/* import() */[__webpack_require__.e(1), __webpack_require__.e(79)]).then(__webpack_require__.t.bind(null, 93, 7)),
-  "/ui/structure/": () => Promise.all(/* import() */[__webpack_require__.e(1), __webpack_require__.e(80)]).then(__webpack_require__.t.bind(null, 94, 7)),
-  "/ui/task/": () => Promise.all(/* import() */[__webpack_require__.e(1), __webpack_require__.e(47)]).then(__webpack_require__.t.bind(null, 95, 7))
+  "/": () => Promise.all(/* import() */[__webpack_require__.e(1), __webpack_require__.e(51)]).then(__webpack_require__.t.bind(null, 58, 7)),
+  "/_navbar/": () => Promise.all(/* import() */[__webpack_require__.e(1), __webpack_require__.e(52)]).then(__webpack_require__.t.bind(null, 60, 7)),
+  "/_sidebar/": () => Promise.all(/* import() */[__webpack_require__.e(1), __webpack_require__.e(53)]).then(__webpack_require__.t.bind(null, 61, 7)),
+  "/advanced/": () => Promise.all(/* import() */[__webpack_require__.e(1), __webpack_require__.e(54)]).then(__webpack_require__.t.bind(null, 62, 7)),
+  "/architecture/": () => Promise.all(/* import() */[__webpack_require__.e(1), __webpack_require__.e(42)]).then(__webpack_require__.t.bind(null, 63, 7)),
+  "/build/": () => Promise.all(/* import() */[__webpack_require__.e(1), __webpack_require__.e(48)]).then(__webpack_require__.t.bind(null, 64, 7)),
+  "/bundle-analyze/": () => Promise.all(/* import() */[__webpack_require__.e(1), __webpack_require__.e(49)]).then(__webpack_require__.t.bind(null, 65, 7)),
+  "/cmd-plugin/": () => Promise.all(/* import() */[__webpack_require__.e(1), __webpack_require__.e(55)]).then(__webpack_require__.t.bind(null, 66, 7)),
+  "/component/": () => Promise.all(/* import() */[__webpack_require__.e(1), __webpack_require__.e(56)]).then(__webpack_require__.t.bind(null, 67, 7)),
+  "/config/": () => Promise.all(/* import() */[__webpack_require__.e(1), __webpack_require__.e(57)]).then(__webpack_require__.t.bind(null, 68, 7)),
+  "/create-project/": () => Promise.all(/* import() */[__webpack_require__.e(1), __webpack_require__.e(58)]).then(__webpack_require__.t.bind(null, 69, 7)),
+  "/create-scaffold/": () => Promise.all(/* import() */[__webpack_require__.e(1), __webpack_require__.e(59)]).then(__webpack_require__.t.bind(null, 70, 7)),
+  "/deployment/": () => Promise.all(/* import() */[__webpack_require__.e(1), __webpack_require__.e(60)]).then(__webpack_require__.t.bind(null, 71, 7)),
+  "/env/": () => Promise.all(/* import() */[__webpack_require__.e(1), __webpack_require__.e(64)]).then(__webpack_require__.t.bind(null, 72, 7)),
+  "/hulk-cli-migration/": () => Promise.all(/* import() */[__webpack_require__.e(1), __webpack_require__.e(65)]).then(__webpack_require__.t.bind(null, 73, 7)),
+  "/inspect/": () => Promise.all(/* import() */[__webpack_require__.e(1), __webpack_require__.e(66)]).then(__webpack_require__.t.bind(null, 74, 7)),
+  "/modern-mode/": () => Promise.all(/* import() */[__webpack_require__.e(1), __webpack_require__.e(67)]).then(__webpack_require__.t.bind(null, 75, 7)),
+  "/plugin/": () => Promise.all(/* import() */[__webpack_require__.e(1), __webpack_require__.e(68)]).then(__webpack_require__.t.bind(null, 76, 7)),
+  "/presets/": () => Promise.all(/* import() */[__webpack_require__.e(1), __webpack_require__.e(69)]).then(__webpack_require__.t.bind(null, 77, 7)),
+  "/serve/": () => Promise.all(/* import() */[__webpack_require__.e(1), __webpack_require__.e(70)]).then(__webpack_require__.t.bind(null, 78, 7)),
+  "/smarty/": () => Promise.all(/* import() */[__webpack_require__.e(1), __webpack_require__.e(71)]).then(__webpack_require__.t.bind(null, 79, 7)),
+  "/srv-plugin/": () => Promise.all(/* import() */[__webpack_require__.e(1), __webpack_require__.e(72)]).then(__webpack_require__.t.bind(null, 80, 7)),
+  "/docit/_sanbox/": () => Promise.all(/* import() */[__webpack_require__.e(1), __webpack_require__.e(61)]).then(__webpack_require__.t.bind(null, 81, 7)),
+  "/docit/markdownit/": () => Promise.all(/* import() */[__webpack_require__.e(1), __webpack_require__.e(62)]).then(__webpack_require__.t.bind(null, 82, 7)),
+  "/docit/sanbox-demo/": () => Promise.all(/* import() */[__webpack_require__.e(1), __webpack_require__.e(63)]).then(__webpack_require__.t.bind(null, 83, 7)),
+  "/ui/add-addon/": () => Promise.all(/* import() */[__webpack_require__.e(1), __webpack_require__.e(73)]).then(__webpack_require__.t.bind(null, 84, 7)),
+  "/ui/add-config/": () => Promise.all(/* import() */[__webpack_require__.e(1), __webpack_require__.e(74)]).then(__webpack_require__.t.bind(null, 85, 7)),
+  "/ui/add-view/": () => Promise.all(/* import() */[__webpack_require__.e(1), __webpack_require__.e(75)]).then(__webpack_require__.t.bind(null, 86, 7)),
+  "/ui/configuration/": () => Promise.all(/* import() */[__webpack_require__.e(1), __webpack_require__.e(50)]).then(__webpack_require__.t.bind(null, 87, 7)),
+  "/ui/cover-task/": () => Promise.all(/* import() */[__webpack_require__.e(1), __webpack_require__.e(76)]).then(__webpack_require__.t.bind(null, 88, 7)),
+  "/ui/dashboard/": () => Promise.all(/* import() */[__webpack_require__.e(1), __webpack_require__.e(43)]).then(__webpack_require__.t.bind(null, 89, 7)),
+  "/ui/dependency/": () => Promise.all(/* import() */[__webpack_require__.e(1), __webpack_require__.e(45)]).then(__webpack_require__.t.bind(null, 90, 7)),
+  "/ui/plugin-object/": () => Promise.all(/* import() */[__webpack_require__.e(1), __webpack_require__.e(77)]).then(__webpack_require__.t.bind(null, 91, 7)),
+  "/ui/plugin/": () => Promise.all(/* import() */[__webpack_require__.e(1), __webpack_require__.e(46)]).then(__webpack_require__.t.bind(null, 92, 7)),
+  "/ui/project-list/": () => Promise.all(/* import() */[__webpack_require__.e(1), __webpack_require__.e(44)]).then(__webpack_require__.t.bind(null, 93, 7)),
+  "/ui/start/": () => Promise.all(/* import() */[__webpack_require__.e(1), __webpack_require__.e(78)]).then(__webpack_require__.t.bind(null, 94, 7)),
+  "/ui/static/": () => Promise.all(/* import() */[__webpack_require__.e(1), __webpack_require__.e(79)]).then(__webpack_require__.t.bind(null, 95, 7)),
+  "/ui/structure/": () => Promise.all(/* import() */[__webpack_require__.e(1), __webpack_require__.e(80)]).then(__webpack_require__.t.bind(null, 96, 7)),
+  "/ui/task/": () => Promise.all(/* import() */[__webpack_require__.e(1), __webpack_require__.e(47)]).then(__webpack_require__.t.bind(null, 97, 7))
 };
 const base = _common_utils__WEBPACK_IMPORTED_MODULE_3__[/* default */ "a"].base;
 const sidebar = config.themeConfig.sidebar;
@@ -536,8 +581,8 @@ global.hub.on('changed', () => {
 
         var template = __webpack_require__(176);
         
-        var script = __webpack_require__(101).default;
-        module.exports = __webpack_require__(101);
+        var script = __webpack_require__(103).default;
+        module.exports = __webpack_require__(103);
     
         module.exports.default = normalize(script, template, injectStyles);
         /* san-hmr component */
@@ -554,8 +599,8 @@ global.hub.on('changed', () => {
 
         var template = __webpack_require__(180);
         
-        var script = __webpack_require__(100).default;
-        module.exports = __webpack_require__(100);
+        var script = __webpack_require__(102).default;
+        module.exports = __webpack_require__(102);
     
         module.exports.default = normalize(script, template, injectStyles);
         /* san-hmr component */
@@ -580,7 +625,7 @@ ___CSS_LOADER_EXPORT___.push([module.i, "", ""]);
 
 /***/ }),
 
-/***/ 13:
+/***/ 15:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -597,7 +642,7 @@ ___CSS_LOADER_EXPORT___.push([module.i, "", ""]);
 
 /***/ }),
 
-/***/ 14:
+/***/ 16:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -642,7 +687,7 @@ var update = _node_modules_style_loader_dist_runtime_injectStylesIntoStyleTag_js
 /***/ (function(module, exports) {
 
 // Module
-var code = " <div id=\"site\"> <header id=\"header\"> <a href=\"{{docit.base}}\" class=\"navbar\"> <img src=\"{{docit.base + 'logo.svg'}}\" alt=\"Home\" class=\"logo\"/> <span>{{docit.title}}</span> </a> <ul> <li s-for=\"nav in docit.themeConfig.nav\"> <a target=\"{{nav.target || '_blank'}}\" href=\"{{nav.link}}\"> {{nav.text}} </a> </li> </ul> </header> <aside id=\"sidebar\"> <tree treeData=\"{{sidebar}}\" selectedNodes=\"{{selectedNodes}}\"> <router-link s-if=\"treeNode.path\" to=\"{{getPath(treeNode.path)}}\">{{treeNode.title}}</router-link> <span s-else>{{treeNode.title}}</span> </tree> </aside> <content-area docit=\"{{docit}}\"></content-area> </div> ";
+var code = " <div id=\"site\"> <header id=\"header\"> <a href=\"{{docit.base}}\" class=\"navbar\"> <img src=\"{{docit.base + 'logo.svg'}}\" alt=\"Home\" class=\"logo\"/> <span>{{docit.title}}</span> </a> <ul> <li s-for=\"nav in docit.themeConfig.nav\"> <a target=\"{{nav.target || '_blank'}}\" href=\"{{nav.link}}\"> {{nav.text}} </a> </li> </ul> </header> <aside id=\"sidebar\" s-if=\"isShowSidebar\"> <tree treeData=\"{{sidebar}}\" selectedNodes=\"{{selectedNodes}}\"> <router-link s-if=\"treeNode.path\" to=\"{{getPath(treeNode)}}\">{{treeNode.title}}</router-link> <span s-else>{{treeNode.title}}</span> </tree> </aside> <content-area docit=\"{{docit}}\" class=\"{{isShowSidebar ? '' : 'hidden'}}\"></content-area> </div> ";
 // Exports
 module.exports = code;
 
@@ -652,7 +697,7 @@ module.exports = code;
 /***/ (function(module, exports) {
 
 // Module
-var code = " <article id=\"content\"> <div id=\"router-view\" class=\"router-view\" s-ref=\"view\">{{docit.content | raw}}</div> <aside class=\"toc\"> <tree treeData=\"{{toc}}\" selectedNodes=\"{{selectedNodes}}\"> <a href=\"{{getHash(treeNode.hash)}}\">{{treeNode.title}}</a> </tree> </aside> </article> ";
+var code = " <article id=\"content\"> <div id=\"router-view\" class=\"router-view {{isShowToc ? '' : 'hidden'}}\" s-ref=\"view\"> {{docit.content | raw}} </div> <aside class=\"toc\" s-if=\"isShowToc\"> <tree treeData=\"{{toc}}\" selectedNodes=\"{{selectedNodes}}\"> <a href=\"{{getHash(treeNode.hash)}}\">{{treeNode.title}}</a> </tree> </aside> </article> ";
 // Exports
 module.exports = code;
 
@@ -685,7 +730,7 @@ module.exports = code;
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _node_modules_style_loader_dist_runtime_injectStylesIntoStyleTag_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(6);
 /* harmony import */ var _node_modules_style_loader_dist_runtime_injectStylesIntoStyleTag_js__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_node_modules_style_loader_dist_runtime_injectStylesIntoStyleTag_js__WEBPACK_IMPORTED_MODULE_0__);
-/* harmony import */ var _node_modules_css_loader_dist_cjs_js_node_modules_less_loader_dist_cjs_js_ref_4_2_node_modules_mini_css_extract_plugin_dist_loader_js_node_modules_css_loader_dist_cjs_js_node_modules_less_loader_dist_cjs_js_ref_11_2_node_modules_san_loader_index_js_codebox_san_lang_less_san_type_style_index_0__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(14);
+/* harmony import */ var _node_modules_css_loader_dist_cjs_js_node_modules_less_loader_dist_cjs_js_ref_4_2_node_modules_mini_css_extract_plugin_dist_loader_js_node_modules_css_loader_dist_cjs_js_node_modules_less_loader_dist_cjs_js_ref_11_2_node_modules_san_loader_index_js_codebox_san_lang_less_san_type_style_index_0__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(16);
 
             
 
@@ -736,7 +781,7 @@ __webpack_require__.d(__webpack_exports__, "default", function() { return /* bin
 var san_dev = __webpack_require__(3);
 
 // EXTERNAL MODULE: ../src/views/layout.san
-var layout = __webpack_require__(102);
+var layout = __webpack_require__(104);
 var layout_default = /*#__PURE__*/__webpack_require__.n(layout);
 
 // EXTERNAL MODULE: ../node_modules/style-loader/dist/runtime/injectStylesIntoStyleTag.js
@@ -744,7 +789,7 @@ var injectStylesIntoStyleTag = __webpack_require__(6);
 var injectStylesIntoStyleTag_default = /*#__PURE__*/__webpack_require__.n(injectStylesIntoStyleTag);
 
 // EXTERNAL MODULE: ../node_modules/css-loader/dist/cjs.js!../node_modules/less-loader/dist/cjs.js??ref--4-2!../node_modules/mini-css-extract-plugin/dist/loader.js!../node_modules/css-loader/dist/cjs.js!../node_modules/less-loader/dist/cjs.js??ref--11-2!../src/styles/index.less
-var styles = __webpack_require__(13);
+var styles = __webpack_require__(15);
 
 // CONCATENATED MODULE: ../src/styles/index.less
 
@@ -822,7 +867,7 @@ client_entry_defineProperty(client_entry_Index, "template", '<index docit="{{doc
 
 client_entry_defineProperty(client_entry_Index, "computed", {
   docit() {
-    return {"title":"San CLI","base":"/san-cli/","themeConfig":{"nav":[{"text":"San","link":"https://baidu.github.io/san/"},{"text":"Santd","link":"https://ecomfe.github.io/santd/"}],"sidebar":{"/":{"children":[{"path":"/","filename":"/Volumes/Source/san/san-cli-all/san-cli-github/docs/README.md","title":"介绍"},{"title":"基础命令","children":[{"path":"/create-project/","filename":"/Volumes/Source/san/san-cli-all/san-cli-github/docs/create-project.md","title":"初始化项目"},{"path":"/serve/","filename":"/Volumes/Source/san/san-cli-all/san-cli-github/docs/serve.md","title":"开发打包"},{"path":"/build/","filename":"/Volumes/Source/san/san-cli-all/san-cli-github/docs/build.md","title":"生产打包"}]},{"title":"配置","children":[{"path":"/config/","filename":"/Volumes/Source/san/san-cli-all/san-cli-github/docs/config.md","title":"San CLI 配置文件"},{"path":"/advanced/","filename":"/Volumes/Source/san/san-cli-all/san-cli-github/docs/advanced.md","title":"高级配置"},{"path":"/presets/","filename":"/Volumes/Source/san/san-cli-all/san-cli-github/docs/presets.md","title":"Presets 预设"},{"path":"/env/","filename":"/Volumes/Source/san/san-cli-all/san-cli-github/docs/env.md","title":"环境变量"}]},{"title":"常见解决方案","children":[{"path":"/modern-mode/","filename":"/Volumes/Source/san/san-cli-all/san-cli-github/docs/modern-mode.md","title":"现在的浏览器打包模式"},{"path":"/bundle-analyze/","filename":"/Volumes/Source/san/san-cli-all/san-cli-github/docs/bundle-analyze.md","title":"Bundle 分析"},{"path":"/component/","filename":"/Volumes/Source/san/san-cli-all/san-cli-github/docs/component.md","title":"San Component 组件开发"},{"path":"/smarty/","filename":"/Volumes/Source/san/san-cli-all/san-cli-github/docs/smarty.md","title":"Smarty 相关"},{"path":"/deployment/","filename":"/Volumes/Source/san/san-cli-all/san-cli-github/docs/deployment.md","title":"部署"},{"path":"/hulk-cli-migration/","filename":"/Volumes/Source/san/san-cli-all/san-cli-github/docs/hulk-cli-migration.md","title":"hulk-cli升级san-cli"}]},{"title":"二次开发","children":[{"path":"/architecture/","filename":"/Volumes/Source/san/san-cli-all/san-cli-github/docs/architecture.md","title":"内部实现"},{"path":"/create-scaffold/","filename":"/Volumes/Source/san/san-cli-all/san-cli-github/docs/create-scaffold.md","title":"如何创建一个脚手架项目"},{"path":"/plugin/","children":[{"path":"/cmd-plugin/","filename":"/Volumes/Source/san/san-cli-all/san-cli-github/docs/cmd-plugin.md","title":"Command 插件"},{"path":"/srv-plugin/","filename":"/Volumes/Source/san/san-cli-all/san-cli-github/docs/srv-plugin.md","title":"编写一个 Serivce 插件"}]}]},{"title":"CLI UI","children":[{"path":"/ui/start/","children":[{"title":"功能简介","children":[{"path":"/ui/project-list/","filename":"/Volumes/Source/san/san-cli-all/san-cli-github/docs/ui/project-list.md","title":"项目列表"},{"path":"/ui/dashboard/","filename":"/Volumes/Source/san/san-cli-all/san-cli-github/docs/ui/dashboard.md","title":"仪表盘"},{"path":"/ui/plugin/","filename":"/Volumes/Source/san/san-cli-all/san-cli-github/docs/ui/plugin.md","title":"插件管理"},{"path":"/ui/dependency/","filename":"/Volumes/Source/san/san-cli-all/san-cli-github/docs/ui/dependency.md","title":"依赖管理"},{"path":"/ui/configuration/","filename":"/Volumes/Source/san/san-cli-all/san-cli-github/docs/ui/configuration.md","title":"配置管理"},{"path":"/ui/task/","filename":"/Volumes/Source/san/san-cli-all/san-cli-github/docs/ui/task.md","title":"任务管理"}]},{"title":"插件开发","children":[{"path":"/ui/structure/","filename":"/Volumes/Source/san/san-cli-all/san-cli-github/docs/ui/structure.md","title":"CLI UI 插件"},{"path":"/ui/plugin-object/","filename":"/Volumes/Source/san/san-cli-all/san-cli-github/docs/ui/plugin-object.md","title":"PluginManager对象"},{"path":"/ui/add-addon/","filename":"/Volumes/Source/san/san-cli-all/san-cli-github/docs/ui/add-addon.md","title":"addon组件"},{"path":"/ui/add-config/","filename":"/Volumes/Source/san/san-cli-all/san-cli-github/docs/ui/add-config.md","title":"添加项目配置"},{"path":"/ui/task/","filename":"/Volumes/Source/san/san-cli-all/san-cli-github/docs/ui/task.md","title":"任务管理"},{"path":"/ui/add-view/","filename":"/Volumes/Source/san/san-cli-all/san-cli-github/docs/ui/add-view.md","title":"添加自定义视图"},{"path":"/ui/static/","filename":"/Volumes/Source/san/san-cli-all/san-cli-github/docs/ui/static.md","title":"公共静态文件"}]}]}]}]}}}};
+    return {"title":"San CLI","base":"/san-cli/","themeConfig":{"nav":[{"text":"San","link":"https://baidu.github.io/san/"},{"text":"Santd","link":"https://ecomfe.github.io/santd/"}],"sidebar":{"/":{"children":[{"path":"/","filename":"/Volumes/Source/san/san-cli-all/san-cli-github/docs/README.md","title":"介绍"},{"title":"基础命令","children":[{"path":"/create-project/","filename":"/Volumes/Source/san/san-cli-all/san-cli-github/docs/create-project.md","title":"初始化项目"},{"path":"/serve/","filename":"/Volumes/Source/san/san-cli-all/san-cli-github/docs/serve.md","title":"开发打包"},{"path":"/build/","filename":"/Volumes/Source/san/san-cli-all/san-cli-github/docs/build.md","title":"生产打包"}]},{"title":"配置","children":[{"path":"/config/","filename":"/Volumes/Source/san/san-cli-all/san-cli-github/docs/config.md","title":"San CLI 配置文件"},{"path":"/advanced/","filename":"/Volumes/Source/san/san-cli-all/san-cli-github/docs/advanced.md","title":"高级配置"},{"path":"/presets/","filename":"/Volumes/Source/san/san-cli-all/san-cli-github/docs/presets.md","title":"Presets 预设"},{"path":"/env/","filename":"/Volumes/Source/san/san-cli-all/san-cli-github/docs/env.md","title":"环境变量"}]},{"title":"常见解决方案","children":[{"path":"/modern-mode/","filename":"/Volumes/Source/san/san-cli-all/san-cli-github/docs/modern-mode.md","title":"现在的浏览器打包模式"},{"path":"/bundle-analyze/","filename":"/Volumes/Source/san/san-cli-all/san-cli-github/docs/bundle-analyze.md","title":"Bundle 分析"},{"path":"/component/","filename":"/Volumes/Source/san/san-cli-all/san-cli-github/docs/component.md","title":"San Component 组件开发"},{"path":"/smarty/","filename":"/Volumes/Source/san/san-cli-all/san-cli-github/docs/smarty.md","title":"Smarty 相关"},{"path":"/deployment/","filename":"/Volumes/Source/san/san-cli-all/san-cli-github/docs/deployment.md","title":"部署"},{"path":"/hulk-cli-migration/","filename":"/Volumes/Source/san/san-cli-all/san-cli-github/docs/hulk-cli-migration.md","title":"hulk-cli升级san-cli"}]},{"title":"二次开发","children":[{"path":"/architecture/","filename":"/Volumes/Source/san/san-cli-all/san-cli-github/docs/architecture.md","title":"内部实现"},{"path":"/create-scaffold/","filename":"/Volumes/Source/san/san-cli-all/san-cli-github/docs/create-scaffold.md","title":"如何创建一个脚手架项目"},{"path":"/plugin/","filename":"/Volumes/Source/san/san-cli-all/san-cli-github/docs/plugin.md","title":"插件","children":[{"path":"/cmd-plugin/","filename":"/Volumes/Source/san/san-cli-all/san-cli-github/docs/cmd-plugin.md","title":"Command 插件"},{"path":"/srv-plugin/","filename":"/Volumes/Source/san/san-cli-all/san-cli-github/docs/srv-plugin.md","title":"编写一个 Serivce 插件"}]}]},{"title":"CLI UI","children":[{"path":"/ui/start/","filename":"/Volumes/Source/san/san-cli-all/san-cli-github/docs/ui/start.md","title":"CLI UI安装"},{"title":"功能简介","children":[{"path":"/ui/project-list/","filename":"/Volumes/Source/san/san-cli-all/san-cli-github/docs/ui/project-list.md","title":"项目列表"},{"path":"/ui/dashboard/","filename":"/Volumes/Source/san/san-cli-all/san-cli-github/docs/ui/dashboard.md","title":"仪表盘"},{"path":"/ui/plugin/","filename":"/Volumes/Source/san/san-cli-all/san-cli-github/docs/ui/plugin.md","title":"插件管理"},{"path":"/ui/dependency/","filename":"/Volumes/Source/san/san-cli-all/san-cli-github/docs/ui/dependency.md","title":"依赖管理"},{"path":"/ui/configuration/","filename":"/Volumes/Source/san/san-cli-all/san-cli-github/docs/ui/configuration.md","title":"配置管理"},{"path":"/ui/task/","filename":"/Volumes/Source/san/san-cli-all/san-cli-github/docs/ui/task.md","title":"任务管理"}]},{"title":"插件开发","children":[{"path":"/ui/structure/","filename":"/Volumes/Source/san/san-cli-all/san-cli-github/docs/ui/structure.md","title":"CLI UI 插件"},{"path":"/ui/plugin-object/","filename":"/Volumes/Source/san/san-cli-all/san-cli-github/docs/ui/plugin-object.md","title":"PluginManager对象"},{"path":"/ui/add-addon/","filename":"/Volumes/Source/san/san-cli-all/san-cli-github/docs/ui/add-addon.md","title":"addon组件"},{"path":"/ui/add-config/","filename":"/Volumes/Source/san/san-cli-all/san-cli-github/docs/ui/add-config.md","title":"添加项目配置"},{"path":"/ui/cover-task/","filename":"/Volumes/Source/san/san-cli-all/san-cli-github/docs/ui/cover-task.md","title":"任务管理"},{"path":"/ui/add-view/","filename":"/Volumes/Source/san/san-cli-all/san-cli-github/docs/ui/add-view.md","title":"添加自定义视图"},{"path":"/ui/static/","filename":"/Volumes/Source/san/san-cli-all/san-cli-github/docs/ui/static.md","title":"公共静态文件"}]}]}]}}}};
   }
 
 });
@@ -835,7 +880,7 @@ new client_entry_Index({
 
 /***/ }),
 
-/***/ 5:
+/***/ 4:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -1709,7 +1754,7 @@ global.hub = hub;
 
 /***/ }),
 
-/***/ 96:
+/***/ 98:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -1718,12 +1763,12 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var san__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(san__WEBPACK_IMPORTED_MODULE_0__);
 /* harmony import */ var _common_san_router__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(8);
 /* harmony import */ var _common_san_router__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(_common_san_router__WEBPACK_IMPORTED_MODULE_1__);
-/* harmony import */ var _content_area__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(103);
+/* harmony import */ var _content_area__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(105);
 /* harmony import */ var _content_area__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(_content_area__WEBPACK_IMPORTED_MODULE_2__);
 /* harmony import */ var _tree__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(11);
 /* harmony import */ var _tree__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(_tree__WEBPACK_IMPORTED_MODULE_3__);
 /* harmony import */ var _common_hub__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(9);
-/* harmony import */ var _common_utils__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(5);
+/* harmony import */ var _common_utils__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(4);
 
 
 
@@ -1766,6 +1811,7 @@ __webpack_require__.r(__webpack_exports__);
 
   initData() {
     return {
+      isShowSidebar: true,
       selectedNode: []
     };
   },
@@ -1786,8 +1832,8 @@ __webpack_require__.r(__webpack_exports__);
     this.data.set('selectedNodes', selected);
   },
 
-  getPath(path) {
-    return _common_utils__WEBPACK_IMPORTED_MODULE_5__[/* default */ "a"].base + path;
+  getPath(node) {
+    return _common_utils__WEBPACK_IMPORTED_MODULE_5__[/* default */ "a"].base + node.path;
   },
 
   onClick(e) {
@@ -1802,18 +1848,18 @@ __webpack_require__.r(__webpack_exports__);
 
 /***/ }),
 
-/***/ 97:
+/***/ 99:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* WEBPACK VAR INJECTION */(function(global) {/* harmony import */ var san_src_browser_on__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(104);
+/* WEBPACK VAR INJECTION */(function(global) {/* harmony import */ var san_src_browser_on__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(13);
 /* harmony import */ var san_src_browser_on__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(san_src_browser_on__WEBPACK_IMPORTED_MODULE_0__);
-/* harmony import */ var san_src_browser_un__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(105);
+/* harmony import */ var san_src_browser_un__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(14);
 /* harmony import */ var san_src_browser_un__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(san_src_browser_un__WEBPACK_IMPORTED_MODULE_1__);
 /* harmony import */ var _tree__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(11);
 /* harmony import */ var _tree__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(_tree__WEBPACK_IMPORTED_MODULE_2__);
-/* harmony import */ var _common_utils__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(5);
+/* harmony import */ var _common_utils__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(4);
 
 
 
@@ -1826,6 +1872,9 @@ __webpack_require__.r(__webpack_exports__);
   initData() {
     return {
       toc: {},
+      isShowToc: true,
+      isActiveToc: true,
+      // 数据较少时，不激活
       selectedNodes: []
     };
   },
@@ -1848,8 +1897,12 @@ __webpack_require__.r(__webpack_exports__);
     // router 子组件无法通过组件事件或DOM树向上传递事件
     global.hub.on('changed', this.onChanged.bind(this));
     this.__onScroll = this.onScroll.bind(this);
+    this.__onResize = this.onResize.bind(this);
     san_src_browser_on__WEBPACK_IMPORTED_MODULE_0___default()(global, 'scroll', this.__onScroll);
+    san_src_browser_on__WEBPACK_IMPORTED_MODULE_0___default()(global, 'resize', this.__onResize);
     this.initScroll();
+    this.resize(); // SSR 时默认存在 HTML，清空后由 Router 渲染
+
     this.ref('view').innerHTML = '';
   },
 
@@ -1859,9 +1912,44 @@ __webpack_require__.r(__webpack_exports__);
     return pathname + '#' + hash;
   },
 
-  onChanged(val) {
-    this.data.set('toc', val);
+  onChanged(toc) {
+    this.data.set('toc', toc);
+    this.nextTick(this.initResize.bind(this));
     this.nextTick(this.initScroll.bind(this));
+  },
+
+  initResize() {
+    const toc = this.data.get('toc');
+    let count = 0;
+    _common_utils__WEBPACK_IMPORTED_MODULE_3__[/* default */ "a"].treeWalk(toc, () => count++);
+    this.data.set('isActiveToc', count > 2);
+    this.data.set('isShowToc', count > 2);
+  },
+
+  onResize() {
+    if (this.timer) {
+      global.clearTimeout(this.timer);
+    }
+
+    this.timer = global.setTimeout(() => {
+      this.resize();
+      this.timer = null;
+    }, 10);
+  },
+
+  resize() {
+    const width = document.documentElement.clientWidth || document.body.clientWidth;
+    const isShowToc = width > 900;
+
+    if (isShowToc !== this.data.get('isShowToc') && this.data.get('isActiveToc')) {
+      this.data.set('isShowToc', isShowToc);
+    }
+
+    const isShowSidebar = width > 700;
+
+    if (isShowSidebar !== this.parent.data.get('isShowSidebar')) {
+      this.parent.data.set('isShowSidebar', isShowSidebar);
+    }
   },
 
   initScroll() {
@@ -1926,57 +2014,12 @@ __webpack_require__.r(__webpack_exports__);
 
   detached() {
     san_src_browser_un__WEBPACK_IMPORTED_MODULE_1___default()(global, 'scroll', this.__onScroll);
+    san_src_browser_un__WEBPACK_IMPORTED_MODULE_1___default()(global, 'resize', this.__onResize);
   }
 
 });
 /* san-hmr disable */
 /* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(1)))
-
-/***/ }),
-
-/***/ 98:
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony import */ var san__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(3);
-/* harmony import */ var san__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(san__WEBPACK_IMPORTED_MODULE_0__);
-
-/* harmony default export */ __webpack_exports__["default"] = ({
-  components: {// SSR 不支持 self 啊。。
-    // 'tree-node': 'self'
-  },
-  dataTypes: {
-    treeNode: san__WEBPACK_IMPORTED_MODULE_0__["DataTypes"].object
-  },
-
-  getNodeId(node) {
-    return node.path || node.hash;
-  }
-
-});
-/* san-hmr disable */
-
-/***/ }),
-
-/***/ 99:
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony default export */ __webpack_exports__["default"] = ({
-  initData() {
-    return {
-      isExpand: false
-    };
-  },
-
-  toggleExpand() {
-    this.data.set('isExpand', !this.data.get('isExpand'));
-  }
-
-});
-/* san-hmr disable */
 
 /***/ })
 

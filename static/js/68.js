@@ -10,7 +10,7 @@ module.exports = code;
 
 /***/ }),
 
-/***/ 33:
+/***/ 35:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -36,7 +36,7 @@ class ContentView extends san_component__WEBPACK_IMPORTED_MODULE_0__[/* SanCompo
 
 /***/ }),
 
-/***/ 74:
+/***/ 76:
 /***/ (function(module, exports, __webpack_require__) {
 
 
@@ -45,8 +45,8 @@ class ContentView extends san_component__WEBPACK_IMPORTED_MODULE_0__[/* SanCompo
 
         var template = __webpack_require__(134);
         
-        var script = __webpack_require__(33).default;
-        module.exports = __webpack_require__(33);
+        var script = __webpack_require__(35).default;
+        module.exports = __webpack_require__(35);
     
         module.exports.default = normalize(script, template, injectStyles);
         /* san-hmr component */
