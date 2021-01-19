@@ -1,6 +1,6 @@
 (window["webpackJsonp"] = window["webpackJsonp"] || []).push([[61,15],{
 
-/***/ 139:
+/***/ 142:
 /***/ (function(module, exports) {
 
 // Module
@@ -10,7 +10,7 @@ module.exports = code;
 
 /***/ }),
 
-/***/ 40:
+/***/ 41:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -32,21 +32,21 @@ class ContentView extends san_component__WEBPACK_IMPORTED_MODULE_0__[/* SanCompo
 
 }
 /* san-hmr disable */
-/* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(1)))
+/* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(2)))
 
 /***/ }),
 
-/***/ 81:
+/***/ 82:
 /***/ (function(module, exports, __webpack_require__) {
 
 
-        var normalize = __webpack_require__(2);
+        var normalize = __webpack_require__(1);
         var injectStyles = [];
 
-        var template = __webpack_require__(139);
+        var template = __webpack_require__(142);
         
-        var script = __webpack_require__(40).default;
-        module.exports = __webpack_require__(40);
+        var script = __webpack_require__(41).default;
+        module.exports = __webpack_require__(41);
     
         module.exports.default = normalize(script, template, injectStyles);
         /* san-hmr component */

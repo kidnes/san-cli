@@ -217,7 +217,7 @@
 /******/
 /******/
 /******/ 	// add entry module to deferred list
-/******/ 	deferredModules.push([182,0]);
+/******/ 	deferredModules.push([187,0]);
 /******/ 	// run deferred modules when ready
 /******/ 	return checkDeferredModules();
 /******/ })
@@ -225,6 +225,180 @@
 /******/ ({
 
 /***/ 100:
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* WEBPACK VAR INJECTION */(function(global) {/* harmony import */ var san_src_browser_on__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(13);
+/* harmony import */ var san_src_browser_on__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(san_src_browser_on__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var san_src_browser_un__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(14);
+/* harmony import */ var san_src_browser_un__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(san_src_browser_un__WEBPACK_IMPORTED_MODULE_1__);
+/* harmony import */ var _tree__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(11);
+/* harmony import */ var _tree__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(_tree__WEBPACK_IMPORTED_MODULE_2__);
+/* harmony import */ var _common_utils__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(6);
+
+
+
+
+/* harmony default export */ __webpack_exports__["default"] = ({
+  components: {
+    tree: (_tree__WEBPACK_IMPORTED_MODULE_2___default())
+  },
+
+  initData() {
+    return {
+      toc: {},
+      isShowToc: true,
+      isActiveToc: true,
+      // 数据较少时，不激活
+      selectedNodes: []
+    };
+  },
+
+  inited() {
+    let toc = {}; // SSR 时，可从最外层传入docit；client-entry时，从全局变量取
+
+    const docit = this.data.get('docit');
+
+    if (docit && docit.toc) {
+      toc = docit.toc;
+    } else if (global.SAN_DOCIT && global.SAN_DOCIT.toc) {
+      toc = global.SAN_DOCIT.toc;
+    }
+
+    this.data.set('toc', toc);
+  },
+
+  attached() {
+    // router 子组件无法通过组件事件或DOM树向上传递事件
+    global.hub.on('changed', this.onChanged.bind(this));
+    this.__onScroll = this.onScroll.bind(this);
+    this.__onResize = this.onResize.bind(this);
+    san_src_browser_on__WEBPACK_IMPORTED_MODULE_0___default()(global, 'scroll', this.__onScroll);
+    san_src_browser_on__WEBPACK_IMPORTED_MODULE_0___default()(global, 'resize', this.__onResize);
+    this.initScroll();
+    this.resize(); // SSR 时默认存在 HTML，清空后由 Router 渲染
+
+    this.ref('view').innerHTML = '';
+  },
+
+  getHash(hash) {
+    const docit = this.data.get('docit');
+    const pathname = docit.pathname ? _common_utils__WEBPACK_IMPORTED_MODULE_3__[/* default */ "a"].base + docit.pathname : location.pathname;
+    return pathname + '#' + hash;
+  },
+
+  onChanged(toc) {
+    this.data.set('toc', toc);
+    this.nextTick(this.initResize.bind(this));
+    this.nextTick(this.initScroll.bind(this));
+  },
+
+  initResize() {
+    const toc = this.data.get('toc');
+    let count = 0;
+    _common_utils__WEBPACK_IMPORTED_MODULE_3__[/* default */ "a"].treeWalk(toc, () => count++);
+    this.data.set('isActiveToc', count > 2);
+  },
+
+  onResize() {
+    if (this.timer) {
+      global.clearTimeout(this.timer);
+    }
+
+    this.timer = global.setTimeout(() => {
+      this.resize();
+      this.timer = null;
+    }, 10);
+  },
+
+  resize() {
+    const width = document.documentElement.clientWidth || document.body.clientWidth;
+    const isShowToc = width > 900;
+
+    if (isShowToc !== this.data.get('isShowToc') && this.data.get('isActiveToc')) {
+      this.data.set('isShowToc', isShowToc);
+    }
+
+    const isShowSidebar = width > 700;
+
+    if (isShowSidebar !== this.parent.data.get('isShowSidebar')) {
+      this.parent.data.set('isShowSidebar', isShowSidebar);
+    }
+  },
+
+  initScroll() {
+    const view = this.ref('view');
+    const doms = view.querySelectorAll('H2, H3');
+
+    if (!doms) {
+      return;
+    }
+
+    this.postions = [];
+    this.hashs = [];
+    doms.forEach(dom => {
+      this.postions.push(dom.offsetTop);
+      this.hashs.push(dom.id);
+    });
+    const len = this.hashs.length;
+    this.postions[len] = Number.MAX_VALUE;
+    this.hashs[len] = this.hashs[this.hashs.length - 1];
+    const toc = this.data.get('toc');
+
+    if (toc && toc.children && toc.children.length > 0) {
+      this.data.set('selectedNodes', [toc.children[0]]);
+    }
+  },
+
+  onScroll(evt) {
+    if (this.timer) {
+      global.clearTimeout(this.timer);
+    }
+
+    this.timer = global.setTimeout(() => {
+      this.scrollPostion();
+      this.timer = null;
+    }, 10);
+  },
+
+  scrollPostion() {
+    const scrollTop = document.documentElement.scrollTop || document.body.scrollTop;
+    const index = this.postions.findIndex(pos => pos >= scrollTop);
+
+    if (index !== -1) {
+      this.changeSelected(this.hashs[index]);
+    }
+  },
+
+  changeSelected(hash) {
+    if (this.selected === hash) {
+      return;
+    }
+
+    const selected = [];
+    const toc = this.data.get('toc');
+    _common_utils__WEBPACK_IMPORTED_MODULE_3__[/* default */ "a"].treeWalk(toc, item => {
+      if (item.hash === hash) {
+        selected.push(item);
+      }
+    });
+    this.data.set('selectedNodes', selected);
+    this.selected = hash;
+  },
+
+  detached() {
+    san_src_browser_un__WEBPACK_IMPORTED_MODULE_1___default()(global, 'scroll', this.__onScroll);
+    san_src_browser_un__WEBPACK_IMPORTED_MODULE_1___default()(global, 'resize', this.__onResize);
+  }
+
+});
+/* san-hmr disable */
+/* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(2)))
+
+/***/ }),
+
+/***/ 101:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -249,7 +423,28 @@ __webpack_require__.r(__webpack_exports__);
 
 /***/ }),
 
-/***/ 101:
+/***/ 102:
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony default export */ __webpack_exports__["default"] = ({
+  initData() {
+    return {
+      isOpened: false
+    };
+  },
+
+  onClick() {
+    this.data.set('isOpened', !this.data.get('isOpened'));
+  }
+
+});
+/* san-hmr disable */
+
+/***/ }),
+
+/***/ 103:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -270,7 +465,7 @@ __webpack_require__.r(__webpack_exports__);
 
 /***/ }),
 
-/***/ 102:
+/***/ 104:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -280,7 +475,7 @@ __webpack_require__.r(__webpack_exports__);
 
 /***/ }),
 
-/***/ 103:
+/***/ 105:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -291,7 +486,7 @@ __webpack_require__.r(__webpack_exports__);
 var san_dev = __webpack_require__(3);
 
 // EXTERNAL MODULE: ../src/views/tree-node.san
-var tree_node = __webpack_require__(106);
+var tree_node = __webpack_require__(108);
 var tree_node_default = /*#__PURE__*/__webpack_require__.n(tree_node);
 
 // CONCATENATED MODULE: ../src/common/dom.js
@@ -335,18 +530,26 @@ const removeClass = (dom, name) => {
   },
 
   attached() {
-    this.watch('selectedNodes', val => {
-      const list = this.el.querySelectorAll('li[data-id]');
+    this.watch('selectedNodes', this.active);
+    const selectedNodes = this.data.get('selectedNodes');
 
-      for (let i = 0; i < list.length; i++) {
-        const el = list[i];
-        const finded = val.find(item => {
-          return el.getAttribute('data-id') === (item.path || item.hash);
-        });
-        const isActive = finded !== undefined;
-        isActive ? dom.addClass(el, 'active') : dom.removeClass(el, 'active');
-      }
-    });
+    if (selectedNodes && selectedNodes.length > 0) {
+      this.active(selectedNodes);
+    }
+  },
+
+  active(val) {
+    const list = this.el.querySelectorAll('li[data-id]');
+
+    for (let i = 0; i < list.length; i++) {
+      const el = list[i];
+      const dataId = el.getAttribute('data-id');
+      const finded = val.find(item => {
+        return dataId === (item.path || item.hash);
+      });
+      const isActive = finded !== undefined;
+      isActive ? dom.addClass(el, 'active') : dom.removeClass(el, 'active');
+    }
   }
 
 });
@@ -354,33 +557,15 @@ const removeClass = (dom, name) => {
 
 /***/ }),
 
-/***/ 104:
+/***/ 106:
 /***/ (function(module, exports, __webpack_require__) {
 
 
-        var normalize = __webpack_require__(2);
-        __webpack_require__(173);
+        var normalize = __webpack_require__(1);
+        __webpack_require__(176);
 var injectStyles = [];
 
-        var template = __webpack_require__(174);
-        
-        var script = __webpack_require__(98).default;
-        module.exports = __webpack_require__(98);
-    
-        module.exports.default = normalize(script, template, injectStyles);
-        /* san-hmr component */
-    
-
-/***/ }),
-
-/***/ 105:
-/***/ (function(module, exports, __webpack_require__) {
-
-
-        var normalize = __webpack_require__(2);
-        var injectStyles = [];
-
-        var template = __webpack_require__(175);
+        var template = __webpack_require__(177);
         
         var script = __webpack_require__(99).default;
         module.exports = __webpack_require__(99);
@@ -391,14 +576,14 @@ var injectStyles = [];
 
 /***/ }),
 
-/***/ 106:
+/***/ 107:
 /***/ (function(module, exports, __webpack_require__) {
 
 
-        var normalize = __webpack_require__(2);
+        var normalize = __webpack_require__(1);
         var injectStyles = [];
 
-        var template = __webpack_require__(177);
+        var template = __webpack_require__(178);
         
         var script = __webpack_require__(100).default;
         module.exports = __webpack_require__(100);
@@ -413,11 +598,10 @@ var injectStyles = [];
 /***/ (function(module, exports, __webpack_require__) {
 
 
-        var normalize = __webpack_require__(2);
-        __webpack_require__(178);
-var injectStyles = [];
+        var normalize = __webpack_require__(1);
+        var injectStyles = [];
 
-        var template = __webpack_require__(179);
+        var template = __webpack_require__(180);
         
         var script = __webpack_require__(101).default;
         module.exports = __webpack_require__(101);
@@ -429,6 +613,62 @@ var injectStyles = [];
 /***/ }),
 
 /***/ 109:
+/***/ (function(module, exports, __webpack_require__) {
+
+
+        var normalize = __webpack_require__(1);
+        __webpack_require__(181);
+var injectStyles = [];
+
+        var template = __webpack_require__(182);
+        
+        var script = __webpack_require__(102).default;
+        module.exports = __webpack_require__(102);
+    
+        module.exports.default = normalize(script, template, injectStyles);
+        /* san-hmr component */
+    
+
+/***/ }),
+
+/***/ 11:
+/***/ (function(module, exports, __webpack_require__) {
+
+
+        var normalize = __webpack_require__(1);
+        var injectStyles = [];
+
+        var template = __webpack_require__(179);
+        
+        var script = __webpack_require__(105).default;
+        module.exports = __webpack_require__(105);
+    
+        module.exports.default = normalize(script, template, injectStyles);
+        /* san-hmr component */
+    
+
+/***/ }),
+
+/***/ 111:
+/***/ (function(module, exports, __webpack_require__) {
+
+
+        var normalize = __webpack_require__(1);
+        __webpack_require__(183);
+var injectStyles = [];
+
+        var template = __webpack_require__(184);
+        
+        var script = __webpack_require__(103).default;
+        module.exports = __webpack_require__(103);
+    
+        module.exports.default = normalize(script, template, injectStyles);
+        /* san-hmr component */
+    
+
+/***/ }),
+
+/***/ 112:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -437,10 +677,10 @@ var injectStyles = [];
 /* harmony import */ var NProgress__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(10);
 /* harmony import */ var NProgress__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(NProgress__WEBPACK_IMPORTED_MODULE_1__);
 /* harmony import */ var _common_hub__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(9);
-/* harmony import */ var _common_utils__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(4);
-/* harmony import */ var _views_not_found_san__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(110);
+/* harmony import */ var _common_utils__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(6);
+/* harmony import */ var _views_not_found_san__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(113);
 /* harmony import */ var _views_not_found_san__WEBPACK_IMPORTED_MODULE_4___default = /*#__PURE__*/__webpack_require__.n(_views_not_found_san__WEBPACK_IMPORTED_MODULE_4__);
-/* harmony import */ var nprogress_nprogress_css__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(181);
+/* harmony import */ var nprogress_nprogress_css__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(186);
 // import {Router} from '../common/san-router';
 
 
@@ -452,45 +692,45 @@ _common_san_router__WEBPACK_IMPORTED_MODULE_0__["router"].setMode('html5'); // W
 
 const config = {"title":"San CLI","base":"/san-cli/","themeConfig":{"nav":[{"text":"San","link":"https://baidu.github.io/san/"},{"text":"Santd","link":"https://ecomfe.github.io/santd/"}],"sidebar":{"/":{"children":[{"path":"/","filename":"/Volumes/Source/san/san-cli-all/san-cli-github/docs/README.md","title":"介绍"},{"title":"基础命令","children":[{"path":"/create-project/","filename":"/Volumes/Source/san/san-cli-all/san-cli-github/docs/create-project.md","title":"初始化项目"},{"path":"/serve/","filename":"/Volumes/Source/san/san-cli-all/san-cli-github/docs/serve.md","title":"开发打包"},{"path":"/build/","filename":"/Volumes/Source/san/san-cli-all/san-cli-github/docs/build.md","title":"生产打包"}]},{"title":"配置","children":[{"path":"/config/","filename":"/Volumes/Source/san/san-cli-all/san-cli-github/docs/config.md","title":"San CLI 配置文件"},{"path":"/advanced/","filename":"/Volumes/Source/san/san-cli-all/san-cli-github/docs/advanced.md","title":"高级配置"},{"path":"/presets/","filename":"/Volumes/Source/san/san-cli-all/san-cli-github/docs/presets.md","title":"Presets 预设"},{"path":"/env/","filename":"/Volumes/Source/san/san-cli-all/san-cli-github/docs/env.md","title":"环境变量"}]},{"title":"常见解决方案","children":[{"path":"/modern-mode/","filename":"/Volumes/Source/san/san-cli-all/san-cli-github/docs/modern-mode.md","title":"现在的浏览器打包模式"},{"path":"/bundle-analyze/","filename":"/Volumes/Source/san/san-cli-all/san-cli-github/docs/bundle-analyze.md","title":"Bundle 分析"},{"path":"/component/","filename":"/Volumes/Source/san/san-cli-all/san-cli-github/docs/component.md","title":"San Component 组件开发"},{"path":"/smarty/","filename":"/Volumes/Source/san/san-cli-all/san-cli-github/docs/smarty.md","title":"Smarty 相关"},{"path":"/deployment/","filename":"/Volumes/Source/san/san-cli-all/san-cli-github/docs/deployment.md","title":"部署"},{"path":"/hulk-cli-migration/","filename":"/Volumes/Source/san/san-cli-all/san-cli-github/docs/hulk-cli-migration.md","title":"hulk-cli升级san-cli"}]},{"title":"二次开发","children":[{"path":"/architecture/","filename":"/Volumes/Source/san/san-cli-all/san-cli-github/docs/architecture.md","title":"内部实现"},{"path":"/create-scaffold/","filename":"/Volumes/Source/san/san-cli-all/san-cli-github/docs/create-scaffold.md","title":"如何创建一个脚手架项目"},{"path":"/plugin/","filename":"/Volumes/Source/san/san-cli-all/san-cli-github/docs/plugin.md","title":"插件","children":[{"path":"/cmd-plugin/","filename":"/Volumes/Source/san/san-cli-all/san-cli-github/docs/cmd-plugin.md","title":"Command 插件"},{"path":"/srv-plugin/","filename":"/Volumes/Source/san/san-cli-all/san-cli-github/docs/srv-plugin.md","title":"编写一个 Serivce 插件"}]}]},{"title":"CLI UI","children":[{"path":"/ui/start/","filename":"/Volumes/Source/san/san-cli-all/san-cli-github/docs/ui/start.md","title":"CLI UI安装"},{"title":"功能简介","children":[{"path":"/ui/project-list/","filename":"/Volumes/Source/san/san-cli-all/san-cli-github/docs/ui/project-list.md","title":"项目列表"},{"path":"/ui/dashboard/","filename":"/Volumes/Source/san/san-cli-all/san-cli-github/docs/ui/dashboard.md","title":"仪表盘"},{"path":"/ui/plugin/","filename":"/Volumes/Source/san/san-cli-all/san-cli-github/docs/ui/plugin.md","title":"插件管理"},{"path":"/ui/dependency/","filename":"/Volumes/Source/san/san-cli-all/san-cli-github/docs/ui/dependency.md","title":"依赖管理"},{"path":"/ui/configuration/","filename":"/Volumes/Source/san/san-cli-all/san-cli-github/docs/ui/configuration.md","title":"配置管理"},{"path":"/ui/task/","filename":"/Volumes/Source/san/san-cli-all/san-cli-github/docs/ui/task.md","title":"任务管理"}]},{"title":"插件开发","children":[{"path":"/ui/structure/","filename":"/Volumes/Source/san/san-cli-all/san-cli-github/docs/ui/structure.md","title":"CLI UI 插件"},{"path":"/ui/plugin-object/","filename":"/Volumes/Source/san/san-cli-all/san-cli-github/docs/ui/plugin-object.md","title":"PluginManager对象"},{"path":"/ui/add-addon/","filename":"/Volumes/Source/san/san-cli-all/san-cli-github/docs/ui/add-addon.md","title":"addon组件"},{"path":"/ui/add-config/","filename":"/Volumes/Source/san/san-cli-all/san-cli-github/docs/ui/add-config.md","title":"添加项目配置"},{"path":"/ui/cover-task/","filename":"/Volumes/Source/san/san-cli-all/san-cli-github/docs/ui/cover-task.md","title":"任务管理"},{"path":"/ui/add-view/","filename":"/Volumes/Source/san/san-cli-all/san-cli-github/docs/ui/add-view.md","title":"添加自定义视图"},{"path":"/ui/static/","filename":"/Volumes/Source/san/san-cli-all/san-cli-github/docs/ui/static.md","title":"公共静态文件"}]}]}]}}}};
 const components = {
-  "/": () => Promise.all(/* import() */[__webpack_require__.e(1), __webpack_require__.e(51)]).then(__webpack_require__.t.bind(null, 58, 7)),
-  "/_navbar/": () => Promise.all(/* import() */[__webpack_require__.e(1), __webpack_require__.e(52)]).then(__webpack_require__.t.bind(null, 60, 7)),
-  "/_sidebar/": () => Promise.all(/* import() */[__webpack_require__.e(1), __webpack_require__.e(53)]).then(__webpack_require__.t.bind(null, 61, 7)),
-  "/advanced/": () => Promise.all(/* import() */[__webpack_require__.e(1), __webpack_require__.e(54)]).then(__webpack_require__.t.bind(null, 62, 7)),
-  "/architecture/": () => Promise.all(/* import() */[__webpack_require__.e(1), __webpack_require__.e(42)]).then(__webpack_require__.t.bind(null, 63, 7)),
-  "/build/": () => Promise.all(/* import() */[__webpack_require__.e(1), __webpack_require__.e(48)]).then(__webpack_require__.t.bind(null, 64, 7)),
-  "/bundle-analyze/": () => Promise.all(/* import() */[__webpack_require__.e(1), __webpack_require__.e(49)]).then(__webpack_require__.t.bind(null, 65, 7)),
-  "/cmd-plugin/": () => Promise.all(/* import() */[__webpack_require__.e(1), __webpack_require__.e(55)]).then(__webpack_require__.t.bind(null, 66, 7)),
-  "/component/": () => Promise.all(/* import() */[__webpack_require__.e(1), __webpack_require__.e(56)]).then(__webpack_require__.t.bind(null, 67, 7)),
-  "/config/": () => Promise.all(/* import() */[__webpack_require__.e(1), __webpack_require__.e(57)]).then(__webpack_require__.t.bind(null, 68, 7)),
-  "/create-project/": () => Promise.all(/* import() */[__webpack_require__.e(1), __webpack_require__.e(58)]).then(__webpack_require__.t.bind(null, 69, 7)),
-  "/create-scaffold/": () => Promise.all(/* import() */[__webpack_require__.e(1), __webpack_require__.e(59)]).then(__webpack_require__.t.bind(null, 70, 7)),
-  "/deployment/": () => Promise.all(/* import() */[__webpack_require__.e(1), __webpack_require__.e(60)]).then(__webpack_require__.t.bind(null, 71, 7)),
-  "/env/": () => Promise.all(/* import() */[__webpack_require__.e(1), __webpack_require__.e(64)]).then(__webpack_require__.t.bind(null, 72, 7)),
-  "/hulk-cli-migration/": () => Promise.all(/* import() */[__webpack_require__.e(1), __webpack_require__.e(65)]).then(__webpack_require__.t.bind(null, 73, 7)),
-  "/inspect/": () => Promise.all(/* import() */[__webpack_require__.e(1), __webpack_require__.e(66)]).then(__webpack_require__.t.bind(null, 74, 7)),
-  "/modern-mode/": () => Promise.all(/* import() */[__webpack_require__.e(1), __webpack_require__.e(67)]).then(__webpack_require__.t.bind(null, 75, 7)),
-  "/plugin/": () => Promise.all(/* import() */[__webpack_require__.e(1), __webpack_require__.e(68)]).then(__webpack_require__.t.bind(null, 76, 7)),
-  "/presets/": () => Promise.all(/* import() */[__webpack_require__.e(1), __webpack_require__.e(69)]).then(__webpack_require__.t.bind(null, 77, 7)),
-  "/serve/": () => Promise.all(/* import() */[__webpack_require__.e(1), __webpack_require__.e(70)]).then(__webpack_require__.t.bind(null, 78, 7)),
-  "/smarty/": () => Promise.all(/* import() */[__webpack_require__.e(1), __webpack_require__.e(71)]).then(__webpack_require__.t.bind(null, 79, 7)),
-  "/srv-plugin/": () => Promise.all(/* import() */[__webpack_require__.e(1), __webpack_require__.e(72)]).then(__webpack_require__.t.bind(null, 80, 7)),
-  "/docit/_sanbox/": () => Promise.all(/* import() */[__webpack_require__.e(1), __webpack_require__.e(61)]).then(__webpack_require__.t.bind(null, 81, 7)),
-  "/docit/markdownit/": () => Promise.all(/* import() */[__webpack_require__.e(1), __webpack_require__.e(62)]).then(__webpack_require__.t.bind(null, 82, 7)),
-  "/docit/sanbox-demo/": () => Promise.all(/* import() */[__webpack_require__.e(1), __webpack_require__.e(63)]).then(__webpack_require__.t.bind(null, 83, 7)),
-  "/ui/add-addon/": () => Promise.all(/* import() */[__webpack_require__.e(1), __webpack_require__.e(73)]).then(__webpack_require__.t.bind(null, 84, 7)),
-  "/ui/add-config/": () => Promise.all(/* import() */[__webpack_require__.e(1), __webpack_require__.e(74)]).then(__webpack_require__.t.bind(null, 85, 7)),
-  "/ui/add-view/": () => Promise.all(/* import() */[__webpack_require__.e(1), __webpack_require__.e(75)]).then(__webpack_require__.t.bind(null, 86, 7)),
-  "/ui/configuration/": () => Promise.all(/* import() */[__webpack_require__.e(1), __webpack_require__.e(50)]).then(__webpack_require__.t.bind(null, 87, 7)),
-  "/ui/cover-task/": () => Promise.all(/* import() */[__webpack_require__.e(1), __webpack_require__.e(76)]).then(__webpack_require__.t.bind(null, 88, 7)),
-  "/ui/dashboard/": () => Promise.all(/* import() */[__webpack_require__.e(1), __webpack_require__.e(43)]).then(__webpack_require__.t.bind(null, 89, 7)),
-  "/ui/dependency/": () => Promise.all(/* import() */[__webpack_require__.e(1), __webpack_require__.e(45)]).then(__webpack_require__.t.bind(null, 90, 7)),
-  "/ui/plugin-object/": () => Promise.all(/* import() */[__webpack_require__.e(1), __webpack_require__.e(77)]).then(__webpack_require__.t.bind(null, 91, 7)),
-  "/ui/plugin/": () => Promise.all(/* import() */[__webpack_require__.e(1), __webpack_require__.e(46)]).then(__webpack_require__.t.bind(null, 92, 7)),
-  "/ui/project-list/": () => Promise.all(/* import() */[__webpack_require__.e(1), __webpack_require__.e(44)]).then(__webpack_require__.t.bind(null, 93, 7)),
-  "/ui/start/": () => Promise.all(/* import() */[__webpack_require__.e(1), __webpack_require__.e(78)]).then(__webpack_require__.t.bind(null, 94, 7)),
-  "/ui/static/": () => Promise.all(/* import() */[__webpack_require__.e(1), __webpack_require__.e(79)]).then(__webpack_require__.t.bind(null, 95, 7)),
-  "/ui/structure/": () => Promise.all(/* import() */[__webpack_require__.e(1), __webpack_require__.e(80)]).then(__webpack_require__.t.bind(null, 96, 7)),
-  "/ui/task/": () => Promise.all(/* import() */[__webpack_require__.e(1), __webpack_require__.e(47)]).then(__webpack_require__.t.bind(null, 97, 7))
+  "/": () => Promise.all(/* import() */[__webpack_require__.e(1), __webpack_require__.e(51)]).then(__webpack_require__.t.bind(null, 59, 7)),
+  "/_navbar/": () => Promise.all(/* import() */[__webpack_require__.e(1), __webpack_require__.e(52)]).then(__webpack_require__.t.bind(null, 61, 7)),
+  "/_sidebar/": () => Promise.all(/* import() */[__webpack_require__.e(1), __webpack_require__.e(53)]).then(__webpack_require__.t.bind(null, 62, 7)),
+  "/advanced/": () => Promise.all(/* import() */[__webpack_require__.e(1), __webpack_require__.e(54)]).then(__webpack_require__.t.bind(null, 63, 7)),
+  "/architecture/": () => Promise.all(/* import() */[__webpack_require__.e(1), __webpack_require__.e(42)]).then(__webpack_require__.t.bind(null, 64, 7)),
+  "/build/": () => Promise.all(/* import() */[__webpack_require__.e(1), __webpack_require__.e(48)]).then(__webpack_require__.t.bind(null, 65, 7)),
+  "/bundle-analyze/": () => Promise.all(/* import() */[__webpack_require__.e(1), __webpack_require__.e(49)]).then(__webpack_require__.t.bind(null, 66, 7)),
+  "/cmd-plugin/": () => Promise.all(/* import() */[__webpack_require__.e(1), __webpack_require__.e(55)]).then(__webpack_require__.t.bind(null, 67, 7)),
+  "/component/": () => Promise.all(/* import() */[__webpack_require__.e(1), __webpack_require__.e(56)]).then(__webpack_require__.t.bind(null, 68, 7)),
+  "/config/": () => Promise.all(/* import() */[__webpack_require__.e(1), __webpack_require__.e(57)]).then(__webpack_require__.t.bind(null, 69, 7)),
+  "/create-project/": () => Promise.all(/* import() */[__webpack_require__.e(1), __webpack_require__.e(58)]).then(__webpack_require__.t.bind(null, 70, 7)),
+  "/create-scaffold/": () => Promise.all(/* import() */[__webpack_require__.e(1), __webpack_require__.e(59)]).then(__webpack_require__.t.bind(null, 71, 7)),
+  "/deployment/": () => Promise.all(/* import() */[__webpack_require__.e(1), __webpack_require__.e(60)]).then(__webpack_require__.t.bind(null, 72, 7)),
+  "/env/": () => Promise.all(/* import() */[__webpack_require__.e(1), __webpack_require__.e(64)]).then(__webpack_require__.t.bind(null, 73, 7)),
+  "/hulk-cli-migration/": () => Promise.all(/* import() */[__webpack_require__.e(1), __webpack_require__.e(65)]).then(__webpack_require__.t.bind(null, 74, 7)),
+  "/inspect/": () => Promise.all(/* import() */[__webpack_require__.e(1), __webpack_require__.e(66)]).then(__webpack_require__.t.bind(null, 75, 7)),
+  "/modern-mode/": () => Promise.all(/* import() */[__webpack_require__.e(1), __webpack_require__.e(67)]).then(__webpack_require__.t.bind(null, 76, 7)),
+  "/plugin/": () => Promise.all(/* import() */[__webpack_require__.e(1), __webpack_require__.e(68)]).then(__webpack_require__.t.bind(null, 77, 7)),
+  "/presets/": () => Promise.all(/* import() */[__webpack_require__.e(1), __webpack_require__.e(69)]).then(__webpack_require__.t.bind(null, 78, 7)),
+  "/serve/": () => Promise.all(/* import() */[__webpack_require__.e(1), __webpack_require__.e(70)]).then(__webpack_require__.t.bind(null, 79, 7)),
+  "/smarty/": () => Promise.all(/* import() */[__webpack_require__.e(1), __webpack_require__.e(71)]).then(__webpack_require__.t.bind(null, 80, 7)),
+  "/srv-plugin/": () => Promise.all(/* import() */[__webpack_require__.e(1), __webpack_require__.e(72)]).then(__webpack_require__.t.bind(null, 81, 7)),
+  "/docit/_sanbox/": () => Promise.all(/* import() */[__webpack_require__.e(1), __webpack_require__.e(61)]).then(__webpack_require__.t.bind(null, 82, 7)),
+  "/docit/markdownit/": () => Promise.all(/* import() */[__webpack_require__.e(1), __webpack_require__.e(62)]).then(__webpack_require__.t.bind(null, 83, 7)),
+  "/docit/sanbox-demo/": () => Promise.all(/* import() */[__webpack_require__.e(1), __webpack_require__.e(63)]).then(__webpack_require__.t.bind(null, 84, 7)),
+  "/ui/add-addon/": () => Promise.all(/* import() */[__webpack_require__.e(1), __webpack_require__.e(73)]).then(__webpack_require__.t.bind(null, 85, 7)),
+  "/ui/add-config/": () => Promise.all(/* import() */[__webpack_require__.e(1), __webpack_require__.e(74)]).then(__webpack_require__.t.bind(null, 86, 7)),
+  "/ui/add-view/": () => Promise.all(/* import() */[__webpack_require__.e(1), __webpack_require__.e(75)]).then(__webpack_require__.t.bind(null, 87, 7)),
+  "/ui/configuration/": () => Promise.all(/* import() */[__webpack_require__.e(1), __webpack_require__.e(50)]).then(__webpack_require__.t.bind(null, 88, 7)),
+  "/ui/cover-task/": () => Promise.all(/* import() */[__webpack_require__.e(1), __webpack_require__.e(76)]).then(__webpack_require__.t.bind(null, 89, 7)),
+  "/ui/dashboard/": () => Promise.all(/* import() */[__webpack_require__.e(1), __webpack_require__.e(43)]).then(__webpack_require__.t.bind(null, 90, 7)),
+  "/ui/dependency/": () => Promise.all(/* import() */[__webpack_require__.e(1), __webpack_require__.e(45)]).then(__webpack_require__.t.bind(null, 91, 7)),
+  "/ui/plugin-object/": () => Promise.all(/* import() */[__webpack_require__.e(1), __webpack_require__.e(77)]).then(__webpack_require__.t.bind(null, 92, 7)),
+  "/ui/plugin/": () => Promise.all(/* import() */[__webpack_require__.e(1), __webpack_require__.e(46)]).then(__webpack_require__.t.bind(null, 93, 7)),
+  "/ui/project-list/": () => Promise.all(/* import() */[__webpack_require__.e(1), __webpack_require__.e(44)]).then(__webpack_require__.t.bind(null, 94, 7)),
+  "/ui/start/": () => Promise.all(/* import() */[__webpack_require__.e(1), __webpack_require__.e(78)]).then(__webpack_require__.t.bind(null, 95, 7)),
+  "/ui/static/": () => Promise.all(/* import() */[__webpack_require__.e(1), __webpack_require__.e(79)]).then(__webpack_require__.t.bind(null, 96, 7)),
+  "/ui/structure/": () => Promise.all(/* import() */[__webpack_require__.e(1), __webpack_require__.e(80)]).then(__webpack_require__.t.bind(null, 97, 7)),
+  "/ui/task/": () => Promise.all(/* import() */[__webpack_require__.e(1), __webpack_require__.e(47)]).then(__webpack_require__.t.bind(null, 98, 7))
 };
 const base = _common_utils__WEBPACK_IMPORTED_MODULE_3__[/* default */ "a"].base;
 const sidebar = config.themeConfig.sidebar;
@@ -568,39 +808,21 @@ global.hub.on('changed', () => {
   NProgress__WEBPACK_IMPORTED_MODULE_1___default.a.done(true);
 });
 /* harmony default export */ __webpack_exports__["a"] = (_common_san_router__WEBPACK_IMPORTED_MODULE_0__["router"]);
-/* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(1)))
+/* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(2)))
 
 /***/ }),
 
-/***/ 11:
+/***/ 113:
 /***/ (function(module, exports, __webpack_require__) {
 
 
-        var normalize = __webpack_require__(2);
+        var normalize = __webpack_require__(1);
         var injectStyles = [];
 
-        var template = __webpack_require__(176);
+        var template = __webpack_require__(185);
         
-        var script = __webpack_require__(103).default;
-        module.exports = __webpack_require__(103);
-    
-        module.exports.default = normalize(script, template, injectStyles);
-        /* san-hmr component */
-    
-
-/***/ }),
-
-/***/ 110:
-/***/ (function(module, exports, __webpack_require__) {
-
-
-        var normalize = __webpack_require__(2);
-        var injectStyles = [];
-
-        var template = __webpack_require__(180);
-        
-        var script = __webpack_require__(102).default;
-        module.exports = __webpack_require__(102);
+        var script = __webpack_require__(104).default;
+        module.exports = __webpack_require__(104);
     
         module.exports.default = normalize(script, template, injectStyles);
         /* san-hmr component */
@@ -612,7 +834,7 @@ global.hub.on('changed', () => {
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* harmony import */ var _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(7);
+/* harmony import */ var _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(5);
 /* harmony import */ var _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0__);
 // Imports
 
@@ -629,7 +851,7 @@ ___CSS_LOADER_EXPORT___.push([module.i, "", ""]);
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* harmony import */ var _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(7);
+/* harmony import */ var _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(5);
 /* harmony import */ var _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0__);
 // Imports
 
@@ -646,7 +868,7 @@ ___CSS_LOADER_EXPORT___.push([module.i, "", ""]);
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* harmony import */ var _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(7);
+/* harmony import */ var _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(5);
 /* harmony import */ var _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0__);
 // Imports
 
@@ -659,12 +881,29 @@ ___CSS_LOADER_EXPORT___.push([module.i, "", ""]);
 
 /***/ }),
 
-/***/ 173:
+/***/ 17:
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+/* harmony import */ var _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(5);
+/* harmony import */ var _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0__);
+// Imports
+
+var ___CSS_LOADER_EXPORT___ = _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default()(function(i){return i[1]});
+// Module
+___CSS_LOADER_EXPORT___.push([module.i, "", ""]);
+// Exports
+/* harmony default export */ __webpack_exports__["a"] = (___CSS_LOADER_EXPORT___);
+
+
+/***/ }),
+
+/***/ 176:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony import */ var _node_modules_style_loader_dist_runtime_injectStylesIntoStyleTag_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(6);
+/* harmony import */ var _node_modules_style_loader_dist_runtime_injectStylesIntoStyleTag_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(4);
 /* harmony import */ var _node_modules_style_loader_dist_runtime_injectStylesIntoStyleTag_js__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_node_modules_style_loader_dist_runtime_injectStylesIntoStyleTag_js__WEBPACK_IMPORTED_MODULE_0__);
 /* harmony import */ var _node_modules_css_loader_dist_cjs_js_node_modules_less_loader_dist_cjs_js_ref_4_2_node_modules_mini_css_extract_plugin_dist_loader_js_node_modules_css_loader_dist_cjs_js_node_modules_less_loader_dist_cjs_js_ref_11_2_node_modules_san_loader_index_js_layout_san_lang_less_san_type_style_index_0__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(12);
 
@@ -683,17 +922,17 @@ var update = _node_modules_style_loader_dist_runtime_injectStylesIntoStyleTag_js
 
 /***/ }),
 
-/***/ 174:
+/***/ 177:
 /***/ (function(module, exports) {
 
 // Module
-var code = " <div id=\"site\"> <header id=\"header\"> <a href=\"{{docit.base}}\" class=\"navbar\"> <img src=\"{{docit.base + 'logo.svg'}}\" alt=\"Home\" class=\"logo\"/> <span>{{docit.title}}</span> </a> <ul> <li s-for=\"nav in docit.themeConfig.nav\"> <a target=\"{{nav.target || '_blank'}}\" href=\"{{nav.link}}\"> {{nav.text}} </a> </li> </ul> </header> <aside id=\"sidebar\" s-if=\"isShowSidebar\"> <tree treeData=\"{{sidebar}}\" selectedNodes=\"{{selectedNodes}}\"> <router-link s-if=\"treeNode.path\" to=\"{{getPath(treeNode)}}\">{{treeNode.title}}</router-link> <span s-else>{{treeNode.title}}</span> </tree> </aside> <content-area docit=\"{{docit}}\" class=\"{{isShowSidebar ? '' : 'hidden'}}\"></content-area> </div> ";
+var code = " <div id=\"site\"> <header id=\"header\"> <a href=\"{{docit.base}}\" class=\"navbar\"> <img src=\"{{docit.base + 'logo.svg'}}\" alt=\"Home\" class=\"logo\"/> <span>{{docit.title}}</span> </a> <ul> <li s-for=\"nav in docit.themeConfig.nav\"> <a target=\"{{nav.target || '_blank'}}\" href=\"{{nav.link}}\"> {{nav.text}} </a> </li> </ul> </header> <aside s-if=\"isShowSidebar\" id=\"sidebar\" class=\"sidebar\"> <tree treeData=\"{{sidebar}}\" selectedNodes=\"{{selectedNodes}}\"> <router-link s-if=\"treeNode.path\" to=\"{{getPath(treeNode)}}\">{{treeNode.title}}</router-link> <span s-else>{{treeNode.title}}</span> </tree> </aside> <drawer s-else class=\"sidebar\" style=\"width:0\"> <tree treeData=\"{{sidebar}}\" selectedNodes=\"{{selectedNodes}}\" style=\"padding:50px 0\"> <router-link s-if=\"treeNode.path\" to=\"{{getPath(treeNode)}}\">{{treeNode.title}}</router-link> <span s-else>{{treeNode.title}}</span> </tree> </drawer> <content-area docit=\"{{docit}}\" class=\"{{isShowSidebar ? '' : 'hidden'}}\"></content-area> </div> ";
 // Exports
 module.exports = code;
 
 /***/ }),
 
-/***/ 175:
+/***/ 178:
 /***/ (function(module, exports) {
 
 // Module
@@ -703,7 +942,7 @@ module.exports = code;
 
 /***/ }),
 
-/***/ 176:
+/***/ 179:
 /***/ (function(module, exports) {
 
 // Module
@@ -713,7 +952,7 @@ module.exports = code;
 
 /***/ }),
 
-/***/ 177:
+/***/ 180:
 /***/ (function(module, exports) {
 
 // Module
@@ -723,14 +962,48 @@ module.exports = code;
 
 /***/ }),
 
-/***/ 178:
+/***/ 181:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony import */ var _node_modules_style_loader_dist_runtime_injectStylesIntoStyleTag_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(6);
+/* harmony import */ var _node_modules_style_loader_dist_runtime_injectStylesIntoStyleTag_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(4);
 /* harmony import */ var _node_modules_style_loader_dist_runtime_injectStylesIntoStyleTag_js__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_node_modules_style_loader_dist_runtime_injectStylesIntoStyleTag_js__WEBPACK_IMPORTED_MODULE_0__);
-/* harmony import */ var _node_modules_css_loader_dist_cjs_js_node_modules_less_loader_dist_cjs_js_ref_4_2_node_modules_mini_css_extract_plugin_dist_loader_js_node_modules_css_loader_dist_cjs_js_node_modules_less_loader_dist_cjs_js_ref_11_2_node_modules_san_loader_index_js_codebox_san_lang_less_san_type_style_index_0__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(16);
+/* harmony import */ var _node_modules_css_loader_dist_cjs_js_node_modules_less_loader_dist_cjs_js_ref_4_2_node_modules_mini_css_extract_plugin_dist_loader_js_node_modules_css_loader_dist_cjs_js_node_modules_less_loader_dist_cjs_js_ref_11_2_node_modules_san_loader_index_js_drawer_san_lang_less_scoped_san_type_style_index_0__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(15);
+
+            
+
+var options = {};
+
+options.insert = "head";
+options.singleton = false;
+
+var update = _node_modules_style_loader_dist_runtime_injectStylesIntoStyleTag_js__WEBPACK_IMPORTED_MODULE_0___default()(_node_modules_css_loader_dist_cjs_js_node_modules_less_loader_dist_cjs_js_ref_4_2_node_modules_mini_css_extract_plugin_dist_loader_js_node_modules_css_loader_dist_cjs_js_node_modules_less_loader_dist_cjs_js_ref_11_2_node_modules_san_loader_index_js_drawer_san_lang_less_scoped_san_type_style_index_0__WEBPACK_IMPORTED_MODULE_1__[/* default */ "a"], options);
+
+
+
+/* harmony default export */ __webpack_exports__["default"] = (_node_modules_css_loader_dist_cjs_js_node_modules_less_loader_dist_cjs_js_ref_4_2_node_modules_mini_css_extract_plugin_dist_loader_js_node_modules_css_loader_dist_cjs_js_node_modules_less_loader_dist_cjs_js_ref_11_2_node_modules_san_loader_index_js_drawer_san_lang_less_scoped_san_type_style_index_0__WEBPACK_IMPORTED_MODULE_1__[/* default */ "a"].locals || {});
+
+/***/ }),
+
+/***/ 182:
+/***/ (function(module, exports) {
+
+// Module
+var code = " <div class=\"drawer-wrapper\"> <div class=\"drawer drawer-left {{isOpened ? 'drawer-open' : ''}}\"> <div class=\"drawer-mask\" on-click=\"onClick\"></div> <div class=\"drawer-content-wrapper\"> <div class=\"drawer-content\"><slot></slot></div> <div class=\"drawer-handle\" on-click=\"onClick\"> <i class=\"drawer-handle-icon\"></i> </div> </div> </div> </div> ";
+// Exports
+module.exports = code;
+
+/***/ }),
+
+/***/ 183:
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _node_modules_style_loader_dist_runtime_injectStylesIntoStyleTag_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(4);
+/* harmony import */ var _node_modules_style_loader_dist_runtime_injectStylesIntoStyleTag_js__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_node_modules_style_loader_dist_runtime_injectStylesIntoStyleTag_js__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _node_modules_css_loader_dist_cjs_js_node_modules_less_loader_dist_cjs_js_ref_4_2_node_modules_mini_css_extract_plugin_dist_loader_js_node_modules_css_loader_dist_cjs_js_node_modules_less_loader_dist_cjs_js_ref_11_2_node_modules_san_loader_index_js_codebox_san_lang_less_san_type_style_index_0__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(17);
 
             
 
@@ -747,7 +1020,7 @@ var update = _node_modules_style_loader_dist_runtime_injectStylesIntoStyleTag_js
 
 /***/ }),
 
-/***/ 179:
+/***/ 184:
 /***/ (function(module, exports) {
 
 // Module
@@ -757,7 +1030,7 @@ module.exports = code;
 
 /***/ }),
 
-/***/ 180:
+/***/ 185:
 /***/ (function(module, exports) {
 
 // Module
@@ -767,7 +1040,7 @@ module.exports = code;
 
 /***/ }),
 
-/***/ 182:
+/***/ 187:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -781,15 +1054,15 @@ __webpack_require__.d(__webpack_exports__, "default", function() { return /* bin
 var san_dev = __webpack_require__(3);
 
 // EXTERNAL MODULE: ../src/views/layout.san
-var layout = __webpack_require__(104);
+var layout = __webpack_require__(106);
 var layout_default = /*#__PURE__*/__webpack_require__.n(layout);
 
 // EXTERNAL MODULE: ../node_modules/style-loader/dist/runtime/injectStylesIntoStyleTag.js
-var injectStylesIntoStyleTag = __webpack_require__(6);
+var injectStylesIntoStyleTag = __webpack_require__(4);
 var injectStylesIntoStyleTag_default = /*#__PURE__*/__webpack_require__.n(injectStylesIntoStyleTag);
 
 // EXTERNAL MODULE: ../node_modules/css-loader/dist/cjs.js!../node_modules/less-loader/dist/cjs.js??ref--4-2!../node_modules/mini-css-extract-plugin/dist/loader.js!../node_modules/css-loader/dist/cjs.js!../node_modules/less-loader/dist/cjs.js??ref--11-2!../src/styles/index.less
-var styles = __webpack_require__(15);
+var styles = __webpack_require__(16);
 
 // CONCATENATED MODULE: ../src/styles/index.less
 
@@ -809,10 +1082,10 @@ var update = injectStylesIntoStyleTag_default()(styles["a" /* default */], optio
 var hub = __webpack_require__(9);
 
 // EXTERNAL MODULE: ../node_modules/san-component/src/index.js
-var src = __webpack_require__(107);
+var src = __webpack_require__(110);
 
 // EXTERNAL MODULE: ../plugins/components/codebox.san
-var codebox = __webpack_require__(108);
+var codebox = __webpack_require__(111);
 var codebox_default = /*#__PURE__*/__webpack_require__.n(codebox);
 
 // CONCATENATED MODULE: ../src/common/register-components.js
@@ -844,7 +1117,7 @@ _defineProperty(src_Index, "template", '<layout docit="{{docit}}"><layout>');
 
 ;
 // EXTERNAL MODULE: ../src/router/index.js
-var router = __webpack_require__(109);
+var router = __webpack_require__(112);
 
 // CONCATENATED MODULE: ../src/client-entry.js
 function client_entry_defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
@@ -880,7 +1153,7 @@ new client_entry_Index({
 
 /***/ }),
 
-/***/ 4:
+/***/ 6:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -1670,54 +1943,57 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
   };
 
   var router = new Router();
+
+  var Link = __webpack_require__(3).defineComponent({
+    template: '<a href="{{hrefPrefix}}{{href}}" onclick="return false;" on-click="clicker($event)" ' + 'target="{{target}}" class="{{isActive ? activeClass : \'\'}}"><slot/></a>',
+    clicker: function (e) {
+      var href = this.data.get('href');
+
+      if (typeof href === 'string') {
+        router.locator.redirect(href.replace(/^#/, ''));
+      }
+
+      if (e.preventDefault) {
+        e.preventDefault();
+      } else {
+        e.returnValue = false;
+      }
+    },
+    inited: function () {
+      var me = this;
+
+      this.routeListener = function (e) {
+        me.data.set('isActive', e.url === me.data.get('href'));
+      };
+
+      this.routeListener({
+        url: router.locator.current
+      });
+      router.listen(this.routeListener);
+    },
+    disposed: function () {
+      router.unlisten(this.routeListener);
+      this.routeListener = null;
+    },
+    initData: function () {
+      return {
+        isActive: false,
+        hrefPrefix: router.mode === 'hash' ? '#' : ''
+      };
+    },
+    computed: {
+      href: function () {
+        var url = this.data.get('to') || '';
+        return resolveURL(url, router.locator.current);
+      }
+    }
+  });
+
   var main = {
     /**
      * 路由链接的 San 组件
      */
-    Link: {
-      template: '<a href="{{hrefPrefix}}{{href}}" onclick="return false;" on-click="clicker($event)" ' + 'target="{{target}}" class="{{isActive ? activeClass : \'\'}}"><slot/></a>',
-      clicker: function (e) {
-        var href = this.data.get('href');
-
-        if (typeof href === 'string') {
-          router.locator.redirect(href.replace(/^#/, ''));
-        }
-
-        if (e.preventDefault) {
-          e.preventDefault();
-        } else {
-          e.returnValue = false;
-        }
-      },
-      inited: function () {
-        var me = this;
-
-        this.routeListener = function (e) {
-          me.data.set('isActive', e.url === me.data.get('href'));
-        };
-
-        this.routeListener({
-          url: router.locator.current
-        });
-        router.listen(this.routeListener);
-      },
-      disposed: function () {
-        router.unlisten(this.routeListener);
-        this.routeListener = null;
-      },
-      initData: function () {
-        return {
-          isActive: false,
-          hrefPrefix: router.mode === 'hash' ? '#' : ''
-        };
-      },
-      computed: {
-        href: function () {
-          var url = this.data.get('to') || '';
-          return resolveURL(url, router.locator.current);
-        }
-      }
-    },
+    Link: Link,
     router: router,
     Router: Router,
     HashLocator: HashLocator,
@@ -1750,11 +2026,11 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
 const hub = new san__WEBPACK_IMPORTED_MODULE_0__["Component"]({});
 global.hub = hub;
 /* harmony default export */ __webpack_exports__["a"] = (hub);
-/* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(1)))
+/* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(2)))
 
 /***/ }),
 
-/***/ 98:
+/***/ 99:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -1763,12 +2039,15 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var san__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(san__WEBPACK_IMPORTED_MODULE_0__);
 /* harmony import */ var _common_san_router__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(8);
 /* harmony import */ var _common_san_router__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(_common_san_router__WEBPACK_IMPORTED_MODULE_1__);
-/* harmony import */ var _content_area__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(105);
+/* harmony import */ var _content_area__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(107);
 /* harmony import */ var _content_area__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(_content_area__WEBPACK_IMPORTED_MODULE_2__);
 /* harmony import */ var _tree__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(11);
 /* harmony import */ var _tree__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(_tree__WEBPACK_IMPORTED_MODULE_3__);
-/* harmony import */ var _common_hub__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(9);
-/* harmony import */ var _common_utils__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(4);
+/* harmony import */ var _drawer__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(109);
+/* harmony import */ var _drawer__WEBPACK_IMPORTED_MODULE_4___default = /*#__PURE__*/__webpack_require__.n(_drawer__WEBPACK_IMPORTED_MODULE_4__);
+/* harmony import */ var _common_hub__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(9);
+/* harmony import */ var _common_utils__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(6);
+
 
 
 
@@ -1779,6 +2058,7 @@ __webpack_require__.r(__webpack_exports__);
   components: {
     'router-link': _common_san_router__WEBPACK_IMPORTED_MODULE_1__["Link"],
     'content-area': _content_area__WEBPACK_IMPORTED_MODULE_2___default.a,
+    drawer: (_drawer__WEBPACK_IMPORTED_MODULE_4___default()),
     tree: (_tree__WEBPACK_IMPORTED_MODULE_3___default())
   },
   dataTypes: {
@@ -1817,14 +2097,14 @@ __webpack_require__.r(__webpack_exports__);
   },
 
   inited() {
-    _common_hub__WEBPACK_IMPORTED_MODULE_4__[/* default */ "a"].on('RouterChanged', this.isActive.bind(this));
+    _common_hub__WEBPACK_IMPORTED_MODULE_5__[/* default */ "a"].on('RouterChanged', this.isActive.bind(this));
   },
 
   isActive(e) {
     const selected = [];
-    const base = _common_utils__WEBPACK_IMPORTED_MODULE_5__[/* default */ "a"].base;
+    const base = _common_utils__WEBPACK_IMPORTED_MODULE_6__[/* default */ "a"].base;
     const sidebar = this.data.get('sidebar');
-    _common_utils__WEBPACK_IMPORTED_MODULE_5__[/* default */ "a"].treeWalk(sidebar, item => {
+    _common_utils__WEBPACK_IMPORTED_MODULE_6__[/* default */ "a"].treeWalk(sidebar, item => {
       if (base + item.path === e.path) {
         selected.push(item);
       }
@@ -1833,7 +2113,7 @@ __webpack_require__.r(__webpack_exports__);
   },
 
   getPath(node) {
-    return _common_utils__WEBPACK_IMPORTED_MODULE_5__[/* default */ "a"].base + node.path;
+    return _common_utils__WEBPACK_IMPORTED_MODULE_6__[/* default */ "a"].base + node.path;
   },
 
   onClick(e) {
@@ -1844,182 +2124,7 @@ __webpack_require__.r(__webpack_exports__);
 
 });
 /* san-hmr disable */
-/* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(1)))
-
-/***/ }),
-
-/***/ 99:
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* WEBPACK VAR INJECTION */(function(global) {/* harmony import */ var san_src_browser_on__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(13);
-/* harmony import */ var san_src_browser_on__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(san_src_browser_on__WEBPACK_IMPORTED_MODULE_0__);
-/* harmony import */ var san_src_browser_un__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(14);
-/* harmony import */ var san_src_browser_un__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(san_src_browser_un__WEBPACK_IMPORTED_MODULE_1__);
-/* harmony import */ var _tree__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(11);
-/* harmony import */ var _tree__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(_tree__WEBPACK_IMPORTED_MODULE_2__);
-/* harmony import */ var _common_utils__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(4);
-
-
-
-
-/* harmony default export */ __webpack_exports__["default"] = ({
-  components: {
-    tree: (_tree__WEBPACK_IMPORTED_MODULE_2___default())
-  },
-
-  initData() {
-    return {
-      toc: {},
-      isShowToc: true,
-      isActiveToc: true,
-      // 数据较少时，不激活
-      selectedNodes: []
-    };
-  },
-
-  inited() {
-    let toc = {}; // SSR 时，可从最外层传入docit；client-entry时，从全局变量取
-
-    const docit = this.data.get('docit');
-
-    if (docit && docit.toc) {
-      toc = docit.toc;
-    } else if (global.SAN_DOCIT && global.SAN_DOCIT.toc) {
-      toc = global.SAN_DOCIT.toc;
-    }
-
-    this.data.set('toc', toc);
-  },
-
-  attached() {
-    // router 子组件无法通过组件事件或DOM树向上传递事件
-    global.hub.on('changed', this.onChanged.bind(this));
-    this.__onScroll = this.onScroll.bind(this);
-    this.__onResize = this.onResize.bind(this);
-    san_src_browser_on__WEBPACK_IMPORTED_MODULE_0___default()(global, 'scroll', this.__onScroll);
-    san_src_browser_on__WEBPACK_IMPORTED_MODULE_0___default()(global, 'resize', this.__onResize);
-    this.initScroll();
-    this.resize(); // SSR 时默认存在 HTML，清空后由 Router 渲染
-
-    this.ref('view').innerHTML = '';
-  },
-
-  getHash(hash) {
-    const docit = this.data.get('docit');
-    const pathname = docit.pathname ? _common_utils__WEBPACK_IMPORTED_MODULE_3__[/* default */ "a"].base + docit.pathname : location.pathname;
-    return pathname + '#' + hash;
-  },
-
-  onChanged(toc) {
-    this.data.set('toc', toc);
-    this.nextTick(this.initResize.bind(this));
-    this.nextTick(this.initScroll.bind(this));
-  },
-
-  initResize() {
-    const toc = this.data.get('toc');
-    let count = 0;
-    _common_utils__WEBPACK_IMPORTED_MODULE_3__[/* default */ "a"].treeWalk(toc, () => count++);
-    this.data.set('isActiveToc', count > 2);
-    this.data.set('isShowToc', count > 2);
-  },
-
-  onResize() {
-    if (this.timer) {
-      global.clearTimeout(this.timer);
-    }
-
-    this.timer = global.setTimeout(() => {
-      this.resize();
-      this.timer = null;
-    }, 10);
-  },
-
-  resize() {
-    const width = document.documentElement.clientWidth || document.body.clientWidth;
-    const isShowToc = width > 900;
-
-    if (isShowToc !== this.data.get('isShowToc') && this.data.get('isActiveToc')) {
-      this.data.set('isShowToc', isShowToc);
-    }
-
-    const isShowSidebar = width > 700;
-
-    if (isShowSidebar !== this.parent.data.get('isShowSidebar')) {
-      this.parent.data.set('isShowSidebar', isShowSidebar);
-    }
-  },
-
-  initScroll() {
-    const view = this.ref('view');
-    const doms = view.querySelectorAll('H2, H3');
-
-    if (!doms) {
-      return;
-    }
-
-    this.postions = [];
-    this.hashs = [];
-    doms.forEach(dom => {
-      this.postions.push(dom.offsetTop);
-      this.hashs.push(dom.id);
-    });
-    const len = this.hashs.length;
-    this.postions[len] = Number.MAX_VALUE;
-    this.hashs[len] = this.hashs[this.hashs.length - 1];
-    const toc = this.data.get('toc');
-
-    if (toc && toc.children && toc.children.length > 0) {
-      this.data.set('selectedNodes', [toc.children[0]]);
-    }
-  },
-
-  onScroll(evt) {
-    if (this.timer) {
-      global.clearTimeout(this.timer);
-    }
-
-    this.timer = global.setTimeout(() => {
-      this.scrollPostion();
-      this.timer = null;
-    }, 10);
-  },
-
-  scrollPostion() {
-    const scrollTop = document.documentElement.scrollTop || document.body.scrollTop;
-    const index = this.postions.findIndex(pos => pos >= scrollTop);
-
-    if (index !== -1) {
-      this.changeSelected(this.hashs[index]);
-    }
-  },
-
-  changeSelected(hash) {
-    if (this.selected === hash) {
-      return;
-    }
-
-    const selected = [];
-    const toc = this.data.get('toc');
-    _common_utils__WEBPACK_IMPORTED_MODULE_3__[/* default */ "a"].treeWalk(toc, item => {
-      if (item.hash === hash) {
-        selected.push(item);
-      }
-    });
-    this.data.set('selectedNodes', selected);
-    this.selected = hash;
-  },
-
-  detached() {
-    san_src_browser_un__WEBPACK_IMPORTED_MODULE_1___default()(global, 'scroll', this.__onScroll);
-    san_src_browser_un__WEBPACK_IMPORTED_MODULE_1___default()(global, 'resize', this.__onResize);
-  }
-
-});
-/* san-hmr disable */
-/* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(1)))
+/* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(2)))
 
 /***/ })
 

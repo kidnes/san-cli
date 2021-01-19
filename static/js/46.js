@@ -1,12 +1,12 @@
 (window["webpackJsonp"] = window["webpackJsonp"] || []).push([[46,36],{
 
-/***/ 157:
+/***/ 160:
 /***/ (function(module, exports, __webpack_require__) {
 
 // Imports
-var ___HTML_LOADER_GET_SOURCE_FROM_IMPORT___ = __webpack_require__(5);
-var ___HTML_LOADER_IMPORT_0___ = __webpack_require__(158);
-var ___HTML_LOADER_IMPORT_1___ = __webpack_require__(159);
+var ___HTML_LOADER_GET_SOURCE_FROM_IMPORT___ = __webpack_require__(7);
+var ___HTML_LOADER_IMPORT_0___ = __webpack_require__(161);
+var ___HTML_LOADER_IMPORT_1___ = __webpack_require__(162);
 // Module
 var ___HTML_LOADER_REPLACEMENT_0___ = ___HTML_LOADER_GET_SOURCE_FROM_IMPORT___(___HTML_LOADER_IMPORT_0___);
 var ___HTML_LOADER_REPLACEMENT_1___ = ___HTML_LOADER_GET_SOURCE_FROM_IMPORT___(___HTML_LOADER_IMPORT_1___);
@@ -16,7 +16,7 @@ module.exports = code;
 
 /***/ }),
 
-/***/ 158:
+/***/ 161:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -25,7 +25,7 @@ __webpack_require__.r(__webpack_exports__);
 
 /***/ }),
 
-/***/ 159:
+/***/ 162:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -34,7 +34,37 @@ __webpack_require__.r(__webpack_exports__);
 
 /***/ }),
 
-/***/ 5:
+/***/ 52:
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* WEBPACK VAR INJECTION */(function(global) {/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "default", function() { return ContentView; });
+/* harmony import */ var san_component__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(0);
+
+class ContentView extends san_component__WEBPACK_IMPORTED_MODULE_0__[/* SanComponent */ "a"] {
+  inited() {
+    global.hub.fire('changed', {
+      "level": 0,
+      "children": [{
+        "level": 2,
+        "title": "安装插件",
+        "hash": "%E5%AE%89%E8%A3%85%E6%8F%92%E4%BB%B6"
+      }, {
+        "level": 2,
+        "title": "安装 devtools",
+        "hash": "%E5%AE%89%E8%A3%85-devtools"
+      }]
+    });
+  }
+
+}
+/* san-hmr disable */
+/* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(2)))
+
+/***/ }),
+
+/***/ 7:
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -67,47 +97,17 @@ module.exports = function (url, options) {
 
 /***/ }),
 
-/***/ 51:
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* WEBPACK VAR INJECTION */(function(global) {/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "default", function() { return ContentView; });
-/* harmony import */ var san_component__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(0);
-
-class ContentView extends san_component__WEBPACK_IMPORTED_MODULE_0__[/* SanComponent */ "a"] {
-  inited() {
-    global.hub.fire('changed', {
-      "level": 0,
-      "children": [{
-        "level": 2,
-        "title": "安装插件",
-        "hash": "%E5%AE%89%E8%A3%85%E6%8F%92%E4%BB%B6"
-      }, {
-        "level": 2,
-        "title": "安装 devtools",
-        "hash": "%E5%AE%89%E8%A3%85-devtools"
-      }]
-    });
-  }
-
-}
-/* san-hmr disable */
-/* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(1)))
-
-/***/ }),
-
-/***/ 92:
+/***/ 93:
 /***/ (function(module, exports, __webpack_require__) {
 
 
-        var normalize = __webpack_require__(2);
+        var normalize = __webpack_require__(1);
         var injectStyles = [];
 
-        var template = __webpack_require__(157);
+        var template = __webpack_require__(160);
         
-        var script = __webpack_require__(51).default;
-        module.exports = __webpack_require__(51);
+        var script = __webpack_require__(52).default;
+        module.exports = __webpack_require__(52);
     
         module.exports.default = normalize(script, template, injectStyles);
         /* san-hmr component */

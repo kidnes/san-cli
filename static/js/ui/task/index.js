@@ -148,20 +148,20 @@
 /******/
 /******/
 /******/ 	// add entry module to deferred list
-/******/ 	deferredModules.push([97,0]);
+/******/ 	deferredModules.push([98,0]);
 /******/ 	// run deferred modules when ready
 /******/ 	return checkDeferredModules();
 /******/ })
 /************************************************************************/
 /******/ ({
 
-/***/ 168:
+/***/ 171:
 /***/ (function(module, exports, __webpack_require__) {
 
 // Imports
-var ___HTML_LOADER_GET_SOURCE_FROM_IMPORT___ = __webpack_require__(5);
-var ___HTML_LOADER_IMPORT_0___ = __webpack_require__(169);
-var ___HTML_LOADER_IMPORT_1___ = __webpack_require__(170);
+var ___HTML_LOADER_GET_SOURCE_FROM_IMPORT___ = __webpack_require__(7);
+var ___HTML_LOADER_IMPORT_0___ = __webpack_require__(172);
+var ___HTML_LOADER_IMPORT_1___ = __webpack_require__(173);
 // Module
 var ___HTML_LOADER_REPLACEMENT_0___ = ___HTML_LOADER_GET_SOURCE_FROM_IMPORT___(___HTML_LOADER_IMPORT_0___);
 var ___HTML_LOADER_REPLACEMENT_1___ = ___HTML_LOADER_GET_SOURCE_FROM_IMPORT___(___HTML_LOADER_IMPORT_1___);
@@ -171,7 +171,7 @@ module.exports = code;
 
 /***/ }),
 
-/***/ 169:
+/***/ 172:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -180,7 +180,7 @@ __webpack_require__.r(__webpack_exports__);
 
 /***/ }),
 
-/***/ 170:
+/***/ 173:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -189,7 +189,7 @@ __webpack_require__.r(__webpack_exports__);
 
 /***/ }),
 
-/***/ 56:
+/***/ 57:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -211,21 +211,21 @@ class ContentView extends san_component__WEBPACK_IMPORTED_MODULE_0__[/* SanCompo
 
 }
 /* san-hmr disable */
-/* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(1)))
+/* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(2)))
 
 /***/ }),
 
-/***/ 97:
+/***/ 98:
 /***/ (function(module, exports, __webpack_require__) {
 
 
-        var normalize = __webpack_require__(2);
+        var normalize = __webpack_require__(1);
         var injectStyles = [];
 
-        var template = __webpack_require__(168);
+        var template = __webpack_require__(171);
         
-        var script = __webpack_require__(56).default;
-        module.exports = __webpack_require__(56);
+        var script = __webpack_require__(57).default;
+        module.exports = __webpack_require__(57);
     
         module.exports.default = normalize(script, template, injectStyles);
         /* san-hmr component */

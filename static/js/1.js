@@ -8,7 +8,7 @@
 /* unused harmony export mixin */
 /* unused harmony export registerComponents */
 /* unused harmony export registerMixins */
-/* harmony import */ var san__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(59);
+/* harmony import */ var san__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(60);
 /* harmony import */ var san__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(san__WEBPACK_IMPORTED_MODULE_0__);
 /**
  * @file 重新定义san.Component组件
@@ -118,7 +118,7 @@ const registerMixins = (mixins, Component = SanComponent) => {
 
 /***/ }),
 
-/***/ 59:
+/***/ 60:
 /***/ (function(module, exports, __webpack_require__) {
 
 /* WEBPACK VAR INJECTION */(function(setImmediate) {/**
@@ -10644,7 +10644,7 @@ function createComponentLoader(options) {
     // #[end]
 })(this);
 //@ sourceMappingURL=san.dev.js.map
-/* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(57).setImmediate))
+/* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(58).setImmediate))
 
 /***/ })
 

@@ -148,22 +148,22 @@
 /******/
 /******/
 /******/ 	// add entry module to deferred list
-/******/ 	deferredModules.push([93,0]);
+/******/ 	deferredModules.push([94,0]);
 /******/ 	// run deferred modules when ready
 /******/ 	return checkDeferredModules();
 /******/ })
 /************************************************************************/
 /******/ ({
 
-/***/ 160:
+/***/ 163:
 /***/ (function(module, exports, __webpack_require__) {
 
 // Imports
-var ___HTML_LOADER_GET_SOURCE_FROM_IMPORT___ = __webpack_require__(5);
-var ___HTML_LOADER_IMPORT_0___ = __webpack_require__(161);
-var ___HTML_LOADER_IMPORT_1___ = __webpack_require__(162);
-var ___HTML_LOADER_IMPORT_2___ = __webpack_require__(163);
-var ___HTML_LOADER_IMPORT_3___ = __webpack_require__(164);
+var ___HTML_LOADER_GET_SOURCE_FROM_IMPORT___ = __webpack_require__(7);
+var ___HTML_LOADER_IMPORT_0___ = __webpack_require__(164);
+var ___HTML_LOADER_IMPORT_1___ = __webpack_require__(165);
+var ___HTML_LOADER_IMPORT_2___ = __webpack_require__(166);
+var ___HTML_LOADER_IMPORT_3___ = __webpack_require__(167);
 // Module
 var ___HTML_LOADER_REPLACEMENT_0___ = ___HTML_LOADER_GET_SOURCE_FROM_IMPORT___(___HTML_LOADER_IMPORT_0___);
 var ___HTML_LOADER_REPLACEMENT_1___ = ___HTML_LOADER_GET_SOURCE_FROM_IMPORT___(___HTML_LOADER_IMPORT_1___);
@@ -175,7 +175,7 @@ module.exports = code;
 
 /***/ }),
 
-/***/ 161:
+/***/ 164:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -184,7 +184,7 @@ __webpack_require__.r(__webpack_exports__);
 
 /***/ }),
 
-/***/ 162:
+/***/ 165:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -193,7 +193,7 @@ __webpack_require__.r(__webpack_exports__);
 
 /***/ }),
 
-/***/ 163:
+/***/ 166:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -202,7 +202,7 @@ __webpack_require__.r(__webpack_exports__);
 
 /***/ }),
 
-/***/ 164:
+/***/ 167:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -211,7 +211,7 @@ __webpack_require__.r(__webpack_exports__);
 
 /***/ }),
 
-/***/ 52:
+/***/ 53:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -233,21 +233,21 @@ class ContentView extends san_component__WEBPACK_IMPORTED_MODULE_0__[/* SanCompo
 
 }
 /* san-hmr disable */
-/* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(1)))
+/* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(2)))
 
 /***/ }),
 
-/***/ 93:
+/***/ 94:
 /***/ (function(module, exports, __webpack_require__) {
 
 
-        var normalize = __webpack_require__(2);
+        var normalize = __webpack_require__(1);
         var injectStyles = [];
 
-        var template = __webpack_require__(160);
+        var template = __webpack_require__(163);
         
-        var script = __webpack_require__(52).default;
-        module.exports = __webpack_require__(52);
+        var script = __webpack_require__(53).default;
+        module.exports = __webpack_require__(53);
     
         module.exports.default = normalize(script, template, injectStyles);
         /* san-hmr component */

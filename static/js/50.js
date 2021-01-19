@@ -1,11 +1,11 @@
 (window["webpackJsonp"] = window["webpackJsonp"] || []).push([[50,31],{
 
-/***/ 145:
+/***/ 148:
 /***/ (function(module, exports, __webpack_require__) {
 
 // Imports
-var ___HTML_LOADER_GET_SOURCE_FROM_IMPORT___ = __webpack_require__(5);
-var ___HTML_LOADER_IMPORT_0___ = __webpack_require__(146);
+var ___HTML_LOADER_GET_SOURCE_FROM_IMPORT___ = __webpack_require__(7);
+var ___HTML_LOADER_IMPORT_0___ = __webpack_require__(149);
 // Module
 var ___HTML_LOADER_REPLACEMENT_0___ = ___HTML_LOADER_GET_SOURCE_FROM_IMPORT___(___HTML_LOADER_IMPORT_0___);
 var code = " <div class=\"content\"><div class=\"markdown\"><h1 id=\"%E9%85%8D%E7%BD%AE%E7%AE%A1%E7%90%86\"><a class=\"header-anchor\" href=\"#%E9%85%8D%E7%BD%AE%E7%AE%A1%E7%90%86\">#</a> 配置管理</h1> <p>在配置管理，我们可以集中查看、修改项目的各种配置文件。默认的可进行管理的配置文件有 san 项目配置文件和 eslint 配置文件。</p> <p><img src=\"" + ___HTML_LOADER_REPLACEMENT_0___ + "\" alt=\"\"/></p> </div></div> ";
@@ -14,7 +14,7 @@ module.exports = code;
 
 /***/ }),
 
-/***/ 146:
+/***/ 149:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -23,7 +23,7 @@ __webpack_require__.r(__webpack_exports__);
 
 /***/ }),
 
-/***/ 46:
+/***/ 47:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -40,11 +40,11 @@ class ContentView extends san_component__WEBPACK_IMPORTED_MODULE_0__[/* SanCompo
 
 }
 /* san-hmr disable */
-/* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(1)))
+/* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(2)))
 
 /***/ }),
 
-/***/ 5:
+/***/ 7:
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -77,17 +77,17 @@ module.exports = function (url, options) {
 
 /***/ }),
 
-/***/ 87:
+/***/ 88:
 /***/ (function(module, exports, __webpack_require__) {
 
 
-        var normalize = __webpack_require__(2);
+        var normalize = __webpack_require__(1);
         var injectStyles = [];
 
-        var template = __webpack_require__(145);
+        var template = __webpack_require__(148);
         
-        var script = __webpack_require__(46).default;
-        module.exports = __webpack_require__(46);
+        var script = __webpack_require__(47).default;
+        module.exports = __webpack_require__(47);
     
         module.exports.default = normalize(script, template, injectStyles);
         /* san-hmr component */
