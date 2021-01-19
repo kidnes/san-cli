@@ -233,8 +233,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var san_src_browser_on__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(san_src_browser_on__WEBPACK_IMPORTED_MODULE_0__);
 /* harmony import */ var san_src_browser_un__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(14);
 /* harmony import */ var san_src_browser_un__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(san_src_browser_un__WEBPACK_IMPORTED_MODULE_1__);
-/* harmony import */ var _tree__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(11);
-/* harmony import */ var _tree__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(_tree__WEBPACK_IMPORTED_MODULE_2__);
+/* harmony import */ var _components_tree__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(11);
+/* harmony import */ var _components_tree__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(_components_tree__WEBPACK_IMPORTED_MODULE_2__);
 /* harmony import */ var _common_utils__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(6);
 
 
@@ -242,15 +242,13 @@ __webpack_require__.r(__webpack_exports__);
 
 /* harmony default export */ __webpack_exports__["default"] = ({
   components: {
-    tree: (_tree__WEBPACK_IMPORTED_MODULE_2___default())
+    tree: (_components_tree__WEBPACK_IMPORTED_MODULE_2___default())
   },
 
   initData() {
     return {
       toc: {},
       isShowToc: true,
-      isActiveToc: true,
-      // 数据较少时，不激活
       selectedNodes: []
     };
   },
@@ -290,15 +288,14 @@ __webpack_require__.r(__webpack_exports__);
 
   onChanged(toc) {
     this.data.set('toc', toc);
-    this.nextTick(this.initResize.bind(this));
     this.nextTick(this.initScroll.bind(this));
   },
 
-  initResize() {
+  getTocCount() {
     const toc = this.data.get('toc');
     let count = 0;
     _common_utils__WEBPACK_IMPORTED_MODULE_3__[/* default */ "a"].treeWalk(toc, () => count++);
-    this.data.set('isActiveToc', count > 2);
+    return count;
   },
 
   onResize() {
@@ -314,13 +311,15 @@ __webpack_require__.r(__webpack_exports__);
 
   resize() {
     const width = document.documentElement.clientWidth || document.body.clientWidth;
-    const isShowToc = width > 900;
+    const isShowToc = width > 1000;
 
-    if (isShowToc !== this.data.get('isShowToc') && this.data.get('isActiveToc')) {
-      this.data.set('isShowToc', isShowToc);
+    if (isShowToc !== this.data.get('isShowToc')) {
+      if (!isShowToc || this.getTocCount() > 2) {
+        this.data.set('isShowToc', isShowToc);
+      }
     }
 
-    const isShowSidebar = width > 700;
+    const isShowSidebar = width > 800;
 
     if (isShowSidebar !== this.parent.data.get('isShowSidebar')) {
       this.parent.data.set('isShowSidebar', isShowSidebar);
@@ -485,7 +484,7 @@ __webpack_require__.r(__webpack_exports__);
 // EXTERNAL MODULE: ../node_modules/san/dist/san.dev.js
 var san_dev = __webpack_require__(3);
 
-// EXTERNAL MODULE: ../src/views/tree-node.san
+// EXTERNAL MODULE: ../src/components/tree-node.san
 var tree_node = __webpack_require__(108);
 var tree_node_default = /*#__PURE__*/__webpack_require__.n(tree_node);
 
@@ -516,7 +515,7 @@ const removeClass = (dom, name) => {
   addClass,
   removeClass
 });
-// CONCATENATED MODULE: ../src/views/tree.san?lang=js&san=&type=script
+// CONCATENATED MODULE: ../src/components/tree.san?lang=js&san=&type=script
 
 
 
@@ -681,7 +680,6 @@ var injectStyles = [];
 /* harmony import */ var _views_not_found_san__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(113);
 /* harmony import */ var _views_not_found_san__WEBPACK_IMPORTED_MODULE_4___default = /*#__PURE__*/__webpack_require__.n(_views_not_found_san__WEBPACK_IMPORTED_MODULE_4__);
 /* harmony import */ var nprogress_nprogress_css__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(186);
-// import {Router} from '../common/san-router';
 
 
 
@@ -690,7 +688,7 @@ var injectStyles = [];
 
 _common_san_router__WEBPACK_IMPORTED_MODULE_0__["router"].setMode('html5'); // Webpack Inject
 
-const config = {"title":"San CLI","base":"/san-cli/","themeConfig":{"nav":[{"text":"San","link":"https://baidu.github.io/san/"},{"text":"Santd","link":"https://ecomfe.github.io/santd/"}],"sidebar":{"/":{"children":[{"path":"/","filename":"/Volumes/Source/san/san-cli-all/san-cli-github/docs/README.md","title":"介绍"},{"title":"基础命令","children":[{"path":"/create-project/","filename":"/Volumes/Source/san/san-cli-all/san-cli-github/docs/create-project.md","title":"初始化项目"},{"path":"/serve/","filename":"/Volumes/Source/san/san-cli-all/san-cli-github/docs/serve.md","title":"开发打包"},{"path":"/build/","filename":"/Volumes/Source/san/san-cli-all/san-cli-github/docs/build.md","title":"生产打包"}]},{"title":"配置","children":[{"path":"/config/","filename":"/Volumes/Source/san/san-cli-all/san-cli-github/docs/config.md","title":"San CLI 配置文件"},{"path":"/advanced/","filename":"/Volumes/Source/san/san-cli-all/san-cli-github/docs/advanced.md","title":"高级配置"},{"path":"/presets/","filename":"/Volumes/Source/san/san-cli-all/san-cli-github/docs/presets.md","title":"Presets 预设"},{"path":"/env/","filename":"/Volumes/Source/san/san-cli-all/san-cli-github/docs/env.md","title":"环境变量"}]},{"title":"常见解决方案","children":[{"path":"/modern-mode/","filename":"/Volumes/Source/san/san-cli-all/san-cli-github/docs/modern-mode.md","title":"现在的浏览器打包模式"},{"path":"/bundle-analyze/","filename":"/Volumes/Source/san/san-cli-all/san-cli-github/docs/bundle-analyze.md","title":"Bundle 分析"},{"path":"/component/","filename":"/Volumes/Source/san/san-cli-all/san-cli-github/docs/component.md","title":"San Component 组件开发"},{"path":"/smarty/","filename":"/Volumes/Source/san/san-cli-all/san-cli-github/docs/smarty.md","title":"Smarty 相关"},{"path":"/deployment/","filename":"/Volumes/Source/san/san-cli-all/san-cli-github/docs/deployment.md","title":"部署"},{"path":"/hulk-cli-migration/","filename":"/Volumes/Source/san/san-cli-all/san-cli-github/docs/hulk-cli-migration.md","title":"hulk-cli升级san-cli"}]},{"title":"二次开发","children":[{"path":"/architecture/","filename":"/Volumes/Source/san/san-cli-all/san-cli-github/docs/architecture.md","title":"内部实现"},{"path":"/create-scaffold/","filename":"/Volumes/Source/san/san-cli-all/san-cli-github/docs/create-scaffold.md","title":"如何创建一个脚手架项目"},{"path":"/plugin/","filename":"/Volumes/Source/san/san-cli-all/san-cli-github/docs/plugin.md","title":"插件","children":[{"path":"/cmd-plugin/","filename":"/Volumes/Source/san/san-cli-all/san-cli-github/docs/cmd-plugin.md","title":"Command 插件"},{"path":"/srv-plugin/","filename":"/Volumes/Source/san/san-cli-all/san-cli-github/docs/srv-plugin.md","title":"编写一个 Serivce 插件"}]}]},{"title":"CLI UI","children":[{"path":"/ui/start/","filename":"/Volumes/Source/san/san-cli-all/san-cli-github/docs/ui/start.md","title":"CLI UI安装"},{"title":"功能简介","children":[{"path":"/ui/project-list/","filename":"/Volumes/Source/san/san-cli-all/san-cli-github/docs/ui/project-list.md","title":"项目列表"},{"path":"/ui/dashboard/","filename":"/Volumes/Source/san/san-cli-all/san-cli-github/docs/ui/dashboard.md","title":"仪表盘"},{"path":"/ui/plugin/","filename":"/Volumes/Source/san/san-cli-all/san-cli-github/docs/ui/plugin.md","title":"插件管理"},{"path":"/ui/dependency/","filename":"/Volumes/Source/san/san-cli-all/san-cli-github/docs/ui/dependency.md","title":"依赖管理"},{"path":"/ui/configuration/","filename":"/Volumes/Source/san/san-cli-all/san-cli-github/docs/ui/configuration.md","title":"配置管理"},{"path":"/ui/task/","filename":"/Volumes/Source/san/san-cli-all/san-cli-github/docs/ui/task.md","title":"任务管理"}]},{"title":"插件开发","children":[{"path":"/ui/structure/","filename":"/Volumes/Source/san/san-cli-all/san-cli-github/docs/ui/structure.md","title":"CLI UI 插件"},{"path":"/ui/plugin-object/","filename":"/Volumes/Source/san/san-cli-all/san-cli-github/docs/ui/plugin-object.md","title":"PluginManager对象"},{"path":"/ui/add-addon/","filename":"/Volumes/Source/san/san-cli-all/san-cli-github/docs/ui/add-addon.md","title":"addon组件"},{"path":"/ui/add-config/","filename":"/Volumes/Source/san/san-cli-all/san-cli-github/docs/ui/add-config.md","title":"添加项目配置"},{"path":"/ui/cover-task/","filename":"/Volumes/Source/san/san-cli-all/san-cli-github/docs/ui/cover-task.md","title":"任务管理"},{"path":"/ui/add-view/","filename":"/Volumes/Source/san/san-cli-all/san-cli-github/docs/ui/add-view.md","title":"添加自定义视图"},{"path":"/ui/static/","filename":"/Volumes/Source/san/san-cli-all/san-cli-github/docs/ui/static.md","title":"公共静态文件"}]}]}]}}}};
+const config = {"base":"/san-cli/","title":"San CLI","head":[],"logo":"logo.svg","themeConfig":{"nav":[{"text":"San","link":"https://baidu.github.io/san/"},{"text":"Santd","link":"https://ecomfe.github.io/santd/"}],"sidebar":{"/":{"children":[{"path":"/","filename":"/Volumes/Source/san/san-cli-all/san-cli-github/docs/README.md","title":"介绍"},{"title":"基础命令","children":[{"path":"/create-project/","filename":"/Volumes/Source/san/san-cli-all/san-cli-github/docs/create-project.md","title":"初始化项目"},{"path":"/serve/","filename":"/Volumes/Source/san/san-cli-all/san-cli-github/docs/serve.md","title":"开发打包"},{"path":"/build/","filename":"/Volumes/Source/san/san-cli-all/san-cli-github/docs/build.md","title":"生产打包"}]},{"title":"配置","children":[{"path":"/config/","filename":"/Volumes/Source/san/san-cli-all/san-cli-github/docs/config.md","title":"San CLI 配置文件"},{"path":"/advanced/","filename":"/Volumes/Source/san/san-cli-all/san-cli-github/docs/advanced.md","title":"高级配置"},{"path":"/presets/","filename":"/Volumes/Source/san/san-cli-all/san-cli-github/docs/presets.md","title":"Presets 预设"},{"path":"/env/","filename":"/Volumes/Source/san/san-cli-all/san-cli-github/docs/env.md","title":"环境变量"}]},{"title":"常见解决方案","children":[{"path":"/modern-mode/","filename":"/Volumes/Source/san/san-cli-all/san-cli-github/docs/modern-mode.md","title":"现在的浏览器打包模式"},{"path":"/bundle-analyze/","filename":"/Volumes/Source/san/san-cli-all/san-cli-github/docs/bundle-analyze.md","title":"Bundle 分析"},{"path":"/component/","filename":"/Volumes/Source/san/san-cli-all/san-cli-github/docs/component.md","title":"San Component 组件开发"},{"path":"/smarty/","filename":"/Volumes/Source/san/san-cli-all/san-cli-github/docs/smarty.md","title":"Smarty 相关"},{"path":"/deployment/","filename":"/Volumes/Source/san/san-cli-all/san-cli-github/docs/deployment.md","title":"部署"},{"path":"/hulk-cli-migration/","filename":"/Volumes/Source/san/san-cli-all/san-cli-github/docs/hulk-cli-migration.md","title":"hulk-cli升级san-cli"}]},{"title":"二次开发","children":[{"path":"/architecture/","filename":"/Volumes/Source/san/san-cli-all/san-cli-github/docs/architecture.md","title":"内部实现"},{"path":"/create-scaffold/","filename":"/Volumes/Source/san/san-cli-all/san-cli-github/docs/create-scaffold.md","title":"如何创建一个脚手架项目"},{"path":"/plugin/","filename":"/Volumes/Source/san/san-cli-all/san-cli-github/docs/plugin.md","title":"插件","children":[{"path":"/cmd-plugin/","filename":"/Volumes/Source/san/san-cli-all/san-cli-github/docs/cmd-plugin.md","title":"Command 插件"},{"path":"/srv-plugin/","filename":"/Volumes/Source/san/san-cli-all/san-cli-github/docs/srv-plugin.md","title":"编写一个 Serivce 插件"}]}]},{"title":"CLI UI","children":[{"path":"/ui/start/","filename":"/Volumes/Source/san/san-cli-all/san-cli-github/docs/ui/start.md","title":"CLI UI安装"},{"title":"功能简介","children":[{"path":"/ui/project-list/","filename":"/Volumes/Source/san/san-cli-all/san-cli-github/docs/ui/project-list.md","title":"项目列表"},{"path":"/ui/dashboard/","filename":"/Volumes/Source/san/san-cli-all/san-cli-github/docs/ui/dashboard.md","title":"仪表盘"},{"path":"/ui/plugin/","filename":"/Volumes/Source/san/san-cli-all/san-cli-github/docs/ui/plugin.md","title":"插件管理"},{"path":"/ui/dependency/","filename":"/Volumes/Source/san/san-cli-all/san-cli-github/docs/ui/dependency.md","title":"依赖管理"},{"path":"/ui/configuration/","filename":"/Volumes/Source/san/san-cli-all/san-cli-github/docs/ui/configuration.md","title":"配置管理"},{"path":"/ui/task/","filename":"/Volumes/Source/san/san-cli-all/san-cli-github/docs/ui/task.md","title":"任务管理"}]},{"title":"插件开发","children":[{"path":"/ui/structure/","filename":"/Volumes/Source/san/san-cli-all/san-cli-github/docs/ui/structure.md","title":"CLI UI 插件"},{"path":"/ui/plugin-object/","filename":"/Volumes/Source/san/san-cli-all/san-cli-github/docs/ui/plugin-object.md","title":"PluginManager对象"},{"path":"/ui/add-addon/","filename":"/Volumes/Source/san/san-cli-all/san-cli-github/docs/ui/add-addon.md","title":"addon组件"},{"path":"/ui/add-config/","filename":"/Volumes/Source/san/san-cli-all/san-cli-github/docs/ui/add-config.md","title":"添加项目配置"},{"path":"/ui/cover-task/","filename":"/Volumes/Source/san/san-cli-all/san-cli-github/docs/ui/cover-task.md","title":"任务管理"},{"path":"/ui/add-view/","filename":"/Volumes/Source/san/san-cli-all/san-cli-github/docs/ui/add-view.md","title":"添加自定义视图"},{"path":"/ui/static/","filename":"/Volumes/Source/san/san-cli-all/san-cli-github/docs/ui/static.md","title":"公共静态文件"}]}]}]}}},"headHtmlSnippet":""};
 const components = {
   "/": () => Promise.all(/* import() */[__webpack_require__.e(1), __webpack_require__.e(51)]).then(__webpack_require__.t.bind(null, 59, 7)),
   "/_navbar/": () => Promise.all(/* import() */[__webpack_require__.e(1), __webpack_require__.e(52)]).then(__webpack_require__.t.bind(null, 61, 7)),
@@ -926,7 +924,7 @@ var update = _node_modules_style_loader_dist_runtime_injectStylesIntoStyleTag_js
 /***/ (function(module, exports) {
 
 // Module
-var code = " <div id=\"site\"> <header id=\"header\"> <a href=\"{{docit.base}}\" class=\"navbar\"> <img src=\"{{docit.base + 'logo.svg'}}\" alt=\"Home\" class=\"logo\"/> <span>{{docit.title}}</span> </a> <ul> <li s-for=\"nav in docit.themeConfig.nav\"> <a target=\"{{nav.target || '_blank'}}\" href=\"{{nav.link}}\"> {{nav.text}} </a> </li> </ul> </header> <aside s-if=\"isShowSidebar\" id=\"sidebar\" class=\"sidebar\"> <tree treeData=\"{{sidebar}}\" selectedNodes=\"{{selectedNodes}}\"> <router-link s-if=\"treeNode.path\" to=\"{{getPath(treeNode)}}\">{{treeNode.title}}</router-link> <span s-else>{{treeNode.title}}</span> </tree> </aside> <drawer s-else class=\"sidebar\" style=\"width:0\"> <tree treeData=\"{{sidebar}}\" selectedNodes=\"{{selectedNodes}}\" style=\"padding:50px 0\"> <router-link s-if=\"treeNode.path\" to=\"{{getPath(treeNode)}}\">{{treeNode.title}}</router-link> <span s-else>{{treeNode.title}}</span> </tree> </drawer> <content-area docit=\"{{docit}}\" class=\"{{isShowSidebar ? '' : 'hidden'}}\"></content-area> </div> ";
+var code = " <div id=\"site\"> <header id=\"header\"> <a href=\"{{docit.base}}\" class=\"navbar\"> <img src=\"{{docit.base + docit.logo}}\" alt=\"Home\" class=\"logo\"/> <span>{{docit.title}}</span> </a> <ul> <li s-for=\"nav in docit.themeConfig.nav\"> <a target=\"{{nav.target || '_blank'}}\" href=\"{{nav.link}}\"> {{nav.text}} </a> </li> </ul> </header> <aside s-if=\"isShowSidebar\" id=\"sidebar\" class=\"sidebar\"> <tree treeData=\"{{sidebar}}\" selectedNodes=\"{{selectedNodes}}\"> <router-link s-if=\"treeNode.path\" to=\"{{getPath(treeNode)}}\">{{treeNode.title}}</router-link> <span s-else>{{treeNode.title}}</span> </tree> </aside> <drawer s-else class=\"sidebar\" style=\"width:0\"> <tree treeData=\"{{sidebar}}\" selectedNodes=\"{{selectedNodes}}\" style=\"padding:50px 0\"> <router-link s-if=\"treeNode.path\" to=\"{{getPath(treeNode)}}\">{{treeNode.title}}</router-link> <span s-else>{{treeNode.title}}</span> </tree> </drawer> <content-area docit=\"{{docit}}\" class=\"{{isShowSidebar ? '' : 'hidden'}}\"></content-area> </div> ";
 // Exports
 module.exports = code;
 
@@ -1140,7 +1138,7 @@ client_entry_defineProperty(client_entry_Index, "template", '<index docit="{{doc
 
 client_entry_defineProperty(client_entry_Index, "computed", {
   docit() {
-    return {"title":"San CLI","base":"/san-cli/","themeConfig":{"nav":[{"text":"San","link":"https://baidu.github.io/san/"},{"text":"Santd","link":"https://ecomfe.github.io/santd/"}],"sidebar":{"/":{"children":[{"path":"/","filename":"/Volumes/Source/san/san-cli-all/san-cli-github/docs/README.md","title":"介绍"},{"title":"基础命令","children":[{"path":"/create-project/","filename":"/Volumes/Source/san/san-cli-all/san-cli-github/docs/create-project.md","title":"初始化项目"},{"path":"/serve/","filename":"/Volumes/Source/san/san-cli-all/san-cli-github/docs/serve.md","title":"开发打包"},{"path":"/build/","filename":"/Volumes/Source/san/san-cli-all/san-cli-github/docs/build.md","title":"生产打包"}]},{"title":"配置","children":[{"path":"/config/","filename":"/Volumes/Source/san/san-cli-all/san-cli-github/docs/config.md","title":"San CLI 配置文件"},{"path":"/advanced/","filename":"/Volumes/Source/san/san-cli-all/san-cli-github/docs/advanced.md","title":"高级配置"},{"path":"/presets/","filename":"/Volumes/Source/san/san-cli-all/san-cli-github/docs/presets.md","title":"Presets 预设"},{"path":"/env/","filename":"/Volumes/Source/san/san-cli-all/san-cli-github/docs/env.md","title":"环境变量"}]},{"title":"常见解决方案","children":[{"path":"/modern-mode/","filename":"/Volumes/Source/san/san-cli-all/san-cli-github/docs/modern-mode.md","title":"现在的浏览器打包模式"},{"path":"/bundle-analyze/","filename":"/Volumes/Source/san/san-cli-all/san-cli-github/docs/bundle-analyze.md","title":"Bundle 分析"},{"path":"/component/","filename":"/Volumes/Source/san/san-cli-all/san-cli-github/docs/component.md","title":"San Component 组件开发"},{"path":"/smarty/","filename":"/Volumes/Source/san/san-cli-all/san-cli-github/docs/smarty.md","title":"Smarty 相关"},{"path":"/deployment/","filename":"/Volumes/Source/san/san-cli-all/san-cli-github/docs/deployment.md","title":"部署"},{"path":"/hulk-cli-migration/","filename":"/Volumes/Source/san/san-cli-all/san-cli-github/docs/hulk-cli-migration.md","title":"hulk-cli升级san-cli"}]},{"title":"二次开发","children":[{"path":"/architecture/","filename":"/Volumes/Source/san/san-cli-all/san-cli-github/docs/architecture.md","title":"内部实现"},{"path":"/create-scaffold/","filename":"/Volumes/Source/san/san-cli-all/san-cli-github/docs/create-scaffold.md","title":"如何创建一个脚手架项目"},{"path":"/plugin/","filename":"/Volumes/Source/san/san-cli-all/san-cli-github/docs/plugin.md","title":"插件","children":[{"path":"/cmd-plugin/","filename":"/Volumes/Source/san/san-cli-all/san-cli-github/docs/cmd-plugin.md","title":"Command 插件"},{"path":"/srv-plugin/","filename":"/Volumes/Source/san/san-cli-all/san-cli-github/docs/srv-plugin.md","title":"编写一个 Serivce 插件"}]}]},{"title":"CLI UI","children":[{"path":"/ui/start/","filename":"/Volumes/Source/san/san-cli-all/san-cli-github/docs/ui/start.md","title":"CLI UI安装"},{"title":"功能简介","children":[{"path":"/ui/project-list/","filename":"/Volumes/Source/san/san-cli-all/san-cli-github/docs/ui/project-list.md","title":"项目列表"},{"path":"/ui/dashboard/","filename":"/Volumes/Source/san/san-cli-all/san-cli-github/docs/ui/dashboard.md","title":"仪表盘"},{"path":"/ui/plugin/","filename":"/Volumes/Source/san/san-cli-all/san-cli-github/docs/ui/plugin.md","title":"插件管理"},{"path":"/ui/dependency/","filename":"/Volumes/Source/san/san-cli-all/san-cli-github/docs/ui/dependency.md","title":"依赖管理"},{"path":"/ui/configuration/","filename":"/Volumes/Source/san/san-cli-all/san-cli-github/docs/ui/configuration.md","title":"配置管理"},{"path":"/ui/task/","filename":"/Volumes/Source/san/san-cli-all/san-cli-github/docs/ui/task.md","title":"任务管理"}]},{"title":"插件开发","children":[{"path":"/ui/structure/","filename":"/Volumes/Source/san/san-cli-all/san-cli-github/docs/ui/structure.md","title":"CLI UI 插件"},{"path":"/ui/plugin-object/","filename":"/Volumes/Source/san/san-cli-all/san-cli-github/docs/ui/plugin-object.md","title":"PluginManager对象"},{"path":"/ui/add-addon/","filename":"/Volumes/Source/san/san-cli-all/san-cli-github/docs/ui/add-addon.md","title":"addon组件"},{"path":"/ui/add-config/","filename":"/Volumes/Source/san/san-cli-all/san-cli-github/docs/ui/add-config.md","title":"添加项目配置"},{"path":"/ui/cover-task/","filename":"/Volumes/Source/san/san-cli-all/san-cli-github/docs/ui/cover-task.md","title":"任务管理"},{"path":"/ui/add-view/","filename":"/Volumes/Source/san/san-cli-all/san-cli-github/docs/ui/add-view.md","title":"添加自定义视图"},{"path":"/ui/static/","filename":"/Volumes/Source/san/san-cli-all/san-cli-github/docs/ui/static.md","title":"公共静态文件"}]}]}]}}}};
+    return {"base":"/san-cli/","title":"San CLI","head":[],"logo":"logo.svg","themeConfig":{"nav":[{"text":"San","link":"https://baidu.github.io/san/"},{"text":"Santd","link":"https://ecomfe.github.io/santd/"}],"sidebar":{"/":{"children":[{"path":"/","filename":"/Volumes/Source/san/san-cli-all/san-cli-github/docs/README.md","title":"介绍"},{"title":"基础命令","children":[{"path":"/create-project/","filename":"/Volumes/Source/san/san-cli-all/san-cli-github/docs/create-project.md","title":"初始化项目"},{"path":"/serve/","filename":"/Volumes/Source/san/san-cli-all/san-cli-github/docs/serve.md","title":"开发打包"},{"path":"/build/","filename":"/Volumes/Source/san/san-cli-all/san-cli-github/docs/build.md","title":"生产打包"}]},{"title":"配置","children":[{"path":"/config/","filename":"/Volumes/Source/san/san-cli-all/san-cli-github/docs/config.md","title":"San CLI 配置文件"},{"path":"/advanced/","filename":"/Volumes/Source/san/san-cli-all/san-cli-github/docs/advanced.md","title":"高级配置"},{"path":"/presets/","filename":"/Volumes/Source/san/san-cli-all/san-cli-github/docs/presets.md","title":"Presets 预设"},{"path":"/env/","filename":"/Volumes/Source/san/san-cli-all/san-cli-github/docs/env.md","title":"环境变量"}]},{"title":"常见解决方案","children":[{"path":"/modern-mode/","filename":"/Volumes/Source/san/san-cli-all/san-cli-github/docs/modern-mode.md","title":"现在的浏览器打包模式"},{"path":"/bundle-analyze/","filename":"/Volumes/Source/san/san-cli-all/san-cli-github/docs/bundle-analyze.md","title":"Bundle 分析"},{"path":"/component/","filename":"/Volumes/Source/san/san-cli-all/san-cli-github/docs/component.md","title":"San Component 组件开发"},{"path":"/smarty/","filename":"/Volumes/Source/san/san-cli-all/san-cli-github/docs/smarty.md","title":"Smarty 相关"},{"path":"/deployment/","filename":"/Volumes/Source/san/san-cli-all/san-cli-github/docs/deployment.md","title":"部署"},{"path":"/hulk-cli-migration/","filename":"/Volumes/Source/san/san-cli-all/san-cli-github/docs/hulk-cli-migration.md","title":"hulk-cli升级san-cli"}]},{"title":"二次开发","children":[{"path":"/architecture/","filename":"/Volumes/Source/san/san-cli-all/san-cli-github/docs/architecture.md","title":"内部实现"},{"path":"/create-scaffold/","filename":"/Volumes/Source/san/san-cli-all/san-cli-github/docs/create-scaffold.md","title":"如何创建一个脚手架项目"},{"path":"/plugin/","filename":"/Volumes/Source/san/san-cli-all/san-cli-github/docs/plugin.md","title":"插件","children":[{"path":"/cmd-plugin/","filename":"/Volumes/Source/san/san-cli-all/san-cli-github/docs/cmd-plugin.md","title":"Command 插件"},{"path":"/srv-plugin/","filename":"/Volumes/Source/san/san-cli-all/san-cli-github/docs/srv-plugin.md","title":"编写一个 Serivce 插件"}]}]},{"title":"CLI UI","children":[{"path":"/ui/start/","filename":"/Volumes/Source/san/san-cli-all/san-cli-github/docs/ui/start.md","title":"CLI UI安装"},{"title":"功能简介","children":[{"path":"/ui/project-list/","filename":"/Volumes/Source/san/san-cli-all/san-cli-github/docs/ui/project-list.md","title":"项目列表"},{"path":"/ui/dashboard/","filename":"/Volumes/Source/san/san-cli-all/san-cli-github/docs/ui/dashboard.md","title":"仪表盘"},{"path":"/ui/plugin/","filename":"/Volumes/Source/san/san-cli-all/san-cli-github/docs/ui/plugin.md","title":"插件管理"},{"path":"/ui/dependency/","filename":"/Volumes/Source/san/san-cli-all/san-cli-github/docs/ui/dependency.md","title":"依赖管理"},{"path":"/ui/configuration/","filename":"/Volumes/Source/san/san-cli-all/san-cli-github/docs/ui/configuration.md","title":"配置管理"},{"path":"/ui/task/","filename":"/Volumes/Source/san/san-cli-all/san-cli-github/docs/ui/task.md","title":"任务管理"}]},{"title":"插件开发","children":[{"path":"/ui/structure/","filename":"/Volumes/Source/san/san-cli-all/san-cli-github/docs/ui/structure.md","title":"CLI UI 插件"},{"path":"/ui/plugin-object/","filename":"/Volumes/Source/san/san-cli-all/san-cli-github/docs/ui/plugin-object.md","title":"PluginManager对象"},{"path":"/ui/add-addon/","filename":"/Volumes/Source/san/san-cli-all/san-cli-github/docs/ui/add-addon.md","title":"addon组件"},{"path":"/ui/add-config/","filename":"/Volumes/Source/san/san-cli-all/san-cli-github/docs/ui/add-config.md","title":"添加项目配置"},{"path":"/ui/cover-task/","filename":"/Volumes/Source/san/san-cli-all/san-cli-github/docs/ui/cover-task.md","title":"任务管理"},{"path":"/ui/add-view/","filename":"/Volumes/Source/san/san-cli-all/san-cli-github/docs/ui/add-view.md","title":"添加自定义视图"},{"path":"/ui/static/","filename":"/Volumes/Source/san/san-cli-all/san-cli-github/docs/ui/static.md","title":"公共静态文件"}]}]}]}}},"headHtmlSnippet":""};
   }
 
 });
@@ -2041,10 +2039,10 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _common_san_router__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(_common_san_router__WEBPACK_IMPORTED_MODULE_1__);
 /* harmony import */ var _content_area__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(107);
 /* harmony import */ var _content_area__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(_content_area__WEBPACK_IMPORTED_MODULE_2__);
-/* harmony import */ var _tree__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(11);
-/* harmony import */ var _tree__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(_tree__WEBPACK_IMPORTED_MODULE_3__);
-/* harmony import */ var _drawer__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(109);
-/* harmony import */ var _drawer__WEBPACK_IMPORTED_MODULE_4___default = /*#__PURE__*/__webpack_require__.n(_drawer__WEBPACK_IMPORTED_MODULE_4__);
+/* harmony import */ var _components_tree__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(11);
+/* harmony import */ var _components_tree__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(_components_tree__WEBPACK_IMPORTED_MODULE_3__);
+/* harmony import */ var _components_drawer__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(109);
+/* harmony import */ var _components_drawer__WEBPACK_IMPORTED_MODULE_4___default = /*#__PURE__*/__webpack_require__.n(_components_drawer__WEBPACK_IMPORTED_MODULE_4__);
 /* harmony import */ var _common_hub__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(9);
 /* harmony import */ var _common_utils__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(6);
 
@@ -2058,8 +2056,8 @@ __webpack_require__.r(__webpack_exports__);
   components: {
     'router-link': _common_san_router__WEBPACK_IMPORTED_MODULE_1__["Link"],
     'content-area': _content_area__WEBPACK_IMPORTED_MODULE_2___default.a,
-    drawer: (_drawer__WEBPACK_IMPORTED_MODULE_4___default()),
-    tree: (_tree__WEBPACK_IMPORTED_MODULE_3___default())
+    drawer: (_components_drawer__WEBPACK_IMPORTED_MODULE_4___default()),
+    tree: (_components_tree__WEBPACK_IMPORTED_MODULE_3___default())
   },
   dataTypes: {
     docit: san__WEBPACK_IMPORTED_MODULE_0__["DataTypes"].object
